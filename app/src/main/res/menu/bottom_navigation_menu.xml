@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/gate_page"
+        android:enabled="true"
+        android:icon="@android:drawable/ic_lock_idle_lock"
+        android:title="@string/gate" />
+    <item
+        android:id="@+id/activity_page"
+        android:enabled="true"
+        android:icon="@android:drawable/ic_menu_sort_by_size"
+        android:title="@string/activity" />
+    <item
+        android:id="@+id/more_page"
+        android:enabled="true"
+        android:icon="@android:drawable/ic_input_get"
+        android:title="More" />
+</menu>
