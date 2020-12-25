@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/gateFragment2">
+    <fragment
+        android:id="@+id/gateFragment2"
+        android:name="com.example.iotproject.GateFragment"
+        android:label="fragment_gate"
+        tools:layout="@layout/fragment_gate" >
+        <action
+            android:id="@+id/action_gateFragment2_to_activityFragment2"
+            app:destination="@id/activityFragment2" />
+    </fragment>
+    <fragment
+        android:id="@+id/activityFragment2"
+        android:name="com.example.iotproject.ActivityFragment"
+        android:label="fragment_activity"
+        tools:layout="@layout/fragment_activity" />
+</navigation>
