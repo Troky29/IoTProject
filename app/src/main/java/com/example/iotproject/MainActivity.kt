@@ -14,9 +14,16 @@ import android.view.WindowManager
 import android.widget.Button
 import android.widget.ImageButton
 import android.widget.Toast
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.commit
+import androidx.navigation.findNavController
+import androidx.navigation.ui.AppBarConfiguration
+import androidx.navigation.ui.setupActionBarWithNavController
+import androidx.navigation.ui.setupWithNavController
 import com.google.android.material.bottomnavigation.BottomNavigationView
 
 class MainActivity : AppCompatActivity() {
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -24,36 +31,42 @@ class MainActivity : AppCompatActivity() {
 
         //val toolbar: Toolbar = findViewById(R.id.toolbar)
         // toolbar.setTitleTextColor(Color.white)
+
         val profilePicture = findViewById<ImageButton>(R.id.profile_button)
         profilePicture.setOnClickListener() {
             Toast.makeText(this, "Profile image", Toast.LENGTH_SHORT).show()
             //TODO: Put profile settings (maybe other View)
         }
 
-        val navigation = findViewById<BottomNavigationView>(R.id.navigation_bar)
-        val navigationListener = BottomNavigationView.OnNavigationItemSelectedListener { item ->
-                when (item.itemId) {
-                    R.id.gate_page -> {
-                        //TODO: go to selected page
-                        Toast.makeText(this, "Gate page", Toast.LENGTH_SHORT)
-                        true
-                    }
-                    R.id.activity_page -> {
-                        //TODO: go to activity page
-                        Toast.makeText(this, "Activity page", Toast.LENGTH_SHORT)
-                        true
-                    }
-                    R.id.more_page -> {
-                        //TODO: go to more page
-                        Toast.makeText(this, "More page", Toast.LENGTH_SHORT)
-                        true
-                    }
-                    else -> false
+        val bottomNavigation: BottomNavigationView = findViewById(R.id.bottom_navigation)
+        bottomNavigation.setOnNavigationItemSelectedListener { item ->
+            when(item.itemId){
+                R.id.gate_page -> {
+                    //TODO: change to gate frame
+                    replaceFragment(GateFragment())
+                    Toast.makeText(this, "Gate page", Toast.LENGTH_SHORT).show()
+                    true
                 }
+                R.id.activity_page -> {
+                    //TODO: change to activity frame
+                    replaceFragment(ActivityFragment())
+                    Toast.makeText(this, "Activity page", Toast.LENGTH_SHORT).show()
+                    true
+                }
+                R.id.more_page -> {
+                    //TODO: change to more frame
+                    Toast.makeText(this, "More page", Toast.LENGTH_SHORT).show()
+                    true
+                }
+                else -> false
             }
+        }
+    }
 
-        navigation.setOnNavigationItemSelectedListener(navigationListener)
-
+    private fun replaceFragment(fragment: Fragment) {
+        val fragmentTransaction = supportFragmentManager.beginTransaction()
+        fragmentTransaction.replace(R.id.nav_host_fragment, fragment)
+        fragmentTransaction.commit()
     }
 
 }

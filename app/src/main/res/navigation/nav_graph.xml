@@ -3,18 +3,15 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph"
-    app:startDestination="@id/gateFragment2">
+    app:startDestination="@id/gateFragment">
     <fragment
-        android:id="@+id/gateFragment2"
+        android:id="@+id/gateFragment"
         android:name="com.example.iotproject.GateFragment"
         android:label="fragment_gate"
         tools:layout="@layout/fragment_gate" >
-        <action
-            android:id="@+id/action_gateFragment2_to_activityFragment2"
-            app:destination="@id/activityFragment2" />
     </fragment>
     <fragment
-        android:id="@+id/activityFragment2"
+        android:id="@+id/activityFragment"
         android:name="com.example.iotproject.ActivityFragment"
         android:label="fragment_activity"
         tools:layout="@layout/fragment_activity" />
