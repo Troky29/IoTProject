@@ -35,7 +35,7 @@ class MainActivity : AppCompatActivity() {
         val profilePicture = findViewById<ImageButton>(R.id.profile_button)
         profilePicture.setOnClickListener() {
             Toast.makeText(this, "Profile image", Toast.LENGTH_SHORT).show()
-            //TODO: Put profile settings (maybe other View)
+            //TODO: Put profile settings (maybe other activity)
         }
 
         val bottomNavigation: BottomNavigationView = findViewById(R.id.bottom_navigation)
