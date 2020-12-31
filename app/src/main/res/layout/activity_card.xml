@@ -1,9 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     android:id="@+id/cardview"
-    android:layout_gravity="center"
     android:layout_margin="8dp">
 
     <RelativeLayout
@@ -30,8 +29,8 @@
             android:layout_marginLeft="16dp"
             android:layout_marginStart="16dp"
             android:textSize="30sp"
-            android:text="Acesso: tipo"
-             />
+            android:text="Acesso: tipo"/>
+
         <TextView
             android:id="@+id/date_textView"
             android:layout_width="wrap_content"
@@ -40,7 +39,7 @@
             android:layout_alignLeft="@id/access_textView"
             android:layout_alignStart="@id/access_textView"
             android:textSize="16sp"
-            android:text="Data:01/01/2000" />
+            android:text="Data:01/01/2000"/>
     </RelativeLayout>
 
 </androidx.cardview.widget.CardView>

@@ -55,6 +55,7 @@ class MainActivity : AppCompatActivity() {
                 }
                 R.id.more_page -> {
                     //TODO: change to more frame
+                    replaceFragment(MoreFragment())
                     Toast.makeText(this, "More page", Toast.LENGTH_SHORT).show()
                     true
                 }

@@ -1,81 +1,78 @@
 <?xml version="1.0" encoding="utf-8"?>
-<TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:tools="http://schemas.android.com/tools"
     tools:context=".GateFragment">
 
-    <TableRow
-        android:layout_width="match_parent"
+    <ImageView
+        android:id="@+id/gate_image"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:gravity="center">
+        android:adjustViewBounds="true"
+        android:contentDescription="gate image"
+        android:padding="0dp"
+        android:scaleType="fitXY"
+        android:src="@drawable/hqdefault"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
-        <ImageView
-            android:id="@+id/gate_image"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:adjustViewBounds="true"
-            android:contentDescription="gate image"
-            android:padding="8dp"
-            android:scaleType="fitXY"
-            android:src="@drawable/ic_launcher_foreground"
-            android:background="@color/ColorPrimary"
-            />
-    </TableRow>
 
-    <TableRow
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
+    <TextView
+        android:id="@+id/gate_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="16dp"
+        android:layout_marginTop="40dp"
+        android:layout_weight="1"
+        android:text="Gate Name"
+        android:textSize="24sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/gate_image" />
 
-        <TextView
-            android:id="@+id/gate_name"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Gate Name"
-            android:textSize="24sp"
-            android:layout_weight="1"
-            />
+    <TextView
+        android:id="@+id/location"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="16dp"
+        android:layout_weight="1"
+        android:text="Location"
+        android:textSize="24sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/gate_name" />
 
-        <TextView
-            android:id="@+id/location"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Location"
-            android:textSize="24sp"
-            android:layout_weight="1"/>
-    </TableRow>
+    <TextView
+        android:id="@+id/gate_state"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="16dp"
+        android:layout_weight="1"
+        android:text="Gate state"
+        android:textSize="24sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/location" />
 
-    <TableRow
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" >
+    <TextView
+        android:id="@+id/gate_id"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="16dp"
+        android:layout_weight="1"
+        android:text="Gate id"
+        android:textSize="24sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/gate_state" />
 
-        <TextView
-            android:id="@+id/gate_state"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Gate state"
-            android:textSize="24sp"
-            android:layout_weight="1"/>
+    <Button
+        android:id="@+id/button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Open"
+        android:layout_marginBottom="32dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 
-        <TextView
-            android:id="@+id/gate_id"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Gate id"
-            android:textSize="24sp"
-            android:layout_weight="1"/>
-    </TableRow>
-
-    <TableRow
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:gravity="center">
-
-        <Button
-            android:id="@+id/button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Open"/>
-    </TableRow>
-
-</TableLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>
