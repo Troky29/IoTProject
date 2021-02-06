@@ -18,7 +18,7 @@ class MoreFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        view.findViewById<Button>(R.id.loginButton).setOnClickListener() { logout(view) }
+        view.findViewById<Button>(R.id.loguotButton).setOnClickListener() { logout(view) }
 
     }
 

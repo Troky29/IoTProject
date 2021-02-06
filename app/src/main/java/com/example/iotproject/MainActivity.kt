@@ -1,10 +1,8 @@
 package com.example.iotproject
 
-import android.content.Intent
 import android.os.Bundle
-import android.view.View
-import android.widget.Button
 import android.widget.ImageButton
+import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
@@ -17,11 +15,13 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
         setSupportActionBar(findViewById(R.id.toolbar))
 
+        val email = intent.getStringExtra(EMAIL)
+        findViewById<TextView>(R.id.toolbarTextView).text = email
 
         //val toolbar: Toolbar = findViewById(R.id.toolbar)
         // toolbar.setTitleTextColor(Color.white)
 
-        val profilePicture = findViewById<ImageButton>(R.id.profile_button)
+        val profilePicture = findViewById<ImageButton>(R.id.profileButton)
         profilePicture.setOnClickListener() {
             Toast.makeText(this, "Profile image", Toast.LENGTH_SHORT).show()
             //TODO: Put profile settings (maybe other activity)
@@ -51,6 +51,8 @@ class MainActivity : AppCompatActivity() {
                 else -> false
             }
         }
+
+        replaceFragment(GateFragment())
     }
 
     private fun replaceFragment(fragment: Fragment) {
