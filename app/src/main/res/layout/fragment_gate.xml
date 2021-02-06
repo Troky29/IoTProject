@@ -33,7 +33,7 @@
         app:layout_constraintTop_toBottomOf="@+id/gate_image" />
 
     <TextView
-        android:id="@+id/location"
+        android:id="@+id/gateLocationTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:padding="16dp"
@@ -52,7 +52,7 @@
         android:text="Gate state"
         android:textSize="24sp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/location" />
+        app:layout_constraintTop_toBottomOf="@+id/gateLocationTextView" />
 
     <TextView
         android:id="@+id/gate_id"

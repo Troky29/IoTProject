@@ -18,7 +18,7 @@ class Login : AppCompatActivity() {
 
         findViewById<Button>(R.id.loginButton).setOnClickListener() {
             //TODO: lauch function to check credential, if ok go further
-            login(it)
+            login(it.rootView)
         }
     }
 
