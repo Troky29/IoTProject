@@ -1,5 +1,6 @@
 package com.example.iotproject
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -17,5 +18,12 @@ class MoreFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        view.findViewById<Button>(R.id.loginButton).setOnClickListener() { logout(view) }
+
+    }
+
+    private fun logout(view: View) {
+        val intent = Intent(context, Login::class.java)
+        startActivity(intent)
     }
 }

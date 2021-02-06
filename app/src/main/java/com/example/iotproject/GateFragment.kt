@@ -25,6 +25,7 @@ class GateFragment: Fragment() {
 
         view.findViewById<Button>(R.id.button).setOnClickListener() {
             Toast.makeText(context, "Button pressed", Toast.LENGTH_SHORT).show()
+            //TODO: Move activity to login, for changing user
         }
     }
 }

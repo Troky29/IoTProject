@@ -1,25 +1,13 @@
 package com.example.iotproject
 
-import android.annotation.TargetApi
-import android.app.Activity
-import android.content.Context
-import android.graphics.drawable.Drawable
-import android.os.Build
-import androidx.appcompat.app.AppCompatActivity
+import android.content.Intent
 import android.os.Bundle
-import android.util.AttributeSet
 import android.view.View
-import android.view.Window
-import android.view.WindowManager
 import android.widget.Button
 import android.widget.ImageButton
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.commit
-import androidx.navigation.findNavController
-import androidx.navigation.ui.AppBarConfiguration
-import androidx.navigation.ui.setupActionBarWithNavController
-import androidx.navigation.ui.setupWithNavController
 import com.google.android.material.bottomnavigation.BottomNavigationView
 
 class MainActivity : AppCompatActivity() {
@@ -28,6 +16,7 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         setSupportActionBar(findViewById(R.id.toolbar))
+
 
         //val toolbar: Toolbar = findViewById(R.id.toolbar)
         // toolbar.setTitleTextColor(Color.white)
