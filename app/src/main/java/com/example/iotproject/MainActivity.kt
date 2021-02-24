@@ -4,37 +4,62 @@ import android.Manifest
 import android.content.pm.PackageManager
 import android.location.Location
 import android.os.Bundle
+import android.os.Looper
 import android.widget.ImageButton
 import android.widget.TextView
 import android.widget.Toast
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.fragment.app.Fragment
-import com.google.android.gms.location.FusedLocationProviderClient
-import com.google.android.gms.location.LocationServices
+import androidx.lifecycle.Observer
+import com.google.android.gms.location.*
 import com.google.android.material.bottomnavigation.BottomNavigationView
 
 class MainActivity : AppCompatActivity() {
 
     private lateinit var fusedLocationClient: FusedLocationProviderClient
+    private lateinit var locationRequest: LocationRequest
+    private lateinit var locationCallback: LocationCallback
+    //private lateinit var viewModel: MainActivityViewModel
     private val REQUEST_CODE = 1
+    var currentLocation: String? = null
+
+    init {
+
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         setSupportActionBar(findViewById(R.id.toolbar))
 
-        val email = intent.getStringExtra(EMAIL)
-        findViewById<TextView>(R.id.toolbarTextView).text = email
+        //val email = intent.getStringExtra(EMAIL)
+        //findViewById<TextView>(R.id.toolbarTextView).text = email
+
+        //Initialize the Main Activity ViewModel, used for managing information between fragments
+        val model: MainActivityViewModel by viewModels()
+        model.getGates().observe(this, Observer<List<MainActivityViewModel.Gate>> { gates ->
+            //TODO: Update UI with the list of gates, or the list of activities
+        })
+        //TODO:Do the same for the activities, to preload them
+
+        createLocationRequest()
+        locationCallback = object: LocationCallback() {
+            override fun onLocationResult(locationResult: LocationResult?) {
+                locationResult ?: return
+                for (location in locationResult.locations) {
+                    //TODO: put call to the ViewModel instead of test function
+                    updateLocation(location)
+                }
+            }
+        }
 
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
 
         val moreFragment = MoreFragment()
         val gateFragment = GateFragment()
         val activityFragment = ActivityFragment()
-
-        //val toolbar: Toolbar = findViewById(R.id.toolbar)
-        // toolbar.setTitleTextColor(Color.white)
 
         val profilePicture = findViewById<ImageButton>(R.id.profileButton)
         profilePicture.setOnClickListener() {
@@ -46,21 +71,15 @@ class MainActivity : AppCompatActivity() {
         bottomNavigation.setOnNavigationItemSelectedListener { item ->
             when(item.itemId){
                 R.id.gate_page -> {
-                    //TODO: change to gate frame
                     replaceFragment(gateFragment)
-                    Toast.makeText(this, "Gate page", Toast.LENGTH_SHORT).show()
                     true
                 }
                 R.id.activity_page -> {
-                    //TODO: change to activity frame
                     replaceFragment(activityFragment)
-                    Toast.makeText(this, "Activity page", Toast.LENGTH_SHORT).show()
                     true
                 }
                 R.id.more_page -> {
-                    //TODO: change to more frame
                     replaceFragment(moreFragment)
-                    Toast.makeText(this, "More page", Toast.LENGTH_SHORT).show()
                     true
                 }
                 else -> false
@@ -68,7 +87,7 @@ class MainActivity : AppCompatActivity() {
         }
 
         replaceFragment(gateFragment)
-        getLocation()
+        //updateGPS()
     }
 
     private fun replaceFragment(fragment: Fragment) {
@@ -77,27 +96,67 @@ class MainActivity : AppCompatActivity() {
         fragmentTransaction.commit()
     }
 
-    fun getLocation() {
-        var location: Location? = null
+    override fun onResume() {
+        super.onResume()
+        startLocationUpdates()
+    }
+
+    private fun startLocationUpdates() {
         if (ActivityCompat.checkSelfPermission(
-                this,
-                Manifest.permission.ACCESS_FINE_LOCATION
-            ) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(
-                this,
-                Manifest.permission.ACCESS_COARSE_LOCATION
-            ) != PackageManager.PERMISSION_GRANTED
+                        this,
+                        Manifest.permission.ACCESS_FINE_LOCATION
+                ) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(
+                        this,
+                        Manifest.permission.ACCESS_COARSE_LOCATION
+                ) != PackageManager.PERMISSION_GRANTED
         ) {
             ActivityCompat.requestPermissions(this,
-                arrayOf(Manifest.permission.ACCESS_FINE_LOCATION,
-                    Manifest.permission.ACCESS_COARSE_LOCATION),
-                REQUEST_CODE)
+                    arrayOf(Manifest.permission.ACCESS_FINE_LOCATION,
+                            Manifest.permission.ACCESS_COARSE_LOCATION),
+                    REQUEST_CODE)
+            return
+        }
+
+        fusedLocationClient.requestLocationUpdates(locationRequest, locationCallback,
+                Looper.getMainLooper())
+    }
+
+    private fun createLocationRequest() {
+        locationRequest = LocationRequest.create()?.apply {
+            interval = 30000
+            fastestInterval = 5000
+            priority = LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY
+        }!!
+    }
+
+    /*
+    private fun updateGPS() {
+        var location: Location? = null
+        if (ActivityCompat.checkSelfPermission(
+                        this,
+                        Manifest.permission.ACCESS_FINE_LOCATION
+                ) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(
+                        this,
+                        Manifest.permission.ACCESS_COARSE_LOCATION
+                ) != PackageManager.PERMISSION_GRANTED
+        ) {
+            ActivityCompat.requestPermissions(this,
+                    arrayOf(Manifest.permission.ACCESS_FINE_LOCATION,
+                            Manifest.permission.ACCESS_COARSE_LOCATION),
+                    REQUEST_CODE)
             return
         }
 
         fusedLocationClient.lastLocation.addOnSuccessListener { location : Location? ->
-            if (location != null) {
-                findViewById<TextView>(R.id.toolbarTextView).text = location.latitude.toString()
-            }
+            //viewModel.updateLocation(location)
         }
     }
+     */
+
+
+    fun updateLocation(location: Location?) {
+        findViewById<TextView>(R.id.gateLocationTextView).text = location?.latitude.toString() +
+                ';' + location?.longitude.toString()
+    }
+
 }
