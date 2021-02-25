@@ -23,6 +23,7 @@ class GateCardAdapter(private val exampleList: List<GateCardItem>) : RecyclerVie
         holder.gateLocation.text = currentItem.location
         holder.gateState.text = currentItem.state
         holder.gateId.text = currentItem.id
+        //TODO: set click listeners
     }
 
     override fun getItemCount(): Int = exampleList.size

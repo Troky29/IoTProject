@@ -4,9 +4,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
-import android.widget.ImageView
-import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.LinearSnapHelper
@@ -44,7 +41,19 @@ class GateFragment: Fragment() {
         recyclerView.layoutManager = LinearLayoutManager(activity, LinearLayoutManager.HORIZONTAL, false)
         recyclerView.setHasFixedSize(true)
 
-        val snapHelper: SnapHelper = LinearSnapHelper()
+        val snapHelper: SnapHelper = SnapHelperOneByOne()
+
         snapHelper.attachToRecyclerView(recyclerView)
+    }
+
+    private class SnapHelperOneByOne : LinearSnapHelper() {
+        override fun findTargetSnapPosition(layoutManager: RecyclerView.LayoutManager?, velocityX: Int, velocityY: Int): Int {
+            if (layoutManager !is RecyclerView.SmoothScroller.ScrollVectorProvider)
+                return RecyclerView.NO_POSITION
+
+            val currentView: View = findSnapView(layoutManager) ?: return RecyclerView.NO_POSITION
+
+            return layoutManager.getPosition(currentView)
+        }
     }
 }
