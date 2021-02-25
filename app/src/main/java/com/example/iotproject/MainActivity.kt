@@ -23,7 +23,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var locationCallback: LocationCallback
     //private lateinit var viewModel: MainActivityViewModel
     private val REQUEST_CODE = 1
-    var currentLocation: String? = null
+    //var currentLocation: String? = null
 
     init {
 
@@ -40,9 +40,12 @@ class MainActivity : AppCompatActivity() {
         //Initialize the Main Activity ViewModel, used for managing information between fragments
         val model: MainActivityViewModel by viewModels()
         model.getGates().observe(this, Observer<List<MainActivityViewModel.Gate>> { gates ->
-            //TODO: Update UI with the list of gates, or the list of activities
+            //TODO: Update UI with the list of gates
         })
-        //TODO:Do the same for the activities, to preload them
+
+        model.getAvtivities().observe(this, Observer<List<MainActivityViewModel.Activity>> { activities ->
+            //TODO: Update UI with list of activities
+        })
 
         createLocationRequest()
         locationCallback = object: LocationCallback() {
@@ -50,7 +53,7 @@ class MainActivity : AppCompatActivity() {
                 locationResult ?: return
                 for (location in locationResult.locations) {
                     //TODO: put call to the ViewModel instead of test function
-                    updateLocation(location)
+                    model.updateLocation(location)
                 }
             }
         }
@@ -102,16 +105,11 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun startLocationUpdates() {
-        if (ActivityCompat.checkSelfPermission(
-                        this,
-                        Manifest.permission.ACCESS_FINE_LOCATION
-                ) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(
-                        this,
-                        Manifest.permission.ACCESS_COARSE_LOCATION
-                ) != PackageManager.PERMISSION_GRANTED
-        ) {
-            ActivityCompat.requestPermissions(this,
-                    arrayOf(Manifest.permission.ACCESS_FINE_LOCATION,
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
+                != PackageManager.PERMISSION_GRANTED
+                && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION)
+                != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.ACCESS_FINE_LOCATION,
                             Manifest.permission.ACCESS_COARSE_LOCATION),
                     REQUEST_CODE)
             return
@@ -152,11 +150,5 @@ class MainActivity : AppCompatActivity() {
         }
     }
      */
-
-
-    fun updateLocation(location: Location?) {
-        findViewById<TextView>(R.id.gateLocationTextView).text = location?.latitude.toString() +
-                ';' + location?.longitude.toString()
-    }
 
 }

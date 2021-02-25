@@ -7,12 +7,10 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 
-class CardAdapter(private val exampleList: List<CardItem>) : RecyclerView.Adapter<CardAdapter.CardViewHolder>() {
+class ActivityCardAdapter(private val exampleList: List<ActivityCardItem>) : RecyclerView.Adapter<ActivityCardAdapter.CardViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CardViewHolder {
-        val itemView = LayoutInflater.from(parent.context).inflate(R.layout.activity_card,
-                parent, false)
-
+        val itemView = LayoutInflater.from(parent.context).inflate(R.layout.activity_card, parent, false)
         return CardViewHolder(itemView)
     }
 
@@ -33,4 +31,4 @@ class CardAdapter(private val exampleList: List<CardItem>) : RecyclerView.Adapte
     }
 }
 
-data class CardItem (val imageResource: Int, val access: String, val date: String)
+data class ActivityCardItem (val imageResource: Int, val access: String, val date: String)

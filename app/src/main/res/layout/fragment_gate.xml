@@ -6,6 +6,16 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:context=".GateFragment">
 
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/gateRecycleView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toTopOf="@+id/gate_image"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:listitem="@layout/gate_card" />
+
     <ImageView
         android:id="@+id/gate_image"
         android:layout_width="wrap_content"

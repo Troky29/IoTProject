@@ -10,14 +10,6 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <TextView
-            android:id="@+id/locationTextView"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Current Location"
-            android:gravity="center"
-            android:textSize="24sp"/>
-
         <Button
             android:id="@+id/button2"
             style="?android:borderlessButtonStyle"

@@ -22,12 +22,12 @@ class ActivityFragment: Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val item = CardItem(R.drawable.hqdefault, "Element", "29/12/2020")
-        val exampleList = ArrayList<CardItem>()
+        val item = ActivityCardItem(R.drawable.hqdefault, "Element", "29/12/2020")
+        val exampleList = ArrayList<ActivityCardItem>()
         for (i in 1..100) exampleList += item
 
-        val recyclerView: RecyclerView = view.findViewById(R.id.recicleView)
-        recyclerView.adapter = CardAdapter(exampleList)
+        val recyclerView: RecyclerView = view.findViewById(R.id.activityRecicleView)
+        recyclerView.adapter = ActivityCardAdapter(exampleList)
         recyclerView.layoutManager = LinearLayoutManager(activity)
         recyclerView.setHasFixedSize(true)
     }

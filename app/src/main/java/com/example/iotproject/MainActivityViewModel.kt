@@ -17,19 +17,33 @@ class MainActivityViewModel : ViewModel() {
         }
     }
 
-    fun getGates(): LiveData<List<Gate>> {
-        return gates
+    private val activities: MutableLiveData<List<Activity>> by lazy {
+        MutableLiveData<List<Activity>>().also {
+            loadActivities()
+        }
     }
 
     private fun loadGates() {
         //TODO: Code to import gate info from server, to do while waiting during login
     }
 
-    fun updateLocation(location: Location?) {
+    private fun loadActivities() {
+        //TODO: Code to import activities inforation, to do while logging in
+    }
 
+    fun getGates(): LiveData<List<Gate>> {
+        return gates
+    }
+
+    fun getAvtivities(): LiveData<List<Activity>> {
+        return activities
+    }
+
+    fun updateLocation(location: Location?) {
+        //TODO: Upload user location every interval sec
     }
 
     data class Gate (val id: String)
 
-    //data class Activity(val id: String)
+    data class Activity(val id: String)
 }

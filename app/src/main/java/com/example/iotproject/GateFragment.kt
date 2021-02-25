@@ -8,6 +8,7 @@ import android.widget.Button
 import android.widget.ImageView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.RecyclerView
 
 class GateFragment: Fragment() {
 
@@ -27,5 +28,8 @@ class GateFragment: Fragment() {
             Toast.makeText(context, "Button pressed", Toast.LENGTH_SHORT).show()
             //TODO: Move activity to login, for changing user
         }
+
+        val recyclerView: RecyclerView = view.findViewById(R.id.gateRecycleView)
+        //recyclerView.adapter = CardAdapter
     }
 }
