@@ -22,6 +22,7 @@ class MoreFragment : Fragment() {
 
     private fun logout(view: View) {
         val intent = Intent(context, Login::class.java)
+        //TODO:put a real navigation, login is already initialized, so you should be able to go back
         startActivity(intent)
     }
 

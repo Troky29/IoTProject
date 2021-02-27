@@ -3,5 +3,9 @@
     <string name="gate">Gate</string>
     <string name="activity">Activity</string>
     <string name="profile_image">profile image</string>
+    <string name="email">email</string>
+    <string name="password">password</string>
+    <string name="login">Login</string>
+    <string name="sign_in"><u>Sign In</u></string>
 
 </resources>

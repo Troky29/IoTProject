@@ -9,6 +9,6 @@
         android:id="@+id/activityRecicleView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        tools:listitem="@layout/activity_card"/>
+        tools:listitem="@layout/card_activity"/>
 
 </FrameLayout>

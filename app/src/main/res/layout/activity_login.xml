@@ -22,7 +22,7 @@
 
     <EditText
         android:id="@+id/editTextTextEmailAddress"
-        android:hint="email"
+        android:hint="@string/email"
         android:textColor="@color/white"
         android:textColorHint="@color/white"
         android:layout_width="wrap_content"
@@ -30,13 +30,14 @@
         android:layout_marginBottom="4sp"
         android:ems="10"
         android:inputType="textEmailAddress"
+        android:backgroundTint="@color/white"
         app:layout_constraintBottom_toTopOf="@+id/editTextTextPassword"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 
     <EditText
         android:id="@+id/editTextTextPassword"
-        android:hint="password"
+        android:hint="@string/password"
         android:textColor="@color/white"
         android:textColorHint="@color/white"
         android:layout_width="wrap_content"
@@ -44,6 +45,7 @@
         android:layout_marginBottom="28dp"
         android:ems="10"
         android:inputType="textPassword"
+        android:backgroundTint="@color/white"
         app:layout_constraintBottom_toTopOf="@+id/loginButton"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
@@ -52,10 +54,25 @@
         android:id="@+id/loginButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
         android:layout_marginBottom="208dp"
-        android:text="Login"
+        android:text="@string/login"
         style="@style/Widget.AppCompat.Button.Borderless"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
+
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="@string/sign_in"
+        android:textColor="@color/white"
+        android:clickable="true"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/loginButton" />
+
+
 </androidx.constraintlayout.widget.ConstraintLayout>
