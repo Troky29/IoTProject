@@ -28,7 +28,7 @@ class ActivityCardAdapter(private val activityList: List<ActivityCardItem>) : Re
         holder.accessTextView.text = currentItem.access
         holder.dateTextView.text = currentItem.date
 
-        holder.activityCard.setOnClickListener() {
+        holder.imageView.setOnClickListener() {
             showActivityImage(holder.imageView.context, holder.imageView.drawable)
         }
     }

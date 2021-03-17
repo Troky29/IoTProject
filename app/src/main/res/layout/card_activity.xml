@@ -13,8 +13,8 @@
 
         <ImageView
             android:id="@+id/cardImageView"
-            android:layout_width="150dp"
-            android:layout_height="150dp"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
             android:contentDescription="Image of activity"
             android:src="@drawable/hqdefault"/>
 
@@ -41,6 +41,8 @@
             android:layout_alignStart="@id/access_textView"
             android:textSize="16sp"
             android:text="Data:01/01/2000"/>
+
+
     </RelativeLayout>
 
 </androidx.cardview.widget.CardView>
