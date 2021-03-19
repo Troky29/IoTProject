@@ -35,7 +35,7 @@ class MainActivityViewModel : ViewModel() {
         return gates
     }
 
-    fun getAvtivities(): LiveData<List<Activity>> {
+    fun getActivities(): LiveData<List<Activity>> {
         return activities
     }
 

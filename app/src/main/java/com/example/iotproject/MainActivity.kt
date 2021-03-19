@@ -2,11 +2,9 @@ package com.example.iotproject
 
 import android.Manifest
 import android.content.pm.PackageManager
-import android.location.Location
 import android.os.Bundle
 import android.os.Looper
 import android.widget.ImageButton
-import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
@@ -43,7 +41,7 @@ class MainActivity : AppCompatActivity() {
             //TODO: Update UI with the list of gates
         })
 
-        model.getAvtivities().observe(this, Observer<List<MainActivityViewModel.Activity>> { activities ->
+        model.getActivities().observe(this, Observer<List<MainActivityViewModel.Activity>> { activities ->
             //TODO: Update UI with list of activities
         })
 
@@ -150,5 +148,4 @@ class MainActivity : AppCompatActivity() {
         }
     }
      */
-
 }
