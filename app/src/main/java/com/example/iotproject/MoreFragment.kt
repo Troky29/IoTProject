@@ -6,8 +6,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
-import android.widget.TextView
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProvider
 
 class MoreFragment : Fragment() {
 
@@ -17,12 +17,14 @@ class MoreFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        view.findViewById<Button>(R.id.loguotButton).setOnClickListener() { logout(view) }
+        view.findViewById<Button>(R.id.loguotButton).setOnClickListener() { logout() }
     }
 
-    private fun logout(view: View) {
+    private fun logout() {
         val intent = Intent(context, Login::class.java)
-        //TODO:put a real navigation, login is already initialized, so you should be able to go back
+        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+        val loginViewModel = ViewModelProvider(this).get(LoginViewModel::class.java)
+        loginViewModel.logout()
         startActivity(intent)
     }
 

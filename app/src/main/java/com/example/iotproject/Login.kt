@@ -19,17 +19,12 @@ class Login : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
 
-        val tokenObserver = Observer<String> { token ->
-            //TODO: launch login if it is changed, maybe check if correct
-            if (token.isNotEmpty()) login(token)
-        }
-
+        val tokenObserver = Observer<String> { token -> if (token.isNotEmpty()) login(token) }
         val messageObserver = Observer<String> { message -> messenger(message) }
 
         loginViewModel = ViewModelProvider(this).get(LoginViewModel::class.java)
         loginViewModel.token.observe(this, tokenObserver)
         loginViewModel.message.observe(this, messageObserver)
-
 
         if (loginViewModel.alreadyLoggedIn()) {
             loginViewModel.getSessionToken()
@@ -45,6 +40,7 @@ class Login : AppCompatActivity() {
     }
 
     private fun login(sessionToken: String) {
+        //messenger(sessionToken)
         val email = findViewById<EditText>(R.id.editTextTextEmailAddress).text.toString()
         val intent = Intent(this, MainActivity::class.java).apply {
             putExtra(EMAIL, email)

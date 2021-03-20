@@ -28,15 +28,15 @@ class LoginViewModel(application: Application) : AndroidViewModel(application) {
     val message: MutableLiveData<String> by lazy { MutableLiveData<String>() }
     val token: MutableLiveData<String> by lazy { MutableLiveData<String>() }
 
-    fun alreadyLoggedIn(): Boolean { return sharedPreferences.contains("jwtRefresh") }
+    fun alreadyLoggedIn() = sharedPreferences.contains("jwtRefresh") &&
+                sharedPreferences.getString("jwtRefresh", "")!!.isNotEmpty()
 
     fun getSessionToken()  {
-        val jwtRefresh = sharedPreferences.getString("jwtRefresh", "") ?: ""
-
+        val jwtRefresh = sharedPreferences.getString("jwtRefresh", "")
 
         val requestBody = MultipartBody.Builder()
                 .setType(MultipartBody.FORM)
-                .addFormDataPart("jwt_refresh", jwtRefresh)
+                .addFormDataPart("jwt_refresh", jwtRefresh!!)
                 .build()
 
         val request = Request.Builder()
@@ -55,14 +55,12 @@ class LoginViewModel(application: Application) : AndroidViewModel(application) {
                         val jwtExpiry = JSONObject(response.body!!.string()).get("jwt_token_expiry").toString()
                         token.postValue(jwtExpiry)
                     } catch (e: Exception) {
-                        //TODO: fill with error handling
                         message.postValue(app.getString(R.string.server_error))
                     }
                     403 -> message.postValue(app.getString(R.string.invalid_data))
                 }
             }
         })
-
     }
 
     fun login(email: String, password: String) {
@@ -84,7 +82,6 @@ class LoginViewModel(application: Application) : AndroidViewModel(application) {
                         val jwtRefresh = json.get("jwt_token").toString()
                         val jwtExpiry = json.get("jwt_token_expiry").toString()
                         encrypted.putString("jwtRefresh", jwtRefresh).apply()
-                        //login(jwtExpiry)
                         token.postValue(jwtExpiry)
                     } catch (e: Exception) {
                         //TODO: manage exception
@@ -96,6 +93,8 @@ class LoginViewModel(application: Application) : AndroidViewModel(application) {
             }
         })
     }
+
+    fun logout() { encrypted.putString("jwtRefresh", null).apply() }
 
 /*
     private fun messenger(message: String){
