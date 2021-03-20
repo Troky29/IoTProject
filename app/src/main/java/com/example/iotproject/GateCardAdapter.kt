@@ -16,7 +16,7 @@ class GateCardAdapter(private val gateList: List<GateCardItem>) : RecyclerView.A
         return CardViewHolder(itemView)
     }
 
-    override fun onBindViewHolder(holder: GateCardAdapter.CardViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: CardViewHolder, position: Int) {
         val currentItem = gateList[position]
 
         holder.gateImage.setImageResource(currentItem.imageResource)

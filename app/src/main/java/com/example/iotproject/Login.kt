@@ -9,11 +9,8 @@ import android.widget.Toast
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 
-const val EMAIL = "com.example.iotproject.EMAIL"
-const val TOKEN = "com.example.iotproject.TOKEN"
-
 class Login : AppCompatActivity() {
-    lateinit var loginViewModel: LoginViewModel
+    //lateinit var loginViewModel: LoginViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -22,7 +19,7 @@ class Login : AppCompatActivity() {
         val tokenObserver = Observer<String> { token -> if (token.isNotEmpty()) login(token) }
         val messageObserver = Observer<String> { message -> messenger(message) }
 
-        loginViewModel = ViewModelProvider(this).get(LoginViewModel::class.java)
+        val loginViewModel = ViewModelProvider(this).get(LoginViewModel::class.java)
         loginViewModel.token.observe(this, tokenObserver)
         loginViewModel.message.observe(this, messageObserver)
 
@@ -40,7 +37,6 @@ class Login : AppCompatActivity() {
     }
 
     private fun login(sessionToken: String) {
-        //messenger(sessionToken)
         val email = findViewById<EditText>(R.id.editTextTextEmailAddress).text.toString()
         val intent = Intent(this, MainActivity::class.java).apply {
             putExtra(EMAIL, email)
@@ -48,11 +44,11 @@ class Login : AppCompatActivity() {
         }
         startActivity(intent)
     }
-
+/*
     fun logout(){
         //TODO: delete refresh token from secure shared preferences
     }
-
+*/
     private fun signin() {
         //TODO: add possibility for a user to sign in to the service
     }

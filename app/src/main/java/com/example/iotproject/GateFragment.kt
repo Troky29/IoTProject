@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.SnapHelper
 
 class GateFragment: Fragment() {
+    private val gateList by lazy { ArrayList<GateCardItem>() }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.fragment_gate, container, false)
@@ -19,25 +20,8 @@ class GateFragment: Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        /*
-        view.findViewById<ImageView>(R.id.gate_image).setOnClickListener(){
-            val showDescription = it.contentDescription.toString()
-            Toast.makeText(context, showDescription, Toast.LENGTH_SHORT).show()
-        }
-
-        view.findViewById<Button>(R.id.button).setOnClickListener() {
-            Toast.makeText(context, "Button pressed", Toast.LENGTH_SHORT).show()
-            //TODO: Move activity to login, for changing user
-        }
-
-         */
-
-        val item = GateCardItem(R.drawable.hqdefault, "Name", "Location", "State", "Id")
-        val exampleList = ArrayList<GateCardItem>()
-        for (i in 1..3) exampleList += item
-
         val recyclerView: RecyclerView = view.findViewById(R.id.gateRecycleView)
-        recyclerView.adapter = GateCardAdapter(exampleList)
+        recyclerView.adapter = GateCardAdapter(gateList)
         recyclerView.layoutManager = LinearLayoutManager(activity, LinearLayoutManager.HORIZONTAL, false)
         recyclerView.setHasFixedSize(true)
 
@@ -45,6 +29,13 @@ class GateFragment: Fragment() {
 
         snapHelper.attachToRecyclerView(recyclerView)
     }
+
+    fun addGateCard(name: String, location: String, state: String, id: String) {
+        val item = GateCardItem(R.drawable.hqdefault, name, location, state, id)
+        gateList.add(item)
+    }
+
+    fun flushGateCards() { gateList.clear() }
 
     private class SnapHelperOneByOne : LinearSnapHelper() {
         override fun findTargetSnapPosition(layoutManager: RecyclerView.LayoutManager?, velocityX: Int, velocityY: Int): Int {

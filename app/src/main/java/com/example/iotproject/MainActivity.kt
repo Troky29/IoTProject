@@ -11,6 +11,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
 import com.google.android.gms.location.*
 import com.google.android.material.bottomnavigation.BottomNavigationView
 
@@ -23,38 +24,18 @@ class MainActivity : AppCompatActivity() {
     private val REQUEST_CODE = 1
     //var currentLocation: String? = null
 
-    init {
-
-    }
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         setSupportActionBar(findViewById(R.id.toolbar))
 
+        val messageObserver = Observer<String> { message -> messenger(message) }
+
         //val email = intent.getStringExtra(EMAIL)
         //findViewById<TextView>(R.id.toolbarTextView).text = email
 
         //Initialize the Main Activity ViewModel, used for managing information between fragments
-        val model: MainActivityViewModel by viewModels()
-        model.getGates().observe(this, Observer<List<MainActivityViewModel.Gate>> { gates ->
-            //TODO: Update UI with the list of gates
-        })
-
-        model.getActivities().observe(this, Observer<List<MainActivityViewModel.Activity>> { activities ->
-            //TODO: Update UI with list of activities
-        })
-
-        createLocationRequest()
-        locationCallback = object: LocationCallback() {
-            override fun onLocationResult(locationResult: LocationResult?) {
-                locationResult ?: return
-                for (location in locationResult.locations) {
-                    //TODO: put call to the ViewModel instead of test function
-                    model.updateLocation(location)
-                }
-            }
-        }
+        //val viewModel: MainActivityViewModel by viewModels()
 
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
 
@@ -87,6 +68,31 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
+        val viewModel = ViewModelProvider(this).get(MainActivityViewModel::class.java)
+        viewModel.message.observe(this, messageObserver)
+        viewModel.sessionToken = intent.getStringExtra(TOKEN).toString()
+
+        viewModel.getGates().observe(this, Observer<List<MainActivityViewModel.Gate>> { gates ->
+            gateFragment.flushGateCards()
+            for (gate in gates)
+                gateFragment.addGateCard(gate.name, gate.location, gate.state, gate.id)
+        })
+
+        viewModel.getActivities().observe(this, Observer<List<MainActivityViewModel.Activity>> { activities ->
+            //TODO: Update UI with list of activities
+        })
+
+        createLocationRequest()
+        locationCallback = object: LocationCallback() {
+            override fun onLocationResult(locationResult: LocationResult?) {
+                locationResult ?: return
+                for (location in locationResult.locations) {
+                    //TODO: put call to the ViewModel instead of test function
+                    viewModel.updateLocation(location)
+                }
+            }
+        }
+        
         replaceFragment(gateFragment)
         //updateGPS()
     }
@@ -148,4 +154,6 @@ class MainActivity : AppCompatActivity() {
         }
     }
      */
+
+    private fun messenger(message: String) = Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
 }

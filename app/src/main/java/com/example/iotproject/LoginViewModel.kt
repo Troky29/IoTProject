@@ -24,7 +24,6 @@ class LoginViewModel(application: Application) : AndroidViewModel(application) {
     }
     val encrypted: SharedPreferences.Editor = sharedPreferences.edit()
     private val client = OkHttpClient()
-    val app = getApplication<Application>()
     val message: MutableLiveData<String> by lazy { MutableLiveData<String>() }
     val token: MutableLiveData<String> by lazy { MutableLiveData<String>() }
 
@@ -40,13 +39,13 @@ class LoginViewModel(application: Application) : AndroidViewModel(application) {
                 .build()
 
         val request = Request.Builder()
-                .url(app.getString(R.string.url) + "jwt")
+                .url(URL + "jwt")
                 .post(requestBody)
                 .build()
 
         client.newCall(request).enqueue(object : Callback {
             override fun onFailure(call: Call, e: IOException) {
-                message.postValue(app.getString(R.string.server_error))
+                message.postValue(server_error)
             }
 
             override fun onResponse(call: Call, response: Response) {
@@ -55,9 +54,9 @@ class LoginViewModel(application: Application) : AndroidViewModel(application) {
                         val jwtExpiry = JSONObject(response.body!!.string()).get("jwt_token_expiry").toString()
                         token.postValue(jwtExpiry)
                     } catch (e: Exception) {
-                        message.postValue(app.getString(R.string.server_error))
+                        message.postValue(server_error)
                     }
-                    403 -> message.postValue(app.getString(R.string.invalid_data))
+                    403 -> message.postValue(invalid_data)
                 }
             }
         })
@@ -66,13 +65,13 @@ class LoginViewModel(application: Application) : AndroidViewModel(application) {
     fun login(email: String, password: String) {
         val credential = Credentials.basic(email, password)
         val request = Request.Builder()
-                .url(app.getString(R.string.url) + "login")
+                .url(URL + "login")
                 .addHeader("Authorization", credential)
                 .build()
 
         client.newCall(request).enqueue(object : Callback {
             override fun onFailure(call: Call, e: IOException) {
-                message.postValue(app.getString(R.string.server_error))
+                message.postValue(server_error)
             }
 
             override fun onResponse(call: Call, response: Response) {
@@ -84,26 +83,16 @@ class LoginViewModel(application: Application) : AndroidViewModel(application) {
                         encrypted.putString("jwtRefresh", jwtRefresh).apply()
                         token.postValue(jwtExpiry)
                     } catch (e: Exception) {
-                        //TODO: manage exception
-                        message.postValue(app.getString(R.string.server_error))
+                        message.postValue(server_error)
                     }
-                    400 -> message.postValue(app.getString(R.string.invalid_data))
-                    401 -> message.postValue(app.getString(R.string.invalid_user))
+                    400 -> message.postValue(invalid_data)
+                    401 -> message.postValue(invalid_user)
                 }
             }
         })
     }
 
     fun logout() { encrypted.putString("jwtRefresh", null).apply() }
-
-/*
-    private fun messenger(message: String){
-        Handler(Looper.getMainLooper()).post {
-            Toast.makeText(getApplication(), message, Toast.LENGTH_SHORT).show()
-        }
-    }
-
- */
 
     override fun onCleared() {
         super.onCleared()
