@@ -1,5 +1,6 @@
 package com.example.iotproject
 
+import android.media.session.MediaSession
 import okhttp3.*
 import org.json.JSONObject
 import java.io.IOException
@@ -43,8 +44,8 @@ class AccessTokenAuthenticator (private val accessRepository: AccessTokenReposit
     }
 
     private fun isRequestWithAccessToken(response: Response): Boolean {
-        val header = response.request.header("Authentication")
-        return header != null && header.startsWith("Bearer")
+        val header = response.request.header("x-access-token")
+        return header != null
     }
 
     private fun newRequestWithAccessToken(request: Request, accessToken : String): Request {
@@ -54,7 +55,10 @@ class AccessTokenAuthenticator (private val accessRepository: AccessTokenReposit
     }
 }
 
-class AccessTokenRepository (var token: String, private val refreshToken: String) {
+object AccessTokenRepository {
+    var token: String = ""
+    var refreshToken: String = ""
+    var logout = false
     private val client = OkHttpClient()
 
     fun refreshAccessToken(): String {

@@ -27,7 +27,7 @@ class LoginViewModel : ViewModel() {
 
         val requestBody = MultipartBody.Builder()
                 .setType(MultipartBody.FORM)
-                .addFormDataPart("jwt_refresh", jwtRefresh!!)
+                .addFormDataPart("jwt_refresh", jwtRefresh)
                 .build()
 
         val request = Request.Builder()
@@ -49,7 +49,7 @@ class LoginViewModel : ViewModel() {
                         message.postValue(server_error)
                     }
                     400 -> message.postValue(invalid_data)
-                    401 -> { /*TODO: token is incorrect, that means thet you have to login*/ }
+                    401 -> { /*TODO: token is incorrect, that means that you have to login*/ }
                 }
             }
         })
@@ -73,7 +73,6 @@ class LoginViewModel : ViewModel() {
                         val json = JSONObject(response.body!!.string())
                         val jwtRefresh = json.get("jwt_token").toString()
                         val jwtExpiry = json.get("jwt_token_expiry").toString()
-                        //encrypted.putString("jwtRefresh", jwtRefresh).apply()
                         refreshToken.postValue(jwtRefresh)
                         token.postValue(jwtExpiry)
                     } catch (e: Exception) {
@@ -87,8 +86,9 @@ class LoginViewModel : ViewModel() {
     }
 
     fun logout() {
-        //TODO: to be fixed, we don't have no more a reference to the sharedPreferecne
-        //encrypted.putString("jwtRefresh", null).apply()
+        AccessTokenRepository.logout = true
+        AccessTokenRepository.token = ""
+        AccessTokenRepository.refreshToken = ""
     }
 
     override fun onCleared() {

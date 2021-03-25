@@ -13,7 +13,6 @@ import androidx.security.crypto.EncryptedSharedPreferences
 import androidx.security.crypto.MasterKeys
 
 class Login : AppCompatActivity() {
-    //lateinit var loginViewModel: LoginViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -30,7 +29,9 @@ class Login : AppCompatActivity() {
             )
         }
         val encrypted: SharedPreferences.Editor = sharedPreferences.edit()
-        val refreshToken = sharedPreferences.getString("jwtRefresh", "")!!
+        val refreshToken = if (AccessTokenRepository.logout) "" else
+            sharedPreferences.getString("jwtRefresh", "")!!
+
 
         val tokenObserver = Observer<String> { token -> if (token.isNotEmpty()) login(token, refreshToken) }
         val refreshTokenObserver = Observer<String> { token -> encrypted.putString("jwtRefresh", token).apply() }
@@ -53,11 +54,12 @@ class Login : AppCompatActivity() {
     }
 
     private fun login(sessionToken: String, refreshToken: String) {
+        AccessTokenRepository.token = sessionToken
+        AccessTokenRepository.refreshToken = refreshToken
         val email = findViewById<EditText>(R.id.editTextTextEmailAddress).text.toString()
         val intent = Intent(this, MainActivity::class.java).apply {
             putExtra(EMAIL, email)
-            putExtra(TOKEN, sessionToken)
-            putExtra(REFRESH, refreshToken)
+            //TODO: see if its actually usefull to send information from the Login View
         }
         startActivity(intent)
     }

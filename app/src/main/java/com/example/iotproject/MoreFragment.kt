@@ -25,6 +25,7 @@ class MoreFragment : Fragment() {
         intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
         val loginViewModel = ViewModelProvider(this).get(LoginViewModel::class.java)
         loginViewModel.logout()
+        //TODO: attention, we moved the shared preference management inside the Logic Activity, modify logout accordingly
         startActivity(intent)
     }
 

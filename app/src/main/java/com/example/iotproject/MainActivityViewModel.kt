@@ -3,13 +3,15 @@ package com.example.iotproject
 import android.location.Location
 import android.util.Log
 import androidx.lifecycle.*
+import kotlinx.coroutines.channels.consumesAll
 import okhttp3.*
 import org.json.JSONArray
+import org.json.JSONObject
 import java.io.IOException
 import java.lang.Exception
 
 
-class MainActivityViewModel(val accessRepository: AccessTokenRepository) : ViewModel() {
+class MainActivityViewModel(private val accessRepository: AccessTokenRepository) : ViewModel() {
 
     val message: MutableLiveData<String> by lazy { MutableLiveData<String>() }
     private var client: OkHttpClient = OkHttpClient().newBuilder()
@@ -79,12 +81,35 @@ class MainActivityViewModel(val accessRepository: AccessTokenRepository) : ViewM
     }
 
     fun updateLocation(location: Location?) {
-        //TODO: Upload user location every interval sec
-        //message.postValue("Updated location")
-        //message.postValue(location.toString())
-        Log.i("MainActivityViewModel", "location received")
-    }
+        //TODO: update with parameters that you want ot send
+        Log.i("Location", "location received")
+        val requestBody = MultipartBody.Builder()
+                .setType(MultipartBody.FORM)
+                .addFormDataPart("altitude", location!!.altitude.toString())
+                .addFormDataPart("latitude", location.latitude.toString())
+                .addFormDataPart("longitude", location.longitude.toString())
+                .build()
 
+        val request = Request.Builder()
+                .url(URL + "location")
+                .addHeader("x-access-token", accessRepository.token)
+                .post(requestBody)
+                .build()
+
+        client.newCall(request).enqueue(object : Callback {
+            override fun onFailure(call: Call, e: IOException) {
+                message.postValue(server_error)
+            }
+
+            override fun onResponse(call: Call, response: Response) {
+                when (response.code) {
+                    200 -> message.postValue("Location sent")
+                    400 -> message.postValue(invalid_data)
+                    500 -> message.postValue(server_error)
+                }
+            }
+        })
+    }
 
     override fun onCleared() {
         super.onCleared()
@@ -96,7 +121,7 @@ class MainActivityViewModel(val accessRepository: AccessTokenRepository) : ViewM
     data class Activity(val id: String)
 }
 
-class MainActivityViewModelFactory(val accessRepository: AccessTokenRepository) : ViewModelProvider.Factory {
+class MainActivityViewModelFactory(private val accessRepository: AccessTokenRepository) : ViewModelProvider.Factory {
     override fun <T : ViewModel?> create(modelClass: Class<T>): T {
         return MainActivityViewModel(accessRepository) as T
     }
