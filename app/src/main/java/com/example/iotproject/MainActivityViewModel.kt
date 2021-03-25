@@ -1,22 +1,21 @@
 package com.example.iotproject
 
-import android.inputmethodservice.AbstractInputMethodService
 import android.location.Location
 import android.util.Log
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
+import androidx.lifecycle.*
 import okhttp3.*
 import org.json.JSONArray
-import org.json.JSONObject
 import java.io.IOException
 import java.lang.Exception
 
 
-class MainActivityViewModel : ViewModel() {
-    private val client = OkHttpClient()
-    lateinit var sessionToken: String
+class MainActivityViewModel(val accessRepository: AccessTokenRepository) : ViewModel() {
+
     val message: MutableLiveData<String> by lazy { MutableLiveData<String>() }
+    private var client: OkHttpClient = OkHttpClient().newBuilder()
+            .authenticator(AccessTokenAuthenticator(accessRepository))
+            .addInterceptor(AccessTokenInterceptor(accessRepository))
+            .build()
 
     private val gates: MutableLiveData<List<Gate>> by lazy {
         MutableLiveData<List<Gate>>().also {
@@ -30,10 +29,10 @@ class MainActivityViewModel : ViewModel() {
         }
     }
 
-    private fun loadGates() {
+    fun loadGates() {
         val request = Request.Builder()
                 .url(URL + "gate")
-                .addHeader("x-access-token", sessionToken)
+                .addHeader("x-access-token", accessRepository.token)
                 .build()
 
         client.newCall(request).enqueue(object : Callback {
@@ -59,6 +58,8 @@ class MainActivityViewModel : ViewModel() {
                     } catch (e: Exception) {
                         message.postValue(server_error)
                     }
+                    400 -> message.postValue(server_error)
+                    404 -> message.postValue(no_gates)
                 }
             }
         })
@@ -79,8 +80,11 @@ class MainActivityViewModel : ViewModel() {
 
     fun updateLocation(location: Location?) {
         //TODO: Upload user location every interval sec
-
+        //message.postValue("Updated location")
+        //message.postValue(location.toString())
+        Log.i("MainActivityViewModel", "location received")
     }
+
 
     override fun onCleared() {
         super.onCleared()
@@ -90,4 +94,10 @@ class MainActivityViewModel : ViewModel() {
     data class Gate (val name: String, val location: String, val state: String, val id: String)
 
     data class Activity(val id: String)
+}
+
+class MainActivityViewModelFactory(val accessRepository: AccessTokenRepository) : ViewModelProvider.Factory {
+    override fun <T : ViewModel?> create(modelClass: Class<T>): T {
+        return MainActivityViewModel(accessRepository) as T
+    }
 }

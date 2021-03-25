@@ -5,33 +5,25 @@ import android.content.SharedPreferences
 import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
 import androidx.security.crypto.EncryptedSharedPreferences
 import androidx.security.crypto.MasterKeys
 import okhttp3.*
 import org.json.JSONObject
 import java.io.IOException
+import java.time.LocalDateTime
+import java.util.*
 
-class LoginViewModel(application: Application) : AndroidViewModel(application) {
-    private val masterKeyAlias = MasterKeys.getOrCreate(MasterKeys.AES256_GCM_SPEC)
-    private val sharedPreferences: SharedPreferences by lazy {
-        EncryptedSharedPreferences.create(
-                "encrypted_preferences",
-                masterKeyAlias,
-                getApplication(),
-                EncryptedSharedPreferences.PrefKeyEncryptionScheme.AES256_SIV,
-                EncryptedSharedPreferences.PrefValueEncryptionScheme.AES256_GCM
-        )
-    }
-    val encrypted: SharedPreferences.Editor = sharedPreferences.edit()
+class LoginViewModel : ViewModel() {
     private val client = OkHttpClient()
     val message: MutableLiveData<String> by lazy { MutableLiveData<String>() }
     val token: MutableLiveData<String> by lazy { MutableLiveData<String>() }
+    val refreshToken: MutableLiveData<String> by lazy { MutableLiveData<String>() }
 
-    fun alreadyLoggedIn() = sharedPreferences.contains("jwtRefresh") &&
-                sharedPreferences.getString("jwtRefresh", "")!!.isNotEmpty()
+    //fun alreadyLoggedIn() = sharedPreferences.getString("jwtRefresh", "")!!.isNotEmpty()
 
-    fun getSessionToken()  {
-        val jwtRefresh = sharedPreferences.getString("jwtRefresh", "")
+    fun getSessionToken(jwtRefresh: String)  {
+        //val jwtRefresh = sharedPreferences.getString("jwtRefresh", "")
 
         val requestBody = MultipartBody.Builder()
                 .setType(MultipartBody.FORM)
@@ -56,7 +48,8 @@ class LoginViewModel(application: Application) : AndroidViewModel(application) {
                     } catch (e: Exception) {
                         message.postValue(server_error)
                     }
-                    403 -> message.postValue(invalid_data)
+                    400 -> message.postValue(invalid_data)
+                    401 -> { /*TODO: token is incorrect, that means thet you have to login*/ }
                 }
             }
         })
@@ -80,7 +73,8 @@ class LoginViewModel(application: Application) : AndroidViewModel(application) {
                         val json = JSONObject(response.body!!.string())
                         val jwtRefresh = json.get("jwt_token").toString()
                         val jwtExpiry = json.get("jwt_token_expiry").toString()
-                        encrypted.putString("jwtRefresh", jwtRefresh).apply()
+                        //encrypted.putString("jwtRefresh", jwtRefresh).apply()
+                        refreshToken.postValue(jwtRefresh)
                         token.postValue(jwtExpiry)
                     } catch (e: Exception) {
                         message.postValue(server_error)
@@ -92,7 +86,10 @@ class LoginViewModel(application: Application) : AndroidViewModel(application) {
         })
     }
 
-    fun logout() { encrypted.putString("jwtRefresh", null).apply() }
+    fun logout() {
+        //TODO: to be fixed, we don't have no more a reference to the sharedPreferecne
+        //encrypted.putString("jwtRefresh", null).apply()
+    }
 
     override fun onCleared() {
         super.onCleared()
