@@ -1,11 +1,10 @@
 package com.example.iotproject
 
-import android.util.Log
 import okhttp3.*
 import org.json.JSONObject
 import java.io.IOException
 
-class AccessTokenInterceptor (val accessRepository: AccessTokenRepository) : Interceptor {
+class AccessTokenInterceptor (private val accessRepository: AccessTokenRepository) : Interceptor {
     override fun intercept(chain: Interceptor.Chain): Response {
         val accessToken = accessRepository.token
         val request = newRequestWithAccessToken(chain.request(), accessToken)
@@ -31,7 +30,7 @@ class AccessTokenInterceptor (val accessRepository: AccessTokenRepository) : Int
     }
 }
 
-class AccessTokenAuthenticator (val accessRepository: AccessTokenRepository) : Authenticator {
+class AccessTokenAuthenticator (private val accessRepository: AccessTokenRepository) : Authenticator {
     override fun authenticate(route: Route?, response: Response): Request? {
         val accessToken = accessRepository.token
         if (!isRequestWithAccessToken(response))
@@ -71,6 +70,7 @@ class AccessTokenRepository (var token: String, private val refreshToken: String
                 .build()
 
         client.newCall(request).execute().use { response ->
+            //TODO: instead of throwing an exception you should log off the user
             if(!response.isSuccessful) throw IOException("Unexpected code $response")
             token = JSONObject(response.body!!.string()).get("jwt_token_expiry").toString()
             return token
