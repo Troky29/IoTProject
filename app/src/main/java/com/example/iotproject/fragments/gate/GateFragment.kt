@@ -1,4 +1,4 @@
-package com.example.iotproject
+package com.example.iotproject.fragments.gate
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -9,6 +9,9 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.LinearSnapHelper
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.SnapHelper
+import com.example.iotproject.GateCardAdapter
+import com.example.iotproject.GateCardItem
+import com.example.iotproject.R
 
 class GateFragment: Fragment() {
     private val gateList by lazy { ArrayList<GateCardItem>() }
@@ -28,6 +31,16 @@ class GateFragment: Fragment() {
         val snapHelper: SnapHelper = SnapHelperOneByOne()
 
         snapHelper.attachToRecyclerView(recyclerView)
+/*
+        val viewModel = ViewModelProvider(this).get(MainActivityViewModel::class.java)
+        viewModel.getGates().observe(viewLifecycleOwner, { gates ->
+            flushGateCards()
+            for (gate in gates)
+                addGateCard(gate.name, gate.location, gate.state, gate.id)
+            //replaceFragment(gateFragment)
+        })
+
+ */
     }
 
     fun addGateCard(name: String, location: String, state: String, id: String) {

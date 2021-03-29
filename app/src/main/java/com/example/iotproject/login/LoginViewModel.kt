@@ -1,18 +1,16 @@
-package com.example.iotproject
+package com.example.iotproject.login
 
-import android.app.Application
-import android.content.SharedPreferences
 import android.util.Log
-import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import androidx.security.crypto.EncryptedSharedPreferences
-import androidx.security.crypto.MasterKeys
+import com.example.iotproject.AccessTokenRepository
+import com.example.iotproject.Constants.Companion.URL
+import com.example.iotproject.Constants.Companion.invalid_data
+import com.example.iotproject.Constants.Companion.invalid_user
+import com.example.iotproject.Constants.Companion.server_error
 import okhttp3.*
 import org.json.JSONObject
 import java.io.IOException
-import java.time.LocalDateTime
-import java.util.*
 
 class LoginViewModel : ViewModel() {
     private val client = OkHttpClient()
@@ -20,10 +18,7 @@ class LoginViewModel : ViewModel() {
     val token: MutableLiveData<String> by lazy { MutableLiveData<String>() }
     val refreshToken: MutableLiveData<String> by lazy { MutableLiveData<String>() }
 
-    //fun alreadyLoggedIn() = sharedPreferences.getString("jwtRefresh", "")!!.isNotEmpty()
-
     fun getSessionToken(jwtRefresh: String)  {
-        //val jwtRefresh = sharedPreferences.getString("jwtRefresh", "")
 
         val requestBody = MultipartBody.Builder()
                 .setType(MultipartBody.FORM)

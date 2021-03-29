@@ -1,4 +1,4 @@
-package com.example.iotproject
+package com.example.iotproject.fragments
 
 import android.content.Intent
 import android.os.Bundle
@@ -8,6 +8,9 @@ import android.view.ViewGroup
 import android.widget.Button
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import com.example.iotproject.R
+import com.example.iotproject.login.Login
+import com.example.iotproject.login.LoginViewModel
 
 class MoreFragment : Fragment() {
 

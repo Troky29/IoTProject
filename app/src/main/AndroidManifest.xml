@@ -5,6 +5,7 @@
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
     <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="com.android.c3dm.permission.RECEIVE"/>
 
     <application
         android:allowBackup="true"
@@ -15,7 +16,7 @@
         android:theme="@style/Theme.IoTProject"
         android:usesCleartextTraffic="true">
         <activity
-            android:name=".Login"
+            android:name=".login.Login"
             android:noHistory="true"
             android:screenOrientation="portrait"
             android:configChanges="orientation|keyboardHidden">
@@ -29,6 +30,20 @@
             android:name=".MainActivity"
             android:screenOrientation="portrait"
             android:configChanges="orientation|keyboardHidden"/>
+        <!-->TODO: remember to delete this if not used</!-->
+        <receiver android:name=".ActivityBroadcastReceiver" android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED"/>
+                <action android:name="android.intent.action.INPUT_METHOD_CHANGED"/>
+            </intent-filter>
+        </receiver>
+        <service android:name=".FirebaseService"
+            android:permission="com.google.andoird.c3dm.permission.SEND">
+            <intent-filter>
+                <action android:name="com.google.firebase.MESSAGING_EVENT"/>
+                <action android:name="com.google.andoird.c2dm.intent.RECEIVE"/>
+            </intent-filter>
+        </service>
     </application>
 
 </manifest>

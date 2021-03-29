@@ -1,4 +1,4 @@
-package com.example.iotproject
+package com.example.iotproject.login
 
 import android.content.Intent
 import android.content.SharedPreferences
@@ -11,6 +11,10 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.security.crypto.EncryptedSharedPreferences
 import androidx.security.crypto.MasterKeys
+import com.example.iotproject.AccessTokenRepository
+import com.example.iotproject.Constants.Companion.EMAIL
+import com.example.iotproject.MainActivity
+import com.example.iotproject.R
 
 class Login : AppCompatActivity() {
 

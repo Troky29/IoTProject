@@ -1,16 +1,15 @@
-package com.example.iotproject
+package com.example.iotproject.fragments.activity
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
-import android.widget.ImageView
-import android.widget.LinearLayout
-import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.iotproject.ActivityCardAdapter
+import com.example.iotproject.ActivityCardItem
+import com.example.iotproject.R
 import java.util.ArrayList
 
 class ActivityFragment: Fragment() {
@@ -30,6 +29,8 @@ class ActivityFragment: Fragment() {
         recyclerView.adapter = ActivityCardAdapter(exampleList)
         recyclerView.layoutManager = LinearLayoutManager(activity)
         recyclerView.setHasFixedSize(true)
+
+        //val viewModel = ViewModelProvider(this).get(MainActivityViewModel::class.java)
     }
 
 

@@ -3,20 +3,22 @@ package com.example.iotproject
 import android.location.Location
 import android.util.Log
 import androidx.lifecycle.*
-import kotlinx.coroutines.channels.consumesAll
+import com.example.iotproject.Constants.Companion.URL
+import com.example.iotproject.Constants.Companion.invalid_data
+import com.example.iotproject.Constants.Companion.no_gates
+import com.example.iotproject.Constants.Companion.server_error
 import okhttp3.*
 import org.json.JSONArray
-import org.json.JSONObject
 import java.io.IOException
 import java.lang.Exception
 
 
-class MainActivityViewModel(private val accessRepository: AccessTokenRepository) : ViewModel() {
+class MainActivityViewModel : ViewModel() {
 
     val message: MutableLiveData<String> by lazy { MutableLiveData<String>() }
     private var client: OkHttpClient = OkHttpClient().newBuilder()
-            .authenticator(AccessTokenAuthenticator(accessRepository))
-            .addInterceptor(AccessTokenInterceptor(accessRepository))
+            .authenticator(AccessTokenAuthenticator(AccessTokenRepository))
+            .addInterceptor(AccessTokenInterceptor(AccessTokenRepository))
             .build()
 
     private val gates: MutableLiveData<List<Gate>> by lazy {
@@ -34,7 +36,7 @@ class MainActivityViewModel(private val accessRepository: AccessTokenRepository)
     fun loadGates() {
         val request = Request.Builder()
                 .url(URL + "gate")
-                .addHeader("x-access-token", accessRepository.token)
+                .addHeader("x-access-token", AccessTokenRepository.token)
                 .build()
 
         client.newCall(request).enqueue(object : Callback {
@@ -82,7 +84,6 @@ class MainActivityViewModel(private val accessRepository: AccessTokenRepository)
 
     fun updateLocation(location: Location?) {
         //TODO: update with parameters that you want ot send
-        Log.i("Location", "location received")
         val requestBody = MultipartBody.Builder()
                 .setType(MultipartBody.FORM)
                 .addFormDataPart("altitude", location!!.altitude.toString())
@@ -92,7 +93,7 @@ class MainActivityViewModel(private val accessRepository: AccessTokenRepository)
 
         val request = Request.Builder()
                 .url(URL + "location")
-                .addHeader("x-access-token", accessRepository.token)
+                .addHeader("x-access-token", AccessTokenRepository.token)
                 .post(requestBody)
                 .build()
 
@@ -103,7 +104,9 @@ class MainActivityViewModel(private val accessRepository: AccessTokenRepository)
 
             override fun onResponse(call: Call, response: Response) {
                 when (response.code) {
-                    200 -> message.postValue("Location sent")
+                    200 -> {
+                    //TODO: since this will be in the background, we do not notify the user
+                    }
                     400 -> message.postValue(invalid_data)
                     500 -> message.postValue(server_error)
                 }
@@ -113,16 +116,17 @@ class MainActivityViewModel(private val accessRepository: AccessTokenRepository)
 
     override fun onCleared() {
         super.onCleared()
-        Log.i("MainActivityViewModel", "Login destroyed")
+        Log.i("MainActivityViewModel", "MainActivity destroyed")
     }
 
     data class Gate (val name: String, val location: String, val state: String, val id: String)
 
     data class Activity(val id: String)
 }
-
+/*
 class MainActivityViewModelFactory(private val accessRepository: AccessTokenRepository) : ViewModelProvider.Factory {
     override fun <T : ViewModel?> create(modelClass: Class<T>): T {
         return MainActivityViewModel(accessRepository) as T
     }
 }
+*/
