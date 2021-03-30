@@ -4,6 +4,7 @@ import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.iotproject.AccessTokenRepository
+import com.example.iotproject.Constants
 import com.example.iotproject.Constants.Companion.URL
 import com.example.iotproject.Constants.Companion.invalid_data
 import com.example.iotproject.Constants.Companion.invalid_user
@@ -13,6 +14,7 @@ import org.json.JSONObject
 import java.io.IOException
 
 class LoginViewModel : ViewModel() {
+    val TAG = "LoginViewModel"
     private val client = OkHttpClient()
     val message: MutableLiveData<String> by lazy { MutableLiveData<String>() }
     val token: MutableLiveData<String> by lazy { MutableLiveData<String>() }
@@ -88,6 +90,6 @@ class LoginViewModel : ViewModel() {
 
     override fun onCleared() {
         super.onCleared()
-        Log.i("LoginViewModel", "Login destroyed")
+        Log.i(TAG, Constants.destroyed)
     }
 }

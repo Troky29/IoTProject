@@ -1,5 +1,6 @@
 package com.example.iotproject.fragments.gate
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -41,6 +42,11 @@ class GateFragment: Fragment() {
         })
 
  */
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        TODO("Maibe we can insert here te update of the gates")
     }
 
     fun addGateCard(name: String, location: String, state: String, id: String) {

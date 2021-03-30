@@ -15,6 +15,7 @@ class Constants {
         const val no_gates = "No gates found"
         const val notification_title = "Check new activity"
         const val notification_content = "New activity detected from your smart gate, what do you want to do?"
+        const val destroyed = "Destroyed!"
     }
 }
 

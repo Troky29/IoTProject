@@ -37,13 +37,15 @@
                 <action android:name="android.intent.action.INPUT_METHOD_CHANGED"/>
             </intent-filter>
         </receiver>
-        <service android:name=".FirebaseService"
+        <service
+            android:name=".FirebaseService"
             android:permission="com.google.andoird.c3dm.permission.SEND">
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT"/>
                 <action android:name="com.google.andoird.c2dm.intent.RECEIVE"/>
             </intent-filter>
         </service>
+        <service android:name=".LocationService"/>
     </application>
 
 </manifest>

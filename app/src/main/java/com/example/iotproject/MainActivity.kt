@@ -100,16 +100,8 @@ class MainActivity : AppCompatActivity() {
             //TODO: Update UI with list of activities
         })
 
-
-        fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
-        createLocationRequest()
-        locationCallback = object: LocationCallback() {
-            override fun onLocationResult(locationResult: LocationResult?) {
-                locationResult ?: return
-                for (location in locationResult.locations)
-                    viewModel.updateLocation(location)
-            }
-        }
+        val intent = Intent(this, LocationService::class.java)
+        startService(intent)
 
         //createNotificationChannel()
         //Testing push notification routine
@@ -134,7 +126,7 @@ class MainActivity : AppCompatActivity() {
         }
 
          */
-
+        createNotificationChannel()
     }
 
     private fun sendNotification(notification: PushNotification) = CoroutineScope(Dispatchers.IO).launch {
@@ -206,9 +198,11 @@ class MainActivity : AppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
-        startLocationUpdates()
+        //TODO: removed for testing
+        //startLocationUpdates()
     }
 
+    //TODO: change this to make sure that you have the correct permission for sending the user location
     private fun startLocationUpdates() {
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
                 != PackageManager.PERMISSION_GRANTED &&
@@ -233,7 +227,7 @@ class MainActivity : AppCompatActivity() {
             fastestInterval = TimeUnit.SECONDS.toMillis(30)
             //maxWaitTime = TimeUnit.MINUTES.toMillis(2)
             priority = LocationRequest.PRIORITY_HIGH_ACCURACY
-        }!!
+        }
     }
 
     override fun onDestroy() {

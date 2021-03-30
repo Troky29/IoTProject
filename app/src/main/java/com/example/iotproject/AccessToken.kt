@@ -6,6 +6,8 @@ import okhttp3.*
 import org.json.JSONObject
 import java.io.IOException
 
+//TODO: there might be something here leaking connection, check if you find anything
+
 class AccessTokenInterceptor (private val accessRepository: AccessTokenRepository) : Interceptor {
     override fun intercept(chain: Interceptor.Chain): Response {
         val accessToken = accessRepository.token

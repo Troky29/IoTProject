@@ -14,6 +14,7 @@ import java.lang.Exception
 
 
 class MainActivityViewModel : ViewModel() {
+    val TAG = "MainActivityViewModel"
 
     val message: MutableLiveData<String> by lazy { MutableLiveData<String>() }
     private var client: OkHttpClient = OkHttpClient().newBuilder()
@@ -82,41 +83,9 @@ class MainActivityViewModel : ViewModel() {
         return activities
     }
 
-    fun updateLocation(location: Location?) {
-        //TODO: update with parameters that you want ot send
-        val requestBody = MultipartBody.Builder()
-                .setType(MultipartBody.FORM)
-                .addFormDataPart("altitude", location!!.altitude.toString())
-                .addFormDataPart("latitude", location.latitude.toString())
-                .addFormDataPart("longitude", location.longitude.toString())
-                .build()
-
-        val request = Request.Builder()
-                .url(URL + "location")
-                .addHeader("x-access-token", AccessTokenRepository.token)
-                .post(requestBody)
-                .build()
-
-        client.newCall(request).enqueue(object : Callback {
-            override fun onFailure(call: Call, e: IOException) {
-                message.postValue(server_error)
-            }
-
-            override fun onResponse(call: Call, response: Response) {
-                when (response.code) {
-                    200 -> {
-                    //TODO: since this will be in the background, we do not notify the user
-                    }
-                    400 -> message.postValue(invalid_data)
-                    500 -> message.postValue(server_error)
-                }
-            }
-        })
-    }
-
     override fun onCleared() {
         super.onCleared()
-        Log.i("MainActivityViewModel", "MainActivity destroyed")
+        Log.i(TAG, Constants.destroyed)
     }
 
     data class Gate (val name: String, val location: String, val state: String, val id: String)
