@@ -35,8 +35,8 @@ class Login : AppCompatActivity() {
             )
         }
         val encrypted: SharedPreferences.Editor = sharedPreferences.edit()
-        val refreshToken = if (AccessTokenRepository.logout) "" else
-            sharedPreferences.getString("jwtRefresh", "")!!
+        if (AccessTokenRepository.logout) logout(encrypted)
+        val refreshToken = sharedPreferences.getString("jwtRefresh", "")!!
 
 
         val tokenObserver = Observer<String> { token -> if (token.isNotEmpty()) login(token, refreshToken) }
@@ -70,6 +70,7 @@ class Login : AppCompatActivity() {
         val email = findViewById<EditText>(R.id.editTextTextEmailAddress).text.toString()
         val intent = Intent(this, MainActivity::class.java).apply {
             putExtra(EMAIL, email)
+            flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
             //TODO: see if its actually usefull to send information from the Login View
         }
         startActivity(intent)
@@ -80,16 +81,8 @@ class Login : AppCompatActivity() {
         Log.i("Login", "started Intent $intent")
         startActivity(intent)
     }
-/*
-    fun logout(){
-        //TODO: delete refresh token from secure shared preferences
-    }
 
-    private fun signin() {
-        //TODO: add possibility for a user to sign in to the service
-    }
+    private fun logout(encrypted: SharedPreferences.Editor) { encrypted.putString("jwtRefresh", "").apply() }
 
-
- */
     private fun messenger(message: String) = Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
 }

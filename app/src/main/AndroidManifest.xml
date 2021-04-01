@@ -15,7 +15,11 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.IoTProject"
         android:usesCleartextTraffic="true">
-        <activity android:name=".login.SignIn"></activity>
+
+        <activity
+            android:name=".login.SignIn"
+            android:configChanges="orientation|keyboardHidden"
+            android:screenOrientation="portrait"/>
 
         <activity
             android:name=".login.Login"
@@ -42,7 +46,7 @@
 
         <service
             android:name=".FirebaseService"
-            android:permission="com.google.andoird.c3dm.permission.SEND">
+            android:permission="com.google.android.c3dm.permission.SEND">
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
                 <action android:name="com.google.andoird.c2dm.intent.RECEIVE" />
