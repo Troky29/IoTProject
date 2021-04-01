@@ -4,8 +4,10 @@ import android.content.Intent
 import android.content.SharedPreferences
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.widget.Button
 import android.widget.EditText
+import android.widget.TextView
 import android.widget.Toast
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -55,11 +57,16 @@ class Login : AppCompatActivity() {
                 loginViewModel.login(email, password)
             }
         }
+
+        findViewById<TextView>(R.id.signInTextView).setOnClickListener() {
+            signIn()
+        }
     }
 
     private fun login(sessionToken: String, refreshToken: String) {
         AccessTokenRepository.token = sessionToken
         AccessTokenRepository.refreshToken = refreshToken
+        AccessTokenRepository.logout = false
         val email = findViewById<EditText>(R.id.editTextTextEmailAddress).text.toString()
         val intent = Intent(this, MainActivity::class.java).apply {
             putExtra(EMAIL, email)
@@ -67,14 +74,22 @@ class Login : AppCompatActivity() {
         }
         startActivity(intent)
     }
+
+    private fun signIn() {
+        val intent = Intent(this, SignIn::class.java)
+        Log.i("Login", "started Intent $intent")
+        startActivity(intent)
+    }
 /*
     fun logout(){
         //TODO: delete refresh token from secure shared preferences
     }
-*/
+
     private fun signin() {
         //TODO: add possibility for a user to sign in to the service
     }
 
+
+ */
     private fun messenger(message: String) = Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
 }

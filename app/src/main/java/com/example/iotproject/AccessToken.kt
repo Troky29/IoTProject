@@ -1,12 +1,9 @@
 package com.example.iotproject
 
-import android.media.session.MediaSession
 import com.example.iotproject.Constants.Companion.URL
 import okhttp3.*
 import org.json.JSONObject
 import java.io.IOException
-
-//TODO: there might be something here leaking connection, check if you find anything
 
 class AccessTokenInterceptor (private val accessRepository: AccessTokenRepository) : Interceptor {
     override fun intercept(chain: Interceptor.Chain): Response {
@@ -77,10 +74,8 @@ object AccessTokenRepository {
                 .build()
 
         client.newCall(request).execute().use { response ->
-            //TODO: instead of throwing an exception you should log off the user
             if(!response.isSuccessful) throw IOException("Unexpected code $response")
-            token = JSONObject(response.body!!.string()).get("jwt_token_expiry").toString()
-            return token
+            return JSONObject(response.body!!.string()).get("jwt_token_expiry").toString()
         }
     }
 }

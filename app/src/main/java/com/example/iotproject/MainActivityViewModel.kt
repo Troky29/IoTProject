@@ -1,33 +1,31 @@
 package com.example.iotproject
 
-import android.location.Location
 import android.util.Log
-import androidx.lifecycle.*
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
 import com.example.iotproject.Constants.Companion.URL
-import com.example.iotproject.Constants.Companion.invalid_data
 import com.example.iotproject.Constants.Companion.no_gates
 import com.example.iotproject.Constants.Companion.server_error
 import okhttp3.*
 import org.json.JSONArray
 import java.io.IOException
-import java.lang.Exception
 
 
 class MainActivityViewModel : ViewModel() {
     val TAG = "MainActivityViewModel"
 
-    val message: MutableLiveData<String> by lazy { MutableLiveData<String>() }
     private var client: OkHttpClient = OkHttpClient().newBuilder()
             .authenticator(AccessTokenAuthenticator(AccessTokenRepository))
             .addInterceptor(AccessTokenInterceptor(AccessTokenRepository))
             .build()
 
+    val message: MutableLiveData<String> by lazy { MutableLiveData<String>() }
     private val gates: MutableLiveData<List<Gate>> by lazy {
         MutableLiveData<List<Gate>>().also {
             loadGates()
         }
     }
-
     private val activities: MutableLiveData<List<Activity>> by lazy {
         MutableLiveData<List<Activity>>().also {
             loadActivities()

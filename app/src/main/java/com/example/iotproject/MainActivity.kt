@@ -42,10 +42,6 @@ import java.util.concurrent.TimeUnit
 const val TOPIC = "myTopic"
 
 class MainActivity : AppCompatActivity() {
-
-    private lateinit var fusedLocationClient: FusedLocationProviderClient
-    private lateinit var locationRequest: LocationRequest
-    private lateinit var locationCallback: LocationCallback
     private val REQUEST_CODE = 1
     private val CHANNEL_ID = "1"
 
@@ -77,8 +73,6 @@ class MainActivity : AppCompatActivity() {
                 }
                 R.id.activity_page -> {
                     replaceFragment(activityFragment)
-                    //TODO: just for testing, remember to delete
-                    //updateGPS()
                     true
                 }
                 R.id.more_page -> {
@@ -100,8 +94,11 @@ class MainActivity : AppCompatActivity() {
             //TODO: Update UI with list of activities
         })
 
+        //We check for the permission for obtaining the location and start the service
+        checkPermissions()
         val intent = Intent(this, LocationService::class.java)
-        startService(intent)
+        //TODO: Insert back location updates
+        //startService(intent)
 
         //createNotificationChannel()
         //Testing push notification routine
@@ -126,7 +123,7 @@ class MainActivity : AppCompatActivity() {
         }
 
          */
-        createNotificationChannel()
+        //createNotificationChannel()
     }
 
     private fun sendNotification(notification: PushNotification) = CoroutineScope(Dispatchers.IO).launch {
@@ -203,7 +200,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     //TODO: change this to make sure that you have the correct permission for sending the user location
-    private fun startLocationUpdates() {
+    private fun checkPermissions() {
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
                 != PackageManager.PERMISSION_GRANTED &&
                 ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION)
@@ -213,20 +210,6 @@ class MainActivity : AppCompatActivity() {
                             Manifest.permission.ACCESS_COARSE_LOCATION),
                     REQUEST_CODE)
             return
-        }
-
-
-        fusedLocationClient.requestLocationUpdates(locationRequest,
-                locationCallback,
-                Looper.getMainLooper())
-    }
-
-    private fun createLocationRequest() {
-        locationRequest = LocationRequest.create().apply {
-            interval = TimeUnit.SECONDS.toMillis(60)
-            fastestInterval = TimeUnit.SECONDS.toMillis(30)
-            //maxWaitTime = TimeUnit.MINUTES.toMillis(2)
-            priority = LocationRequest.PRIORITY_HIGH_ACCURACY
         }
     }
 

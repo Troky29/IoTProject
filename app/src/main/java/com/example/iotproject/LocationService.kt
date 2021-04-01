@@ -6,18 +6,16 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.location.Location
 import android.os.*
-import android.text.format.Time
 import android.util.Log
 import androidx.core.app.ActivityCompat
+import com.example.iotproject.Constants.Companion.JSON
 import com.google.android.gms.location.*
 import okhttp3.*
+import okhttp3.RequestBody.Companion.toRequestBody
 import java.io.IOException
 import java.util.concurrent.TimeUnit
-import java.util.logging.Level
-import java.util.logging.Logger
 
 class LocationService : Service() {
-    //val mBinder: IBinder = LocalBinder()
     val TAG = "LocationService"
 
     private val client: OkHttpClient = OkHttpClient().newBuilder()
@@ -31,10 +29,6 @@ class LocationService : Service() {
     private lateinit var fusedLocationClient: FusedLocationProviderClient
     private lateinit var locationRequest: LocationRequest
     private lateinit var locationCallback: LocationCallback
-    private val REQUEST_CODE = 1
-
-    private var inProgress = false
-    private var serviceAvailable = false
 
     override fun onCreate() {
         super.onCreate()
@@ -44,6 +38,7 @@ class LocationService : Service() {
             override fun onLocationResult(locationResult: LocationResult?) {
                 locationResult ?: return
                 for (location in locationResult.locations) {
+                    Log.i(TAG, location.toString())
                     updateLocation(location)
                 }
             }
@@ -63,7 +58,6 @@ class LocationService : Service() {
         locationRequest = LocationRequest.create().apply {
             interval = TimeUnit.SECONDS.toMillis(60)
             fastestInterval = TimeUnit.SECONDS.toMillis(30)
-            //maxWaitTime = TimeUnit.MINUTES.toMillis(2)
             priority = LocationRequest.PRIORITY_HIGH_ACCURACY
         }
     }
@@ -81,13 +75,12 @@ class LocationService : Service() {
     }
 
     fun updateLocation(location: Location?) {
-        //TODO: update with parameters that you want ot send
-        val requestBody = MultipartBody.Builder()
-                .setType(MultipartBody.FORM)
-                .addFormDataPart("altitude", location!!.altitude.toString())
-                .addFormDataPart("latitude", location.latitude.toString())
-                .addFormDataPart("longitude", location.longitude.toString())
-                .build()
+        //TODO: update with parameters that you want to send
+        val altitude = location!!.altitude.toString()
+        val latitude = location.latitude.toString()
+        val longitude = location.longitude.toString()
+        val body = """{"altitude":"$altitude", "latitude:"$latitude", "longitude":"$longitude"}"""
+        val requestBody = body.toRequestBody(JSON)
 
         val request = Request.Builder()
                 .url(Constants.URL + "location")
@@ -98,19 +91,15 @@ class LocationService : Service() {
         client.newCall(request).enqueue(object : Callback {
             override fun onFailure(call: Call, e: IOException) {
                 Log.e (TAG, Constants.server_error)
-                Log.e(TAG, client.toString())
-                Log.e(TAG, e.stackTraceToString())
             }
 
             override fun onResponse(call: Call, response: Response) {
                 if (response.isSuccessful)
                 when (response.code) {
-                    200 -> {
-                        //TODO: since this will be in the background, we do not notify the user
-                        Log.i(TAG, "Successfully sent location!")
-                    }
-                    400 -> { }
-                    500 -> { }
+                    200 -> Log.i(TAG, "Successfully sent location!")
+                    400 -> Log.e(TAG, Constants.invalid_data)
+                    404 -> Log.e(TAG, Constants.invalid_user)
+                    500 -> Log.e(TAG, Constants.server_error)
                 }
                 response.close()
             }
@@ -121,5 +110,4 @@ class LocationService : Service() {
         super.onDestroy()
         Log.i(TAG, Constants.destroyed)
     }
-
 }

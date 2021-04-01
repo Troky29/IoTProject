@@ -6,6 +6,8 @@
     <string name="email">email</string>
     <string name="password">password</string>
     <string name="login">Login</string>
-    <string name="sign_in"><u>Sign In</u></string>
+    <string name="sign_in_underlined"><u>Sign In</u></string>
+    <string name="sign_in">Sign In</string>
+    <string name="repeat_password">repeat password</string>
 
 </resources>

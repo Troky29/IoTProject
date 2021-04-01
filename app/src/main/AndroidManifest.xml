@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.iotproject">
-    
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
-    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
-    <uses-permission android:name="android.permission.INTERNET"/>
-    <uses-permission android:name="com.android.c3dm.permission.RECEIVE"/>
+
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="com.android.c3dm.permission.RECEIVE" />
 
     <application
         android:allowBackup="true"
@@ -15,37 +15,40 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.IoTProject"
         android:usesCleartextTraffic="true">
+        <activity android:name=".login.SignIn"></activity>
+
         <activity
             android:name=".login.Login"
-            android:noHistory="true"
-            android:screenOrientation="portrait"
-            android:configChanges="orientation|keyboardHidden">
+            android:configChanges="orientation|keyboardHidden"
+            android:screenOrientation="portrait">
             <intent-filter>
-                <action android:name="android.intent.action.MAIN"/>
+                <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-
         </activity>
+
         <activity
             android:name=".MainActivity"
-            android:screenOrientation="portrait"
-            android:configChanges="orientation|keyboardHidden"/>
-        <!-->TODO: remember to delete this if not used</!-->
-        <receiver android:name=".ActivityBroadcastReceiver" android:exported="true">
+            android:configChanges="orientation|keyboardHidden"
+            android:screenOrientation="portrait" /> <!-- >TODO: remember to delete this if not used</! -->
+        <receiver
+            android:name=".ActivityBroadcastReceiver"
+            android:exported="true">
             <intent-filter>
-                <action android:name="android.intent.action.BOOT_COMPLETED"/>
-                <action android:name="android.intent.action.INPUT_METHOD_CHANGED"/>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+                <action android:name="android.intent.action.INPUT_METHOD_CHANGED" />
             </intent-filter>
         </receiver>
+
         <service
             android:name=".FirebaseService"
             android:permission="com.google.andoird.c3dm.permission.SEND">
             <intent-filter>
-                <action android:name="com.google.firebase.MESSAGING_EVENT"/>
-                <action android:name="com.google.andoird.c2dm.intent.RECEIVE"/>
+                <action android:name="com.google.firebase.MESSAGING_EVENT" />
+                <action android:name="com.google.andoird.c2dm.intent.RECEIVE" />
             </intent-filter>
         </service>
-        <service android:name=".LocationService"/>
+        <service android:name=".LocationService" />
     </application>
 
 </manifest>
