@@ -9,5 +9,27 @@
     <string name="sign_in_underlined"><u>Sign In</u></string>
     <string name="sign_in">Sign In</string>
     <string name="repeat_password">repeat password</string>
+    <string name="register_car">Register car</string>
+    <string name="license_plate">License Plate</string>
+    <string name="car_color">Car color</string>
+    <string name="car_brand">Car brand</string>
+    <string name="confirm">Confirm</string>
+
+    <string-array name="car_colors">
+        <item>Black</item>
+        <item>Blue</item>
+        <item>Green</item>
+        <item>Gray</item>
+        <item>Red</item>
+        <item>White</item>
+        <item>Yellow</item>
+        <item>Cyan</item>
+    </string-array>
+
+    <string-array name="car_brands">
+        <item>FIAT</item>
+        <item>Ford</item>
+        <item>Ferrari</item>
+    </string-array>
 
 </resources>

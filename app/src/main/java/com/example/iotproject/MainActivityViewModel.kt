@@ -4,11 +4,14 @@ import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.example.iotproject.Constants.Companion.JSON
 import com.example.iotproject.Constants.Companion.URL
 import com.example.iotproject.Constants.Companion.no_gates
 import com.example.iotproject.Constants.Companion.server_error
 import okhttp3.*
+import okhttp3.RequestBody.Companion.toRequestBody
 import org.json.JSONArray
+import org.json.JSONObject
 import java.io.IOException
 
 
@@ -86,7 +89,35 @@ class MainActivityViewModel : ViewModel() {
         Log.i(TAG, Constants.destroyed)
     }
 
-    data class Gate (val name: String, val location: String, val state: String, val id: String)
+    //TODO: move this in the view model of the more fragment, since we have many operation to deal with
+    fun addCar(license: String, color: String, brand: String) {
+        val body = """{"license":"$license","color":"$color", "brand":"$brand"}"""
+        val requestBody = body.toRequestBody(JSON)
+
+        val request = Request.Builder()
+                .url(URL + "car")
+                .post(requestBody)
+                .build()
+
+        client.newCall(request).enqueue(object : Callback {
+            override fun onFailure(call: Call, e: IOException) {
+                message.postValue(server_error)
+            }
+
+            override fun onResponse(call: Call, response: Response) {
+                when (response.code) {
+                    200 -> message.postValue("Successfully added car!")
+                    400 -> message.postValue(Constants.invalid_data)
+                    409 -> message.postValue("Car already exists!")
+                }
+            }
+        })
+    }
+
+    //TODO:make this in their own classes
+    data class Car(val license: String, val color: String, val brand: String)
+
+    data class Gate(val name: String, val location: String, val state: String, val id: String)
 
     data class Activity(val id: String)
 }
