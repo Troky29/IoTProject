@@ -1,4 +1,4 @@
-package com.example.iotproject
+package com.example.iotproject.fragments.gate
 
 import android.view.LayoutInflater
 import android.view.View
@@ -7,6 +7,7 @@ import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.example.iotproject.R
 
 
 class GateCardAdapter(private val gateList: List<GateCardItem>) : RecyclerView.Adapter<GateCardAdapter.CardViewHolder>() {
@@ -27,6 +28,7 @@ class GateCardAdapter(private val gateList: List<GateCardItem>) : RecyclerView.A
 
         holder.gateButton.setOnClickListener() {
             //TODO:set open operation for the corresponding gate
+
         }
     }
 

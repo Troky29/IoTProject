@@ -10,8 +10,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.LinearSnapHelper
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.SnapHelper
-import com.example.iotproject.GateCardAdapter
-import com.example.iotproject.GateCardItem
 import com.example.iotproject.R
 
 class GateFragment: Fragment() {
@@ -32,6 +30,7 @@ class GateFragment: Fragment() {
         val snapHelper: SnapHelper = SnapHelperOneByOne()
 
         snapHelper.attachToRecyclerView(recyclerView)
+        //TODO: we could move here this code, but should wait and render only after the result of operation
 /*
         val viewModel = ViewModelProvider(this).get(MainActivityViewModel::class.java)
         viewModel.getGates().observe(viewLifecycleOwner, { gates ->
@@ -46,7 +45,7 @@ class GateFragment: Fragment() {
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        TODO("Maibe we can insert here te update of the gates")
+        TODO("Maybe we can insert here te update of the gates")
     }
 
     fun addGateCard(name: String, location: String, state: String, id: String) {

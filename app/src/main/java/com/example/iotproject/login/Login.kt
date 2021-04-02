@@ -38,7 +38,6 @@ class Login : AppCompatActivity() {
         if (AccessTokenRepository.logout) logout(encrypted)
         val refreshToken = sharedPreferences.getString("jwtRefresh", "")!!
 
-
         val tokenObserver = Observer<String> { token -> if (token.isNotEmpty()) login(token, refreshToken) }
         val refreshTokenObserver = Observer<String> { token -> encrypted.putString("jwtRefresh", token).apply() }
         val messageObserver = Observer<String> { message -> messenger(message) }
@@ -54,7 +53,9 @@ class Login : AppCompatActivity() {
             val email = findViewById<EditText>(R.id.editTextTextEmailAddress).text.toString()
             val password = findViewById<EditText>(R.id.editTextTextPassword).text.toString()
             if (email.isNotEmpty() && password.isNotEmpty()) {
-                loginViewModel.login(email, password)
+                //TODO: we skip login to test without the need to connect to the server
+                //loginViewModel.login(email, password)
+                login("", "")
             }
         }
 
@@ -71,14 +72,13 @@ class Login : AppCompatActivity() {
         val intent = Intent(this, MainActivity::class.java).apply {
             putExtra(EMAIL, email)
             flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-            //TODO: see if its actually usefull to send information from the Login View
+            //TODO: see if its actually useful to send information from the Login View
         }
         startActivity(intent)
     }
 
     private fun signIn() {
         val intent = Intent(this, SignIn::class.java)
-        Log.i("Login", "started Intent $intent")
         startActivity(intent)
     }
 

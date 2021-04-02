@@ -5,6 +5,7 @@ import okhttp3.*
 import org.json.JSONObject
 import java.io.IOException
 
+//TODO: for my implementationit doesent make sense to pass AccessRepository, unless you wish to divide this file to be more coherent
 class AccessTokenInterceptor (private val accessRepository: AccessTokenRepository) : Interceptor {
     override fun intercept(chain: Interceptor.Chain): Response {
         val accessToken = accessRepository.token

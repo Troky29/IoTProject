@@ -7,8 +7,6 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.iotproject.ActivityCardAdapter
-import com.example.iotproject.ActivityCardItem
 import com.example.iotproject.R
 import java.util.ArrayList
 
@@ -21,6 +19,7 @@ class ActivityFragment: Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        //TODO: This should be removed when we implement the call for obtaining the activities"
         val item = ActivityCardItem(R.drawable.hqdefault, "Element", "29/12/2020")
         val exampleList = ArrayList<ActivityCardItem>()
         for (i in 1..100) exampleList += item
@@ -30,6 +29,7 @@ class ActivityFragment: Fragment() {
         recyclerView.layoutManager = LinearLayoutManager(activity)
         recyclerView.setHasFixedSize(true)
 
+        //TODO: See how you resolve the gate instance, and respond accordingly
         //val viewModel = ViewModelProvider(this).get(MainActivityViewModel::class.java)
     }
 

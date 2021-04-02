@@ -5,7 +5,6 @@
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="com.android.c3dm.permission.RECEIVE" />
 
     <application
         android:allowBackup="true"
@@ -34,25 +33,24 @@
         <activity
             android:name=".MainActivity"
             android:configChanges="orientation|keyboardHidden"
-            android:screenOrientation="portrait" /> <!-- >TODO: remember to delete this if not used</! -->
-        <receiver
-            android:name=".ActivityBroadcastReceiver"
-            android:exported="true">
-            <intent-filter>
-                <action android:name="android.intent.action.BOOT_COMPLETED" />
-                <action android:name="android.intent.action.INPUT_METHOD_CHANGED" />
-            </intent-filter>
-        </receiver>
+            android:screenOrientation="portrait" />
 
         <service
             android:name=".FirebaseService"
-            android:permission="com.google.android.c3dm.permission.SEND">
+            android:exported="false">
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
-                <action android:name="com.google.andoird.c2dm.intent.RECEIVE" />
             </intent-filter>
         </service>
-        <service android:name=".LocationService" />
-    </application>
 
+        <service android:name=".LocationService" />
+
+        <meta-data
+            android:name="com.google.firebase.messaging.default_notification_icon"
+            android:resource="@drawable/ic_gate_access" />
+        <meta-data
+            android:name="com.google.firebase.messaging.default_notification_color"
+            android:resource="@color/ColorPrimary" />
+
+    </application>
 </manifest>

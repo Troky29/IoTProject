@@ -9,8 +9,10 @@ class Constants {
         //Google Cloud Api service
         //const val URL = "https://api-dot-quiet-groove-306310.appspot.com/api/v1/"
         const val FCM_URL = "https://fcm.googleapis.com"
+        //TODO: update with the server key of the IoTProject
         const val SERVER_KEY = "AAAAxL7lTsI:APA91bEsVnNzbVM2cZ2rbkl05xSYf7IVMayZpszta2QiCCqgP-8TvtDMzvkQLuQxPJuAlApXRLQQJMsBzH2a7hg9FTboUMNtAmDQktvdjp-_LNk7x7NfzsiE71ETxSd1OknVmlexum3h"
-        const val CONTENT_TYPE = "application/json"
+        const val TOPIC = "myTopic"
+        //const val CONTENT_TYPE = "application/json"
         val JSON = ("application/json; charset=utf-8").toMediaType()
 
         const val EMAIL = "com.example.iotproject.EMAIL"
@@ -23,8 +25,8 @@ class Constants {
         const val invalid_token = "Invalid token"
         const val success = "Success!"
         const val not_found = "Not found"
-        const val notification_title = "Check new activity"
-        const val notification_content = "New activity detected from your smart gate, what do you want to do?"
+//        const val notification_title = "Check new activity"
+//        const val notification_content = "New activity detected from your smart gate, what do you want to do?"
         const val destroyed = "Destroyed!"
     }
 }
