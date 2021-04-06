@@ -116,7 +116,7 @@ class MainActivityViewModel : ViewModel() {
 
     //TODO: move this in the view model of the more fragment, since we have many operation to deal with
     fun addCar(license: String, color: String, brand: String) {
-        val body = """{"license":"$license","color":"$color", "brand":"$brand"}"""
+        val body = """{"license":"$license", "color":"$color", "brand":"$brand"}"""
         val requestBody = body.toRequestBody(JSON)
 
         val request = Request.Builder()

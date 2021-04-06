@@ -4,6 +4,8 @@ import android.Manifest
 import android.app.Service
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.location.Address
+import android.location.Geocoder
 import android.location.Location
 import android.os.*
 import android.util.Log
@@ -17,6 +19,8 @@ import com.google.android.gms.location.*
 import okhttp3.*
 import okhttp3.RequestBody.Companion.toRequestBody
 import java.io.IOException
+import java.lang.Exception
+import java.util.*
 import java.util.concurrent.TimeUnit
 
 class LocationService : Service() {
@@ -83,6 +87,7 @@ class LocationService : Service() {
         val altitude = location!!.altitude.toString()
         val latitude = location.latitude.toString()
         val longitude = location.longitude.toString()
+
         val body = """{"altitude":"$altitude", "latitude:"$latitude", "longitude":"$longitude"}"""
         val requestBody = body.toRequestBody(JSON)
 

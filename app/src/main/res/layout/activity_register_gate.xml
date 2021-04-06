@@ -26,7 +26,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:backgroundTint="@color/white"
-        android:ems="10"
+        android:ems="18"
         android:hint="Gate name"
         android:inputType="textPersonName"
         android:textColor="@color/white"
@@ -41,7 +41,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="32dp"
-        android:ems="10"
+        android:ems="18"
         android:inputType="textPostalAddress"
         android:hint="Gate location"
         android:textColor="@color/white"
@@ -55,14 +55,14 @@
         android:id="@+id/gateCodeEditText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="4dp"
-        android:layout_marginTop="48dp"
+        android:layout_marginTop="32dp"
         android:backgroundTint="@color/white"
-        android:ems="16"
+        android:ems="18"
         android:hint="Gate code"
         android:inputType="textPersonName"
         android:textColor="@color/white"
         android:textColorHint="@color/white"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/gateLocationEditText" />
 
@@ -72,10 +72,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:background="@null"
-        app:layout_constraintBottom_toBottomOf="@+id/gateCodeEditText"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/gateCodeEditText"
-        app:layout_constraintTop_toTopOf="@+id/gateCodeEditText"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/gateCodeEditText"
         app:srcCompat="@drawable/ic_baseline_qr_code" />
 
     <Button
@@ -87,6 +86,6 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/gateCodeEditText" />
+        app:layout_constraintTop_toBottomOf="@+id/qrCodeImageButton" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

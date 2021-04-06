@@ -55,19 +55,21 @@ class Login : AppCompatActivity() {
             if (email.isNotEmpty() && password.isNotEmpty()) {
                 //TODO: we skip login to test without the need to connect to the server
                 //loginViewModel.login(email, password)
-                login("", "")
             }
         }
 
         findViewById<TextView>(R.id.signInTextView).setOnClickListener() {
             signIn()
         }
+        //TODO: delete this, just for testing
+        login("", "")
     }
 
     private fun login(sessionToken: String, refreshToken: String) {
         AccessTokenRepository.token = sessionToken
         AccessTokenRepository.refreshToken = refreshToken
         AccessTokenRepository.logout = false
+        Log.i("Login", "$sessionToken\t$refreshToken")
         val email = findViewById<EditText>(R.id.emailEditText).text.toString()
         val intent = Intent(this, MainActivity::class.java).apply {
             putExtra(EMAIL, email)
