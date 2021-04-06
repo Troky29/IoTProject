@@ -1,14 +1,12 @@
 package com.example.iotproject.fragments.more
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
 import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.get
 import com.example.iotproject.MainActivityViewModel
 import com.example.iotproject.R
 import java.util.*

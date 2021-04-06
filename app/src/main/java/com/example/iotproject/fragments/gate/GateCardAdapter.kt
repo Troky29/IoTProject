@@ -26,7 +26,6 @@ class GateCardAdapter(private val gateList: List<GateCardItem>) : RecyclerView.A
 
         holder.gateButton.setOnClickListener() {
             //TODO:set open operation for the corresponding gate
-
         }
     }
 
