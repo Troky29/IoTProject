@@ -70,7 +70,7 @@ class MainActivity : AppCompatActivity() {
             if (gates.isNotEmpty())
                 gateFragment.hideEmpty()
             for (gate in gates)
-                gateFragment.addGateCard(gate.name, gate.location, gate.state, gate.id)
+                gateFragment.addGateCard(gate.name, gate.location, gate.code)
             replaceFragment(gateFragment)
         })
 

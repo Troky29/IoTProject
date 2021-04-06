@@ -50,8 +50,8 @@ class GateFragment: Fragment() {
         TODO("Maybe we can insert here te update of the gates")
     }
 
-    fun addGateCard(name: String, location: String, state: String, id: String) {
-        val item = GateCardItem(R.drawable.hqdefault, name, location, state, id)
+    fun addGateCard(name: String, location: String, code: String) {
+        val item = GateCardItem(R.drawable.hqdefault, name, location)
         gateList.add(item)
     }
 

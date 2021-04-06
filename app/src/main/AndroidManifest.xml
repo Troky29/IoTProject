@@ -36,8 +36,9 @@
             android:screenOrientation="portrait" />
         <activity
             android:name=".fragments.more.RegisterGateActivity"
-            android:screenOrientation="fullSensor"
-            tools:replace="screenOrientation" />
+            android:configChanges="orientation|keyboardHidden"
+            android:screenOrientation="portrait" />
+
         <activity
             android:name="com.journeyapps.barcodescanner.CaptureActivity"
             android:screenOrientation="fullSensor"

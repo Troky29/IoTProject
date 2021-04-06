@@ -52,10 +52,10 @@
         app:layout_constraintTop_toBottomOf="@+id/gateNameEditText" />
 
     <EditText
-        android:id="@+id/qrCodeEditText"
+        android:id="@+id/gateCodeEditText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
+        android:layout_marginStart="4dp"
         android:layout_marginTop="48dp"
         android:backgroundTint="@color/white"
         android:ems="16"
@@ -71,14 +71,15 @@
         style="@style/Widget.AppCompat.Button.Borderless"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_constraintBottom_toBottomOf="@+id/qrCodeEditText"
+        android:background="@null"
+        app:layout_constraintBottom_toBottomOf="@+id/gateCodeEditText"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/qrCodeEditText"
-        app:layout_constraintTop_toTopOf="@+id/qrCodeEditText"
+        app:layout_constraintStart_toEndOf="@+id/gateCodeEditText"
+        app:layout_constraintTop_toTopOf="@+id/gateCodeEditText"
         app:srcCompat="@drawable/ic_baseline_qr_code" />
 
     <Button
-        android:id="@+id/button"
+        android:id="@+id/confirmButton"
         style="@style/Widget.AppCompat.Button.Borderless"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -86,6 +87,6 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/qrCodeEditText" />
+        app:layout_constraintTop_toBottomOf="@+id/gateCodeEditText" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

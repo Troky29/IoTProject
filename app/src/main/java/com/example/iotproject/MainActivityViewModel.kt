@@ -6,6 +6,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.iotproject.Constants.Companion.JSON
 import com.example.iotproject.Constants.Companion.URL
+import com.example.iotproject.Constants.Companion.invalid_data
 import com.example.iotproject.Constants.Companion.no_gates
 import com.example.iotproject.Constants.Companion.server_error
 import okhttp3.*
@@ -56,9 +57,8 @@ class MainActivityViewModel : ViewModel() {
                             val item = json.getJSONObject(index)
                             val name = item.get("name").toString()
                             val location = item.get("location").toString()
-                            val state = item.get("state").toString()
-                            val id = item.get("id").toString()
-                            list.add(Gate(name, location, state, id))
+                            val code = item.get("code").toString()
+                            list.add(Gate(name, location, code))
                         }
                         gates.postValue(list)
                     } catch (e: Exception) {
@@ -70,6 +70,31 @@ class MainActivityViewModel : ViewModel() {
             }
         })
         //TODO: Code to import gate info from server, to do while waiting during login
+    }
+
+    fun addGate(name: String, location: String, code: String) {
+        val body = """{"name":"$name", "location":"$location", "id_gate":"$code"}"""
+        val requestBody = body.toRequestBody(JSON)
+
+        val request = Request.Builder()
+            .url(URL + "gate")
+            .post(requestBody)
+            .build()
+
+        client.newCall(request).enqueue(object : Callback {
+            override fun onFailure(call: Call, e: IOException) {
+                message.postValue(server_error)
+            }
+
+            override fun onResponse(call: Call, response: Response) {
+                when (response.code) {
+                    200 -> message.postValue("Successfully added gate!")
+                    400 -> message.postValue(invalid_data)
+                    409 -> message.postValue("Gate already exists!")
+                    500 -> message.postValue(server_error)
+                }
+            }
+        })
     }
 
     private fun loadActivities() {
@@ -117,7 +142,7 @@ class MainActivityViewModel : ViewModel() {
     //TODO:make this in their own classes
     data class Car(val license: String, val color: String, val brand: String)
 
-    data class Gate(val name: String, val location: String, val state: String, val id: String)
+    data class Gate(val name: String, val location: String, val code: String)
 
     data class Activity(val id: String)
 }

@@ -23,8 +23,6 @@ class GateCardAdapter(private val gateList: List<GateCardItem>) : RecyclerView.A
         holder.gateImage.setImageResource(currentItem.imageResource)
         holder.gateName.text = currentItem.name
         holder.gateLocation.text = currentItem.location
-        holder.gateState.text = currentItem.state
-        holder.gateId.text = currentItem.id
 
         holder.gateButton.setOnClickListener() {
             //TODO:set open operation for the corresponding gate
@@ -39,10 +37,8 @@ class GateCardAdapter(private val gateList: List<GateCardItem>) : RecyclerView.A
         val gateImage: ImageView = itemView.findViewById(R.id.gateImageView)
         val gateName: TextView = itemView.findViewById(R.id.gateNameTextView)
         val gateLocation: TextView = itemView.findViewById(R.id.gateLocationTextView)
-        val gateState: TextView = itemView.findViewById(R.id.gateStateTextView)
-        val gateId: TextView = itemView.findViewById(R.id.gateIdTextView)
         val gateButton: Button = itemView.findViewById<Button>(R.id.gateButton)
     }
 }
 
-data class GateCardItem (val imageResource: Int, val name: String, val location: String, val state: String, val id: String)
+data class GateCardItem (val imageResource: Int, val name: String, val location: String)
