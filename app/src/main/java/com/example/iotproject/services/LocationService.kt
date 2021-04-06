@@ -1,4 +1,4 @@
-package com.example.iotproject
+package com.example.iotproject.services
 
 import android.Manifest
 import android.app.Service
@@ -8,6 +8,10 @@ import android.location.Location
 import android.os.*
 import android.util.Log
 import androidx.core.app.ActivityCompat
+import com.example.iotproject.AccessTokenAuthenticator
+import com.example.iotproject.AccessTokenInterceptor
+import com.example.iotproject.AccessTokenRepository
+import com.example.iotproject.Constants
 import com.example.iotproject.Constants.Companion.JSON
 import com.google.android.gms.location.*
 import okhttp3.*

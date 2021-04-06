@@ -24,11 +24,11 @@
             android:background="?android:dividerHorizontal"/>
 
         <Button
-            android:id="@+id/button2"
+            android:id="@+id/registerGateButton"
             style="?android:borderlessButtonStyle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Add gate"
+            android:text="@string/register_gate"
             android:textColor="@color/black" />
 
         <View

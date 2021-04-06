@@ -22,7 +22,7 @@
         app:layout_constraintVertical_bias="0.30"/>
 
     <EditText
-        android:id="@+id/editTextTextEmailAddress"
+        android:id="@+id/emailEditText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:backgroundTint="@color/white"
@@ -31,13 +31,13 @@
         android:inputType="textEmailAddress"
         android:textColor="@color/white"
         android:textColorHint="@color/white"
-        android:layout_marginTop="32sp"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/signInTextView" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <EditText
-        android:id="@+id/editTextTextPassword"
+        android:id="@+id/passwordEditText"
         android:hint="@string/password"
         android:textColor="@color/white"
         android:textColorHint="@color/white"
@@ -46,13 +46,13 @@
         android:ems="10"
         android:inputType="textPassword"
         android:backgroundTint="@color/white"
-        android:layout_marginTop="32sp"
-        app:layout_constraintTop_toBottomOf="@+id/editTextTextEmailAddress"
+        android:layout_marginTop="16sp"
+        app:layout_constraintTop_toBottomOf="@+id/emailEditText"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 
     <EditText
-        android:id="@+id/editTextRepeatPassword"
+        android:id="@+id/repeatPasswordEditText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:backgroundTint="@color/white"
@@ -61,10 +61,10 @@
         android:inputType="textPassword"
         android:textColor="@color/white"
         android:textColorHint="@color/white"
-        android:layout_marginTop="32sp"
+        android:layout_marginTop="16sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editTextTextPassword" />
+        app:layout_constraintTop_toBottomOf="@+id/passwordEditText" />
 
     <Button
         android:id="@+id/signInButton"
@@ -75,7 +75,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editTextRepeatPassword" />
+        app:layout_constraintTop_toBottomOf="@+id/repeatPasswordEditText" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

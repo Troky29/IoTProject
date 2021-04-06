@@ -6,7 +6,7 @@
     tools:context=".fragments.activity.ActivityFragment">
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/activityRecicleView"
+        android:id="@+id/activityRecycleView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         tools:listitem="@layout/card_activity"/>

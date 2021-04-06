@@ -24,7 +24,7 @@ class ActivityFragment: Fragment() {
         val exampleList = ArrayList<ActivityCardItem>()
         for (i in 1..100) exampleList += item
 
-        val recyclerView: RecyclerView = view.findViewById(R.id.activityRecicleView)
+        val recyclerView: RecyclerView = view.findViewById(R.id.activityRecycleView)
         recyclerView.adapter = ActivityCardAdapter(exampleList)
         recyclerView.layoutManager = LinearLayoutManager(activity)
         recyclerView.setHasFixedSize(true)

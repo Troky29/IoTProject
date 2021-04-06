@@ -20,9 +20,9 @@ class SignIn : AppCompatActivity() {
         loginViewModel.message.observe(this, messageObserver)
 
         findViewById<Button>(R.id.signInButton).setOnClickListener() {
-            val email = findViewById<EditText>(R.id.editTextTextEmailAddress).text.toString()
-            val password = findViewById<EditText>(R.id.editTextTextPassword).text.toString()
-            val repeatPassword = findViewById<EditText>(R.id.editTextRepeatPassword).text.toString()
+            val email = findViewById<EditText>(R.id.emailEditText).text.toString()
+            val password = findViewById<EditText>(R.id.passwordEditText).text.toString()
+            val repeatPassword = findViewById<EditText>(R.id.repeatPasswordEditText).text.toString()
             if (password == repeatPassword)
                 loginViewModel.signIn(email, password)
         }

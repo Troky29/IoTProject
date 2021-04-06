@@ -51,16 +51,16 @@
     </androidx.appcompat.widget.Toolbar>
 
     <TextView
-        android:id="@+id/empty_gate"
+        android:id="@+id/emptyGateTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="No gates"
+        android:text="@string/no_gates"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         android:layout_gravity="center"
-        android:visibility="invisible"/>
+        android:visibility="visible"/>
 
     <androidx.fragment.app.FragmentContainerView
         android:id="@+id/nav_host_fragment"

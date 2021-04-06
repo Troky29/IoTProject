@@ -29,6 +29,11 @@ class MoreFragment : Fragment() {
             RegisterCarDialog().show(childFragmentManager, "RegisterCarFragment")
         }
 
+        view.findViewById<Button>(R.id.registerGateButton).setOnClickListener() {
+            val intent = Intent(context, RegisterGateActivity::class.java)
+            startActivity(intent)
+        }
+
         view.findViewById<Button>(R.id.loguotButton).setOnClickListener() { logout() }
     }
 

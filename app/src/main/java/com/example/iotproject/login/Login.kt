@@ -50,8 +50,8 @@ class Login : AppCompatActivity() {
         if (refreshToken.isNotEmpty()) { loginViewModel.getSessionToken(refreshToken) }
 
         findViewById<Button>(R.id.loginButton).setOnClickListener() {
-            val email = findViewById<EditText>(R.id.editTextTextEmailAddress).text.toString()
-            val password = findViewById<EditText>(R.id.editTextTextPassword).text.toString()
+            val email = findViewById<EditText>(R.id.emailEditText).text.toString()
+            val password = findViewById<EditText>(R.id.passwordEditText).text.toString()
             if (email.isNotEmpty() && password.isNotEmpty()) {
                 //TODO: we skip login to test without the need to connect to the server
                 //loginViewModel.login(email, password)
@@ -68,7 +68,7 @@ class Login : AppCompatActivity() {
         AccessTokenRepository.token = sessionToken
         AccessTokenRepository.refreshToken = refreshToken
         AccessTokenRepository.logout = false
-        val email = findViewById<EditText>(R.id.editTextTextEmailAddress).text.toString()
+        val email = findViewById<EditText>(R.id.emailEditText).text.toString()
         val intent = Intent(this, MainActivity::class.java).apply {
             putExtra(EMAIL, email)
             flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK

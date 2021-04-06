@@ -4,7 +4,9 @@ import android.Manifest
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
+import android.view.View
 import android.widget.ImageButton
+import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
@@ -15,6 +17,8 @@ import com.example.iotproject.Constants.Companion.TOPIC
 import com.example.iotproject.fragments.more.MoreFragment
 import com.example.iotproject.fragments.activity.ActivityFragment
 import com.example.iotproject.fragments.gate.GateFragment
+import com.example.iotproject.services.FirebaseService
+import com.example.iotproject.services.LocationService
 import com.google.android.gms.common.ConnectionResult
 import com.google.android.gms.common.GoogleApiAvailability
 import com.google.android.material.bottomnavigation.BottomNavigationView
