@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="com.example.iotproject">
 
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
@@ -14,8 +15,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.IoTProject"
         android:usesCleartextTraffic="true">
-        <activity android:name=".fragments.more.RegisterGateActivity"></activity>
-        <activity android:name=".fragments.more.MainActivity" />
+
         <activity
             android:name=".login.SignIn"
             android:configChanges="orientation|keyboardHidden"
@@ -34,6 +34,14 @@
             android:name=".MainActivity"
             android:configChanges="orientation|keyboardHidden"
             android:screenOrientation="portrait" />
+        <activity
+            android:name=".fragments.more.RegisterGateActivity"
+            android:screenOrientation="fullSensor"
+            tools:replace="screenOrientation" />
+        <activity
+            android:name="com.journeyapps.barcodescanner.CaptureActivity"
+            android:screenOrientation="fullSensor"
+            tools:replace="screenOrientation" />
 
         <service
             android:name=".services.FirebaseService"

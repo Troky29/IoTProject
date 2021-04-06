@@ -5,7 +5,9 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.LinearSnapHelper
 import androidx.recyclerview.widget.RecyclerView
@@ -53,7 +55,12 @@ class GateFragment: Fragment() {
         gateList.add(item)
     }
 
+    //TODO: if we move the loading of the gate inside here we can remove the following two functions
     fun flushGateCards() { gateList.clear() }
+
+    fun hideEmpty() {
+        requireView().findViewById<TextView>(R.id.emptyGateTextView).visibility = View.INVISIBLE
+    }
 
     private class SnapHelperOneByOne : LinearSnapHelper() {
         override fun findTargetSnapPosition(layoutManager: RecyclerView.LayoutManager?, velocityX: Int, velocityY: Int): Int {

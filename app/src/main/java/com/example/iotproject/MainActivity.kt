@@ -67,6 +67,8 @@ class MainActivity : AppCompatActivity() {
 
         viewModel.getGates().observe(this, Observer { gates ->
             gateFragment.flushGateCards()
+            if (gates.isNotEmpty())
+                gateFragment.hideEmpty()
             for (gate in gates)
                 gateFragment.addGateCard(gate.name, gate.location, gate.state, gate.id)
             replaceFragment(gateFragment)
