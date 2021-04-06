@@ -1,6 +1,7 @@
 package com.example.iotproject.fragments.more
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -10,6 +11,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.get
 import com.example.iotproject.MainActivityViewModel
 import com.example.iotproject.R
+import java.util.*
 
 class RegisterCarDialog : DialogFragment() {
 
@@ -18,13 +20,13 @@ class RegisterCarDialog : DialogFragment() {
 
         val colorTextView = view.findViewById<AutoCompleteTextView>(R.id.colorAutoCompleteTextView)
         val colors: Array<out String> = resources.getStringArray(R.array.car_colors)
-        ArrayAdapter<String>(requireContext(), android.R.layout.simple_list_item_1, colors).also { adapter ->
+        ArrayAdapter(requireContext(), android.R.layout.simple_list_item_1, colors).also { adapter ->
             colorTextView.setAdapter(adapter)
         }
 
         val brandTextView = view.findViewById<AutoCompleteTextView>(R.id.bradAutoCompleteTextView)
         val brands: Array<out String> = resources.getStringArray(R.array.car_brands)
-        ArrayAdapter<String>(requireContext(), android.R.layout.simple_list_item_1, brands).also { adapter ->
+        ArrayAdapter(requireContext(), android.R.layout.simple_list_item_1, brands).also { adapter ->
             brandTextView.setAdapter(adapter)
         }
 
@@ -33,8 +35,9 @@ class RegisterCarDialog : DialogFragment() {
             val color = colorTextView.text.toString()
             val brand = brandTextView.text.toString()
 
-            //TODO: implement a more complete control on the car license plate
-            if (license.length != 7) {
+            val corrected = license.replace("\\s".toRegex(), "").toUpperCase()
+            val format = "^[A-Z]{2}[0-9]{3}[A-Z]{2}$".toRegex()
+            if (corrected.length != 7 || !corrected.matches(format)) {
                 messenger("Incorrect license plate")
                 return@setOnClickListener
             }
