@@ -82,7 +82,7 @@ class MainActivity : AppCompatActivity() {
         checkPermissions()
         val intent = Intent(this, LocationService::class.java)
         //TODO: Insert back location updates
-        startService(intent)
+        //startService(intent)
 
         //This code retrieves the token that unequivocally identifies the device
         checkGooglePlayServices()

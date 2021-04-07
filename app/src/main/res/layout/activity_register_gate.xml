@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -19,37 +18,86 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.30"/>
+        app:layout_constraintVertical_bias="0.20" />
 
     <EditText
         android:id="@+id/gateNameEditText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="32dp"
         android:backgroundTint="@color/white"
-        android:ems="18"
+        android:ems="12"
         android:hint="Gate name"
         android:inputType="textPersonName"
         android:textColor="@color/white"
         android:textColorHint="@color/white"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@+id/textView" />
 
     <EditText
-        android:id="@+id/gateLocationEditText"
+        android:id="@+id/gateThoroughfareEditText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="32dp"
-        android:ems="18"
+        android:backgroundTint="@color/white"
+        android:ems="10"
+        android:hint="Thoroughfare"
         android:inputType="textPostalAddress"
-        android:hint="Gate location"
         android:textColor="@color/white"
         android:textColorHint="@color/white"
-        android:backgroundTint="@color/white"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/gateFeatureEditText"
+        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/gateNameEditText" />
+
+    <EditText
+        android:id="@+id/gateFeatureEditText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="32dp"
+        android:backgroundTint="@color/white"
+        android:ems="4"
+        android:hint="Feature"
+        android:inputType="number"
+        android:textColor="@color/white"
+        android:textColorHint="@color/white"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/gateThoroughfareEditText"
+        app:layout_constraintTop_toBottomOf="@+id/gateNameEditText" />
+
+    <EditText
+        android:id="@+id/gateLocalityEditText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="32dp"
+        android:backgroundTint="@color/white"
+        android:ems="10"
+        android:hint="Locality"
+        android:inputType="textPersonName"
+        android:textColor="@color/white"
+        android:textColorHint="@color/white"
+        app:layout_constraintEnd_toStartOf="@+id/gatePostalCodeEditText"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/gateThoroughfareEditText" />
+
+    <EditText
+        android:id="@+id/gatePostalCodeEditText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="32dp"
+        android:backgroundTint="@color/white"
+        android:ems="4"
+        android:hint="P. Code"
+        android:inputType="number"
+        android:textColor="@color/white"
+        android:textColorHint="@color/white"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/gateLocalityEditText"
+        app:layout_constraintTop_toBottomOf="@+id/gateFeatureEditText" />
 
     <EditText
         android:id="@+id/gateCodeEditText"
@@ -58,19 +106,20 @@
         android:layout_marginTop="32dp"
         android:backgroundTint="@color/white"
         android:ems="18"
-        android:hint="Gate code"
+        android:hint="Activation Code"
         android:inputType="textPersonName"
         android:textColor="@color/white"
         android:textColorHint="@color/white"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/gateLocationEditText" />
+        app:layout_constraintTop_toBottomOf="@+id/gateLocalityEditText" />
 
     <ImageButton
         android:id="@+id/qrCodeImageButton"
         style="@style/Widget.AppCompat.Button.Borderless"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
         android:background="@null"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -87,5 +136,6 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/qrCodeImageButton" />
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

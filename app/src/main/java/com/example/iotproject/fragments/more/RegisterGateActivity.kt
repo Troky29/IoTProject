@@ -17,9 +17,12 @@ import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import com.google.zxing.integration.android.IntentIntegrator
 import java.util.*
+import kotlin.math.PI
+import kotlin.math.cos
 
 class RegisterGateActivity : AppCompatActivity() {
     private lateinit var fusedLocationClient: FusedLocationProviderClient
+    private val TAG = "RegisterGateActivity"
     private var REQUEST_CODE = 1
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -35,7 +38,11 @@ class RegisterGateActivity : AppCompatActivity() {
 
         findViewById<Button>(R.id.confirmButton).setOnClickListener {
             val name = findViewById<EditText>(R.id.gateNameEditText).text.toString()
-            val location = findViewById<EditText>(R.id.gateLocationEditText).text.toString()
+            val thoroughfare = findViewById<EditText>(R.id.gateThoroughfareEditText).text.toString()
+            val feature = findViewById<EditText>(R.id.gateFeatureEditText).text.toString()
+            val locality = findViewById<EditText>(R.id.gateLocalityEditText).text.toString()
+            val postcode = findViewById<EditText>(R.id.gatePostalCodeEditText).text.toString()
+            val location = "$thoroughfare, $feature, $locality, $postcode"
             val code = findViewById<EditText>(R.id.gateCodeEditText).text.toString()
 
             if (name.isEmpty()) {
@@ -47,7 +54,7 @@ class RegisterGateActivity : AppCompatActivity() {
                 return@setOnClickListener
             }
             //TODO: check for not admissible characters for the name
-            if (location.isEmpty()) {
+            if (thoroughfare.isEmpty() || feature.isEmpty() || locality.isEmpty() || postcode.isEmpty()) {
                 messenger("Insert a location")
                 return@setOnClickListener
             }
@@ -58,6 +65,9 @@ class RegisterGateActivity : AppCompatActivity() {
                 messenger("Not a valid gate code!")
                 return@setOnClickListener
             }
+            //TODO: you should also send information about the near addresses
+            val neighbours = getNeighbours(location)
+            //TODO: correct everything down the line
             viewModel.addGate(name, location, code)
             //TODO: when you have decided what to do with viewmodels, observe a variable and return only after having received a reply
             finish()
@@ -88,16 +98,50 @@ class RegisterGateActivity : AppCompatActivity() {
         }
         fusedLocationClient.lastLocation.addOnSuccessListener { location ->
             val geocoder = Geocoder(this, Locale.getDefault())
-            val addresses: List<Address>
+            val neighbours: MutableList<String> by lazy { mutableListOf() }
             try {
-                addresses = geocoder.getFromLocation(location.latitude, location.longitude, 1)
-                findViewById<EditText>(R.id.gateLocationEditText).setText(
-                    addresses[0].getAddressLine(0))
-                Log.i("RegisterGateActivity", addresses.toString())
+                val address = geocoder.getFromLocation(location.latitude, location.longitude, 1)[0]
+                findViewById<EditText>(R.id.gateThoroughfareEditText).setText(address.thoroughfare)
+                findViewById<EditText>(R.id.gateFeatureEditText).setText(address.featureName)
+                findViewById<EditText>(R.id.gateLocalityEditText).setText(address.locality)
+                findViewById<EditText>(R.id.gatePostalCodeEditText).setText(address.postalCode)
             } catch (e: Exception) {
-                Log.e("RegisterGateActivity", e.message.toString())
+                Log.e(TAG, e.message.toString())
             }
         }
+    }
+
+    //TODO: see if you actually want to implement this, probably in its own function, given the fact that you have to search inside a radius (probably just combine 8 points around)
+    private fun getNeighbours(location: String) : MutableList<String> {
+        val geocoder = Geocoder(this, Locale.getDefault())
+        //val addresses: List<String>
+        val neighbours: MutableList<String> by lazy { mutableListOf() }
+
+        try {
+            val coordinates  = geocoder.getFromLocationName(location, 1)[0]
+            val earth = 6371
+            val longitudeMeter = ((180/PI) / earth / cos(coordinates.latitude * PI / 180)) / 1000
+            val latitudeMeter = ((180 / PI) / earth) / 1000
+            val addresses = geocoder.getFromLocation(
+                    coordinates.latitude + latitudeMeter * 50,
+                    coordinates.longitude + longitudeMeter * 50,
+                    5)
+            Log.i(TAG, addresses.toString())
+            for (address in addresses) {
+                val thoroughfare = address.thoroughfare
+                if (thoroughfare.isNullOrEmpty() || thoroughfare == "Unnamed Road")
+                    continue
+                if (!neighbours.contains(thoroughfare))
+                    neighbours.add(thoroughfare)
+            }
+        } catch (e: Exception) {
+            Log.e(TAG, e.message.toString())
+        }
+
+        //TODO: handle this neighbours thoroughfare, probably we should couple it with the other information, to avoid uncertainty
+        Log.i("RegisterGateActivity", "Neighbours: $neighbours")
+
+        return neighbours
     }
 
     private fun scanQR() {
