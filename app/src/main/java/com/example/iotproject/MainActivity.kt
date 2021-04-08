@@ -92,7 +92,6 @@ class MainActivity : AppCompatActivity() {
         FirebaseMessaging.getInstance().token.addOnSuccessListener { token ->
             if (FirebaseService.token != token) {
                 FirebaseService.token = token
-                //TODO: we have to save on server side this
             }
         }
     }

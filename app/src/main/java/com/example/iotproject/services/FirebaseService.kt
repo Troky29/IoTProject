@@ -10,14 +10,14 @@ import android.content.SharedPreferences
 import android.os.Build
 import android.util.Log
 import androidx.core.app.NotificationCompat
-import com.example.iotproject.Constants
-import com.example.iotproject.MainActivity
-import com.example.iotproject.NotificationReceiver
-import com.example.iotproject.R
+import com.example.iotproject.*
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
 import kotlin.random.Random
 import com.example.iotproject.Constants.Companion.State
+import okhttp3.*
+import okhttp3.RequestBody.Companion.toRequestBody
+import java.io.IOException
 
 class FirebaseService : FirebaseMessagingService() {
     val TAG = "FirebaseService"
@@ -34,7 +34,7 @@ class FirebaseService : FirebaseMessagingService() {
     override fun onNewToken(newToken: String) {
         super.onNewToken(newToken)
         token = newToken
-        //TODO: send this token to the server, to be saved along the user
+        updateFCMToken(newToken)
     }
 
     override fun onMessageReceived(remoteMessage: RemoteMessage) {
@@ -94,6 +94,35 @@ class FirebaseService : FirebaseMessagingService() {
             }
             notificationManager.createNotificationChannel(channel)
         }
+    }
+
+    private fun updateFCMToken(token: String) {
+        val client: OkHttpClient = OkHttpClient().newBuilder()
+                .authenticator(AccessTokenAuthenticator(AccessTokenRepository))
+                .addInterceptor(AccessTokenInterceptor(AccessTokenRepository))
+                .build()
+
+        val body = """{"fcm_token":"$token"}"""
+        val requestBody = body.toRequestBody(Constants.JSON)
+
+        val request = Request.Builder()
+                .url(Constants.URL + "activity")
+                .post(requestBody)
+                .build()
+
+        client.newCall(request).enqueue(object : Callback {
+            override fun onFailure(call: Call, e: IOException) {
+                Log.e(TAG, Constants.server_error)
+            }
+
+            override fun onResponse(call: Call, response: Response) {
+                when (response.code) {
+                    200 -> Log.i(TAG, "Correctly updated FCM token")
+                    //TODO: add all cases
+                    500 -> Log.e (TAG, Constants.server_error)
+                }
+            }
+        })
     }
 
     override fun onDestroy() {
