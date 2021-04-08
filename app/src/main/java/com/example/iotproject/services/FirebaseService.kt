@@ -12,10 +12,12 @@ import android.util.Log
 import androidx.core.app.NotificationCompat
 import com.example.iotproject.Constants
 import com.example.iotproject.MainActivity
+import com.example.iotproject.NotificationReceiver
 import com.example.iotproject.R
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
 import kotlin.random.Random
+import com.example.iotproject.Constants.Companion.State
 
 class FirebaseService : FirebaseMessagingService() {
     val TAG = "FirebaseService"
@@ -37,32 +39,53 @@ class FirebaseService : FirebaseMessagingService() {
 
     override fun onMessageReceived(remoteMessage: RemoteMessage) {
         super.onMessageReceived(remoteMessage)
-        //TODO: in this we have to manage whenever we obtain
-        Log.i(TAG, "message data: ${remoteMessage.data}")
+
         val intent = Intent(this, MainActivity::class.java)
         val notificationManager = getSystemService(NOTIFICATION_SERVICE) as NotificationManager
         val notificationID = Random.nextInt()
 
-        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             createNotificationChannel(notificationManager)
         }
 
-        //TODO: investigate if this is really necessary to us, used for clearing activities stack
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
         val pendingIntent = PendingIntent.getActivity(this, 0, intent, FLAG_ONE_SHOT)
+
+        val allowBroadcastIntent = Intent(this, NotificationReceiver::class.java).apply {
+            putExtra("requestCode", State.ALLOW)
+            putExtra("notificationID", notificationID)
+        }
+        val allowAction = PendingIntent.getBroadcast(this, 0, allowBroadcastIntent, PendingIntent.FLAG_UPDATE_CURRENT)
+
+        val denyBroadcastIntent = Intent(this, NotificationReceiver::class.java).apply {
+            putExtra("requestCode", State.DENY)
+            putExtra("notificationID", notificationID)
+        }
+        val denyAction = PendingIntent.getBroadcast(this, 0, denyBroadcastIntent, PendingIntent.FLAG_UPDATE_CURRENT)
+
+        val reportBroadcastReceiver = Intent(this, NotificationReceiver::class.java).apply {
+            putExtra("requestCode", Constants.Companion.State.REPORT)
+            putExtra("notificationID", notificationID)
+        }
+        val reportAction = PendingIntent.getBroadcast(this, 0, reportBroadcastReceiver, PendingIntent.FLAG_UPDATE_CURRENT)
+
         val notification = NotificationCompat.Builder(this, CHANNEL_ID)
             .setContentTitle(remoteMessage.notification!!.title)
             .setContentText(remoteMessage.notification!!.body)
             .setSmallIcon(R.drawable.ic_gate_access)
+            .setColor(resources.getColor(R.color.ColorPrimary, theme))
             .setAutoCancel(true)
             .setContentIntent(pendingIntent)
+            .addAction(R.drawable.ic_baseline_check_24, "ALLOW", allowAction)
+            .addAction(R.mipmap.ic_launcher, "DENY", denyAction)
+            .addAction(R.mipmap.ic_launcher, "REPORT", reportAction)
             .build()
 
         notificationManager.notify(notificationID, notification)
     }
 
     private fun createNotificationChannel(notificationManager: NotificationManager) {
-        if (Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             val name = "Access alert"
             val descriptionText = "This channel is used to notify the user for any activity detected"
             val channel = NotificationChannel(CHANNEL_ID, name, IMPORTANCE_HIGH).apply {

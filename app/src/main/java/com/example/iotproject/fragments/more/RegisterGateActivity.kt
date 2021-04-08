@@ -67,7 +67,7 @@ class RegisterGateActivity : AppCompatActivity() {
             }
             //TODO: you should also send information about the near addresses
             val neighbours = getNeighbours(location)
-            //TODO: correct everything down the line
+            //TODO: correct everything down the line, compose in some way a single string of the gate location
             viewModel.addGate(name, location, code)
             //TODO: when you have decided what to do with viewmodels, observe a variable and return only after having received a reply
             finish()
@@ -112,6 +112,8 @@ class RegisterGateActivity : AppCompatActivity() {
     }
 
     //TODO: see if you actually want to implement this, probably in its own function, given the fact that you have to search inside a radius (probably just combine 8 points around)
+
+    //TODO: once the neighbours are found subscribe to the appropriate topics
     private fun getNeighbours(location: String) : MutableList<String> {
         val geocoder = Geocoder(this, Locale.getDefault())
         //val addresses: List<String>
