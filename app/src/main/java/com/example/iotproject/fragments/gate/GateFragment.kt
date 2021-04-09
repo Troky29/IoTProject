@@ -1,13 +1,13 @@
 package com.example.iotproject.fragments.gate
 
-import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import android.widget.Toast
 import androidx.fragment.app.Fragment
-import androidx.navigation.fragment.findNavController
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.LinearSnapHelper
 import androidx.recyclerview.widget.RecyclerView
@@ -15,7 +15,8 @@ import androidx.recyclerview.widget.SnapHelper
 import com.example.iotproject.R
 
 class GateFragment: Fragment() {
-    private val gateList by lazy { ArrayList<GateCardItem>() }
+    private val gateCardList by lazy { ArrayList<GateCardItem>() }
+    private lateinit var recyclerView: RecyclerView
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.fragment_gate, container, false)
@@ -24,42 +25,45 @@ class GateFragment: Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val recyclerView: RecyclerView = view.findViewById(R.id.gateRecycleView)
-        recyclerView.adapter = GateCardAdapter(gateList)
+        recyclerView = view.findViewById(R.id.gateRecycleView)
+        recyclerView.adapter = GateCardAdapter(gateCardList)
         recyclerView.layoutManager = LinearLayoutManager(activity, LinearLayoutManager.HORIZONTAL, false)
         recyclerView.setHasFixedSize(true)
 
         val snapHelper: SnapHelper = SnapHelperOneByOne()
-
         snapHelper.attachToRecyclerView(recyclerView)
-        //TODO: we could move here this code, but should wait and render only after the result of operation
-/*
-        val viewModel = ViewModelProvider(this).get(MainActivityViewModel::class.java)
-        viewModel.getGates().observe(viewLifecycleOwner, { gates ->
-            flushGateCards()
-            for (gate in gates)
-                addGateCard(gate.name, gate.location, gate.state, gate.id)
-            //replaceFragment(gateFragment)
+
+        val viewModel = ViewModelProvider(this).get(GateFragmentViewModel::class.java)
+        viewModel.message.observe(viewLifecycleOwner, { message ->
+            messenger(message)
         })
-
- */
+        viewModel.gateList.observe(viewLifecycleOwner, { gateList ->
+            flushGateCards()
+            for (gate in gateList)
+                addGateCard(gate)
+        })
     }
 
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-        TODO("Maybe we can insert here te update of the gates")
+    fun addGateCard(gate: Gate) {
+        //TODO: gate should also include the url to the image
+        val item = GateCardItem(R.drawable.hqdefault, gate.name, gate.location)
+        gateCardList.add(item)
+        recyclerView.adapter!!.notifyDataSetChanged()
     }
 
-    fun addGateCard(name: String, location: String, code: String) {
-        val item = GateCardItem(R.drawable.hqdefault, name, location)
-        gateList.add(item)
+    fun flushGateCards() {
+        gateCardList.clear()
+        recyclerView.adapter!!.notifyDataSetChanged()
     }
 
-    //TODO: if we move the loading of the gate inside here we can remove the following two functions
-    fun flushGateCards() { gateList.clear() }
+    override fun onResume() {
+        super.onResume()
+        if (gateCardList.isEmpty())
+            view?.findViewById<TextView>(R.id.emptyGateTextView)!!.visibility = View.INVISIBLE
+    }
 
-    fun hideEmpty() {
-        requireView().findViewById<TextView>(R.id.emptyGateTextView).visibility = View.INVISIBLE
+    private fun messenger(message: String) {
+        Toast.makeText(activity, message, Toast.LENGTH_SHORT).show()
     }
 
     private class SnapHelperOneByOne : LinearSnapHelper() {

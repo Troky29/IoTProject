@@ -36,7 +36,7 @@ class GateCardAdapter(private val gateList: List<GateCardItem>) : RecyclerView.A
         val gateImage: ImageView = itemView.findViewById(R.id.gateImageView)
         val gateName: TextView = itemView.findViewById(R.id.gateNameTextView)
         val gateLocation: TextView = itemView.findViewById(R.id.gateLocationTextView)
-        val gateButton: Button = itemView.findViewById<Button>(R.id.gateButton)
+        val gateButton: Button = itemView.findViewById(R.id.gateButton)
     }
 }
 

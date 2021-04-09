@@ -5,12 +5,16 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.iotproject.R
 import java.util.ArrayList
 
 class ActivityFragment: Fragment() {
+    private val activityCardList by lazy { ArrayList<ActivityCardItem>() }
+    private lateinit var recyclerView: RecyclerView
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.fragment_activity, container, false)
@@ -19,19 +23,34 @@ class ActivityFragment: Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        //TODO: This should be removed when we implement the call for obtaining the activities"
-        val item = ActivityCardItem(R.drawable.hqdefault, "Element", "29/12/2020")
-        val exampleList = ArrayList<ActivityCardItem>()
-        for (i in 1..100) exampleList += item
-
-        val recyclerView: RecyclerView = view.findViewById(R.id.activityRecycleView)
-        recyclerView.adapter = ActivityCardAdapter(exampleList)
+        recyclerView = view.findViewById(R.id.activityRecycleView)
+        recyclerView.adapter = ActivityCardAdapter(activityCardList)
         recyclerView.layoutManager = LinearLayoutManager(activity)
         recyclerView.setHasFixedSize(true)
 
-        //TODO: See how you resolve the gate instance, and respond accordingly
-        //val viewModel = ViewModelProvider(this).get(MainActivityViewModel::class.java)
+        val viewModel = ViewModelProvider(this).get(ActivityFragmentViewModel::class.java)
+        viewModel.message.observe(viewLifecycleOwner, { message ->
+            messenger(message)
+        })
+        viewModel.activityList.observe(viewLifecycleOwner, { activityList ->
+            flushActivityCards()
+            for (activity in activityList)
+                addActivityCard(activity)
+        })
     }
 
+    private fun addActivityCard(activity: Activity) {
+        val item = ActivityCardItem(R.drawable.hqdefault, "Granted", "29/19/2020")
+        activityCardList.add(item)
+        recyclerView.adapter!!.notifyDataSetChanged()
+    }
 
+    fun flushActivityCards() {
+        activityCardList.clear()
+        recyclerView.adapter!!.notifyDataSetChanged()
+    }
+
+    private fun messenger(message: String) {
+        Toast.makeText(activity, message, Toast.LENGTH_SHORT).show()
+    }
 }

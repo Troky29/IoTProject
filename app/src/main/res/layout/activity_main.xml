@@ -33,14 +33,13 @@
                 android:textColor="@color/white"
                 android:layout_weight="1"
                 android:gravity="center"
-                android:text="Name Surname" />
+                android:text="@string/toolbar_default" />
 
             <ImageButton
                 android:id="@+id/profileButton"
                 android:layout_width="48dp"
                 android:layout_height="48dp"
                 android:layout_marginEnd="8dp"
-                android:layout_marginRight="8dp"
                 android:background="@drawable/rounded_button"
                 app:srcCompat="@android:drawable/ic_menu_view"
                 android:contentDescription="@string/profile_image"

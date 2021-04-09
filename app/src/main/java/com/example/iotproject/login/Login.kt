@@ -5,6 +5,7 @@ import android.content.SharedPreferences
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import android.util.Patterns
 import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
@@ -56,18 +57,29 @@ class Login : AppCompatActivity() {
         if (refreshToken.isNotEmpty()) {
             loginViewModel.getSessionToken(refreshToken)
             loadingDialog.show(supportFragmentManager, "LoadingDialog")
+            //TODO: remove this, just for testing
+            login("", "")
         }
 
         findViewById<Button>(R.id.loginButton).setOnClickListener() {
             val email = findViewById<EditText>(R.id.emailEditText).text.toString()
             val password = findViewById<EditText>(R.id.passwordEditText).text.toString()
-            if (email.isNotEmpty() && password.isNotEmpty()) {
-                //TODO: we skip login to test without the need to connect to the server
-                //loginViewModel.login(email, password)
-                loadingDialog.show(supportFragmentManager, "LoadingDialog")
-                //TODO: delete this line, just used for testing
-                login("", "")
+
+            if (email.isEmpty()) {
+                messenger("Insert an email address")
+                return@setOnClickListener
             }
+            if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
+                messenger("Not a valid email address")
+                return@setOnClickListener
+            }
+            if (password.isEmpty()) {
+                messenger("Insert a password")
+                return@setOnClickListener
+            }
+            //TODO: we skip login to test without the need to connect to the server
+            //loginViewModel.login(email, password)
+            loadingDialog.show(supportFragmentManager, "LoadingDialog")
         }
 
         findViewById<TextView>(R.id.signInTextView).setOnClickListener() {

@@ -41,7 +41,7 @@ class NotificationReceiver : BroadcastReceiver() {
 
         val request = Request.Builder()
                 .url(URL + "activity")
-                .post(requestBody)
+                .put(requestBody)
                 .build()
 
         client.newCall(request).enqueue(object : Callback {

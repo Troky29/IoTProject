@@ -5,6 +5,7 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
 import android.widget.ImageButton
+import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
@@ -30,18 +31,15 @@ class MainActivity : AppCompatActivity() {
         setSupportActionBar(findViewById(R.id.toolbar))
 
         val viewModel = ViewModelProvider(this).get(MainActivityViewModel::class.java)
-        val messageObserver = Observer<String> { message -> messenger(message) }
-        viewModel.message.observe(this, messageObserver)
+        //val messageObserver = Observer<String> { message -> messenger(message) }
+        viewModel.message.observe(this, { message -> messenger(message) })
 
         val moreFragment = MoreFragment()
         val gateFragment = GateFragment()
         val activityFragment = ActivityFragment()
 
+        findViewById<TextView>(R.id.toolbarTextView).text = "Insert user info"
         val profilePicture = findViewById<ImageButton>(R.id.profileButton)
-        profilePicture.setOnClickListener() {
-            Toast.makeText(this, "Profile image", Toast.LENGTH_SHORT).show()
-            //TODO: Put profile settings (maybe other activity)
-        }
 
         val bottomNavigation: BottomNavigationView = findViewById(R.id.bottom_navigation)
         bottomNavigation.setOnNavigationItemSelectedListener { item ->
@@ -61,30 +59,34 @@ class MainActivity : AppCompatActivity() {
                 else -> false
             }
         }
+        bottomNavigation.selectedItemId = R.id.gate_page
 
-        viewModel.getGates().observe(this, Observer { gates ->
+/*
+        viewModel.getGates().observe(this, { gates ->
             gateFragment.flushGateCards()
             if (gates.isNotEmpty())
                 gateFragment.hideEmpty()
             for (gate in gates)
                 gateFragment.addGateCard(gate.name, gate.location, gate.code)
-            replaceFragment(gateFragment)
         })
 
-        viewModel.getActivities().observe(this, Observer { activities ->
+
+        viewModel.getActivities().observe(this, { activities ->
             //TODO: Update UI with list of activities
         })
+
+ */
 
         //We check for the permission for obtaining the location and start the service
         checkPermissions()
         val intent = Intent(this, LocationService::class.java)
         //TODO: Insert back location updates
-        startService(intent)
+        //startService(intent)
 
-        //This code retrieves the token that unequivocally identifies the device
+        //We need this authorization for implementing the notification inside the application
         checkGooglePlayServices()
-        //FirebaseMessaging.getInstance().subscribeToTopic(TOPIC)
 
+        //This code updates the token that unequivocally identifies the device
         FirebaseService.sharedPreferences = getSharedPreferences("sharedPref", MODE_PRIVATE)
         FirebaseMessaging.getInstance().token.addOnSuccessListener { token ->
             if (FirebaseService.token != token) {
@@ -126,5 +128,7 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun messenger(message: String) = Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
+    private fun messenger(message: String) {
+        Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
+    }
 }

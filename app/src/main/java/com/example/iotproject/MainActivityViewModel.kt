@@ -9,11 +9,9 @@ import com.example.iotproject.Constants.Companion.URL
 import com.example.iotproject.Constants.Companion.invalid_data
 import com.example.iotproject.Constants.Companion.no_gates
 import com.example.iotproject.Constants.Companion.server_error
-import com.example.iotproject.fragments.more.LocationHelper
 import okhttp3.*
 import okhttp3.RequestBody.Companion.toRequestBody
 import org.json.JSONArray
-import org.json.JSONObject
 import java.io.IOException
 
 
@@ -26,6 +24,7 @@ class MainActivityViewModel : ViewModel() {
             .build()
 
     val message: MutableLiveData<String> by lazy { MutableLiveData<String>() }
+    /*
     private val gates: MutableLiveData<List<Gate>> by lazy {
         MutableLiveData<List<Gate>>().also {
             loadGates()
@@ -75,7 +74,7 @@ class MainActivityViewModel : ViewModel() {
 
     fun addGate(name: String, location: String, latitude: Double, longitude: Double, code: String) {
         val body = """{"name":"$name", "location":"$location", "latitude":"$latitude", 
-            |"longitude", "$longitude" "id_gate":"$code"}"""
+            |"longitude", "$longitude" "id_gate":"$code"}""".trimMargin()
         val requestBody = body.toRequestBody(JSON)
 
         val request = Request.Builder()
@@ -99,22 +98,7 @@ class MainActivityViewModel : ViewModel() {
         })
     }
 
-    private fun loadActivities() {
-        //TODO: Code to import activities information, to do while logging in
-    }
-
-    fun getGates(): LiveData<List<Gate>> {
-        return gates
-    }
-
-    fun getActivities(): LiveData<List<Activity>> {
-        return activities
-    }
-
-    override fun onCleared() {
-        super.onCleared()
-        Log.i(TAG, Constants.destroyed)
-    }
+     */
 
     //TODO: move this in the view model of the more fragment, since we have many operation to deal with
     fun addCar(license: String, color: String, brand: String) {
@@ -141,12 +125,24 @@ class MainActivityViewModel : ViewModel() {
         })
     }
 
+    private fun loadActivities() {
+        //TODO: Code to import activities information, to do while logging in
+    }
+
+
+    override fun onCleared() {
+        super.onCleared()
+        Log.i(TAG, Constants.destroyed)
+    }
+
+
+
     //TODO:make this in their own classes
     data class Car(val license: String, val color: String, val brand: String)
 
-    data class Gate(val name: String, val location: String, val code: String)
+    //data class Gate(val name: String, val location: String, val code: String)
 
-    data class Activity(val id: String)
+    //data class Activity(val id: String)
 }
 /*
 class MainActivityViewModelFactory(private val accessRepository: AccessTokenRepository) : ViewModelProvider.Factory {
