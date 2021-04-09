@@ -14,7 +14,7 @@ class Constants {
         const val TOPIC = "myTopic"
         //const val CONTENT_TYPE = "application/json"
         val JSON = ("application/json; charset=utf-8").toMediaType()
-
+        //TODO: check if is important to pass information from login to starting screen
         const val EMAIL = "com.example.iotproject.EMAIL"
 
         //These are the used the messages sent throughout the application
@@ -28,6 +28,8 @@ class Constants {
 //        const val notification_title = "Check new activity"
 //        const val notification_content = "New activity detected from your smart gate, what do you want to do?"
         const val destroyed = "Destroyed!"
+        const val EARTH = 6371  //Radius of the earth in Km, used for position calculation
+        const val NEIGHBOUR_RADIUS = 50 //Radius to check for finding neighbours in meter
         enum class State{ ALLOW, DENY, REPORT }
     }
 }

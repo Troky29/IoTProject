@@ -40,6 +40,7 @@ class FirebaseService : FirebaseMessagingService() {
     override fun onMessageReceived(remoteMessage: RemoteMessage) {
         super.onMessageReceived(remoteMessage)
 
+        Log.i(TAG, remoteMessage.data.toString())
         val intent = Intent(this, MainActivity::class.java)
         val notificationManager = getSystemService(NOTIFICATION_SERVICE) as NotificationManager
         val notificationID = Random.nextInt()
@@ -48,6 +49,7 @@ class FirebaseService : FirebaseMessagingService() {
             createNotificationChannel(notificationManager)
         }
 
+        //TODO: check the kind of notification, the generate the corresponding body
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
         val pendingIntent = PendingIntent.getActivity(this, 0, intent, FLAG_ONE_SHOT)
 

@@ -9,6 +9,7 @@ import com.example.iotproject.Constants.Companion.URL
 import com.example.iotproject.Constants.Companion.invalid_data
 import com.example.iotproject.Constants.Companion.no_gates
 import com.example.iotproject.Constants.Companion.server_error
+import com.example.iotproject.fragments.more.LocationHelper
 import okhttp3.*
 import okhttp3.RequestBody.Companion.toRequestBody
 import org.json.JSONArray
@@ -72,8 +73,9 @@ class MainActivityViewModel : ViewModel() {
         //TODO: Code to import gate info from server, to do while waiting during login
     }
 
-    fun addGate(name: String, location: String, code: String) {
-        val body = """{"name":"$name", "location":"$location", "id_gate":"$code"}"""
+    fun addGate(name: String, location: String, latitude: Double, longitude: Double, code: String) {
+        val body = """{"name":"$name", "location":"$location", "latitude":"$latitude", 
+            |"longitude", "$longitude" "id_gate":"$code"}"""
         val requestBody = body.toRequestBody(JSON)
 
         val request = Request.Builder()
@@ -132,7 +134,7 @@ class MainActivityViewModel : ViewModel() {
             override fun onResponse(call: Call, response: Response) {
                 when (response.code) {
                     200 -> message.postValue("Successfully added car!")
-                    400 -> message.postValue(Constants.invalid_data)
+                    400 -> message.postValue(invalid_data)
                     409 -> message.postValue("Car already exists!")
                 }
             }
