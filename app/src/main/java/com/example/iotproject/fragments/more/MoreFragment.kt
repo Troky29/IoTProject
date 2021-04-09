@@ -26,7 +26,7 @@ class MoreFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         view.findViewById<Button>(R.id.registerCarButton).setOnClickListener() {
-            RegisterCarDialog().show(childFragmentManager, "RegisterCarFragment")
+            RegisterCarDialog().show(childFragmentManager, "RegisterCarDialog")
         }
 
         view.findViewById<Button>(R.id.registerGateButton).setOnClickListener() {

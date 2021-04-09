@@ -65,7 +65,7 @@ class RegisterGateActivity : AppCompatActivity() {
             val locationHelper = LocationHelper(this)
             val location = locationHelper.getNearestLocation(thoroughfare, feature, locality, postalCode)
             for (neighbour in locationHelper.getNeighbours(location, NEIGHBOUR_RADIUS))
-                //TODO: abilitate this only at the end
+                //TODO: enable this only at the end
                 //FirebaseMessaging.getInstance().subscribeToTopic(neighbour)
 
             viewModel.addGate(name, location.address, location.latitude, location.longitude, code)

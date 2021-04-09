@@ -33,7 +33,7 @@ class RegisterCarDialog : DialogFragment() {
             val color = colorTextView.text.toString()
             val brand = brandTextView.text.toString()
 
-            val corrected = license.replace("\\s".toRegex(), "").toUpperCase()
+            val corrected = license.replace("\\s".toRegex(), "").toUpperCase(Locale.ROOT)
             val format = "^[A-Z]{2}[0-9]{3}[A-Z]{2}$".toRegex()
             if (corrected.length != 7 || !corrected.matches(format)) {
                 messenger("Incorrect license plate")

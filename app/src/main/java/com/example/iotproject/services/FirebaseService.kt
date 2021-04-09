@@ -66,7 +66,7 @@ class FirebaseService : FirebaseMessagingService() {
         val denyAction = PendingIntent.getBroadcast(this, 0, denyBroadcastIntent, PendingIntent.FLAG_UPDATE_CURRENT)
 
         val reportBroadcastReceiver = Intent(this, NotificationReceiver::class.java).apply {
-            putExtra("requestCode", Constants.Companion.State.REPORT)
+            putExtra("requestCode", State.REPORT)
             putExtra("notificationID", notificationID)
         }
         val reportAction = PendingIntent.getBroadcast(this, 0, reportBroadcastReceiver, PendingIntent.FLAG_UPDATE_CURRENT)

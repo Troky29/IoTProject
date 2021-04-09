@@ -11,7 +11,7 @@ class Constants {
         const val FCM_URL = "https://fcm.googleapis.com"
         //TODO: update with the server key of the IoTProject
         const val SERVER_KEY = "AAAAxL7lTsI:APA91bEsVnNzbVM2cZ2rbkl05xSYf7IVMayZpszta2QiCCqgP-8TvtDMzvkQLuQxPJuAlApXRLQQJMsBzH2a7hg9FTboUMNtAmDQktvdjp-_LNk7x7NfzsiE71ETxSd1OknVmlexum3h"
-        const val TOPIC = "myTopic"
+        //const val TOPIC = "myTopic"
         //const val CONTENT_TYPE = "application/json"
         val JSON = ("application/json; charset=utf-8").toMediaType()
         //TODO: check if is important to pass information from login to starting screen
