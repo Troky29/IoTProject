@@ -9,16 +9,12 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
 import android.widget.Toast
-import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.security.crypto.EncryptedSharedPreferences
 import androidx.security.crypto.MasterKeys
-import com.example.iotproject.AccessTokenRepository
+import com.example.iotproject.*
 import com.example.iotproject.Constants.Companion.EMAIL
-import com.example.iotproject.LoadingDialog
-import com.example.iotproject.MainActivity
-import com.example.iotproject.R
 
 class Login : AppCompatActivity() {
     private val loadingDialog by lazy { LoadingDialog() }
@@ -41,7 +37,11 @@ class Login : AppCompatActivity() {
         if (AccessTokenRepository.logout) logout(encrypted)
         val refreshToken = sharedPreferences.getString("jwtRefresh", "")!!
 
-        val tokenObserver = Observer<String> { token -> if (token.isNotEmpty()) login(token, refreshToken) }
+        val tokenObserver = Observer<String> { token ->
+            loadingDialog.dismiss()
+            if (token.isNotEmpty())
+                login(token, refreshToken)
+        }
         val refreshTokenObserver = Observer<String> { token -> encrypted.putString("jwtRefresh", token).apply() }
         val messageObserver = Observer<String> { message ->
             loadingDialog.dismiss()
@@ -63,16 +63,16 @@ class Login : AppCompatActivity() {
             val password = findViewById<EditText>(R.id.passwordEditText).text.toString()
             if (email.isNotEmpty() && password.isNotEmpty()) {
                 //TODO: we skip login to test without the need to connect to the server
-                loginViewModel.login(email, password)
+                //loginViewModel.login(email, password)
                 loadingDialog.show(supportFragmentManager, "LoadingDialog")
+                //TODO: delete this line, just used for testing
+                login("", "")
             }
         }
 
         findViewById<TextView>(R.id.signInTextView).setOnClickListener() {
             signIn()
         }
-        //TODO: delete this, just for testing
-        //login("", "")
     }
 
     private fun login(sessionToken: String, refreshToken: String) {
@@ -86,6 +86,7 @@ class Login : AppCompatActivity() {
             flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
             //TODO: see if its actually useful to send information from the Login View
         }
+        loadingDialog.dismiss()
         startActivity(intent)
     }
 

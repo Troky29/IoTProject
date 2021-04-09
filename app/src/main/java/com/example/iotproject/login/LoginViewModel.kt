@@ -10,6 +10,7 @@ import com.example.iotproject.Constants
 import com.example.iotproject.Constants.Companion.JSON
 import com.example.iotproject.Constants.Companion.URL
 import com.example.iotproject.Constants.Companion.invalid_data
+import com.example.iotproject.Constants.Companion.invalid_token
 import com.example.iotproject.Constants.Companion.invalid_user
 import com.example.iotproject.Constants.Companion.server_error
 import okhttp3.*
@@ -49,7 +50,11 @@ class LoginViewModel : ViewModel() {
                         message.postValue(server_error)
                     }
                     400 -> message.postValue(invalid_data)
-                    401 -> { Log.i(TAG, Constants.invalid_token) }
+                    401 -> {    //We reset both, so that we actually delete the memory of the wrong token
+                        Log.i(TAG, invalid_token)
+                        token.postValue("")
+                        refreshToken.postValue("")
+                    }
                 }
             }
         })
