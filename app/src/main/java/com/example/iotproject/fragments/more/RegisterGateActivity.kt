@@ -7,12 +7,18 @@ import android.location.Geocoder
 import android.os.Bundle
 import android.util.Log
 import android.widget.*
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.example.iotproject.Constants.Companion.NEIGHBOUR_RADIUS
+import com.example.iotproject.IoTApplication
 import com.example.iotproject.MainActivityViewModel
 import com.example.iotproject.R
+import com.example.iotproject.fragments.gate.Gate
+import com.example.iotproject.fragments.gate.GateFragmentViewModel
+import com.example.iotproject.fragments.gate.GateViewModelFactory
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import com.google.zxing.integration.android.IntentIntegrator
@@ -26,7 +32,7 @@ class RegisterGateActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_register_gate)
 
-        val viewModel = ViewModelProvider(this).get(MainActivityViewModel::class.java)
+        //val viewModel = ViewModelProvider(this).get(GateFragmentViewModel::class.java)
         autocompleteLocation()
         //TODO: possibly we could autocomplete the location field
         findViewById<ImageButton>(R.id.qrCodeImageButton).setOnClickListener {
@@ -40,6 +46,10 @@ class RegisterGateActivity : AppCompatActivity() {
             val locality = findViewById<EditText>(R.id.gateLocalityEditText).text.toString()
             val postalCode = findViewById<EditText>(R.id.gatePostalCodeEditText).text.toString()
             val code = findViewById<EditText>(R.id.gateCodeEditText).text.toString()
+
+            val viewModel: GateFragmentViewModel by viewModels {
+                GateViewModelFactory((application as IoTApplication).repository)
+            }
 
             if (name.isEmpty()) {
                 messenger("Insert a gate name")
@@ -65,12 +75,14 @@ class RegisterGateActivity : AppCompatActivity() {
             val locationHelper = LocationHelper(this)
             val location = locationHelper.getNearestLocation(thoroughfare, feature, locality, postalCode)
             for (neighbour in locationHelper.getNeighbours(location, NEIGHBOUR_RADIUS))
+                continue
                 //TODO: enable this only at the end
                 //FirebaseMessaging.getInstance().subscribeToTopic(neighbour)
-
+            //viewModel.addGate(name, location.address, location.latitude, location.longitude, code)
+            //viewModel.insert(Gate(name, location.address, "Code", null))
             viewModel.addGate(name, location.address, location.latitude, location.longitude, code)
             //TODO: when you have decided what to do with viewmodels, observe a variable and return only after having received a reply
-            finish()
+            //finish()
         }
     }
 

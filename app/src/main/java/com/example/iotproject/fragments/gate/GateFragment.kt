@@ -1,17 +1,22 @@
 package com.example.iotproject.fragments.gate
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ProgressBar
 import android.widget.TextView
 import android.widget.Toast
+import androidx.activity.viewModels
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.LinearSnapHelper
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.SnapHelper
+import com.example.iotproject.IoTApplication
 import com.example.iotproject.R
 
 class GateFragment: Fragment() {
@@ -33,25 +38,31 @@ class GateFragment: Fragment() {
         val snapHelper: SnapHelper = SnapHelperOneByOne()
         snapHelper.attachToRecyclerView(recyclerView)
 
-        val viewModel = ViewModelProvider(this).get(GateFragmentViewModel::class.java)
+        val viewModel: GateFragmentViewModel by viewModels {
+            GateViewModelFactory((requireActivity().application as IoTApplication).repository)
+        }
         viewModel.message.observe(viewLifecycleOwner, { message ->
             messenger(message)
         })
         viewModel.gateList.observe(viewLifecycleOwner, { gateList ->
             flushGateCards()
+            hideProgressBar()
             for (gate in gateList)
                 addGateCard(gate)
+            if (gateList.isNotEmpty())
+                hideNoGateMessage()
         })
+        showProgressBar()
     }
 
-    fun addGateCard(gate: Gate) {
+    private fun addGateCard(gate: Gate) {
         //TODO: gate should also include the url to the image
         val item = GateCardItem(R.drawable.hqdefault, gate.name, gate.location)
         gateCardList.add(item)
         recyclerView.adapter!!.notifyDataSetChanged()
     }
 
-    fun flushGateCards() {
+    private fun flushGateCards() {
         gateCardList.clear()
         recyclerView.adapter!!.notifyDataSetChanged()
     }
@@ -59,7 +70,23 @@ class GateFragment: Fragment() {
     override fun onResume() {
         super.onResume()
         if (gateCardList.isEmpty())
-            view?.findViewById<TextView>(R.id.emptyGateTextView)!!.visibility = View.INVISIBLE
+            showNoGateMessage()
+    }
+
+    private fun hideNoGateMessage() {
+        view?.findViewById<TextView>(R.id.emptyGateTextView)!!.visibility = View.INVISIBLE
+    }
+
+    private fun showNoGateMessage() {
+        view?.findViewById<TextView>(R.id.emptyGateTextView)!!.visibility = View.VISIBLE
+    }
+
+    private fun hideProgressBar() {
+        view?.findViewById<ProgressBar>(R.id.gateProgressBar)!!.visibility = View.INVISIBLE
+    }
+
+    private fun showProgressBar() {
+        view?.findViewById<ProgressBar>(R.id.gateProgressBar)!!.visibility = View.VISIBLE
     }
 
     private fun messenger(message: String) {

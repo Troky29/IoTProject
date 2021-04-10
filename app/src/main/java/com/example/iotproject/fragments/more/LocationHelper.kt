@@ -13,7 +13,7 @@ class LocationHelper(val context: Context) {
     val geocoder = Geocoder(context, Locale.getDefault())
 
     fun getNearestLocation(thoroughfare: String, feature: String, locality: String, postalCode: String): LocationInfo {
-        val query = "$thoroughfare, $feature, $postalCode $locality"
+        val query = "$thoroughfare, $feature, $postalCode, $locality"
         val location = geocoder.getFromLocationName(query, 1)[0]
         return LocationInfo(location.getAddressLine(0), location.latitude, location.longitude)
     }
