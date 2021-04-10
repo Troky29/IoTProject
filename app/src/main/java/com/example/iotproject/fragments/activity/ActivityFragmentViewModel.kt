@@ -26,7 +26,7 @@ class ActivityFragmentViewModel : ViewModel() {
         }
     }
 
-    fun loadActivities() {
+    private fun loadActivities() {
         val request = Request.Builder()
             .url(Constants.URL + "activity")
             .build()

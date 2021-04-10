@@ -1,17 +1,14 @@
 package com.example.iotproject
 
 import android.util.Log
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.iotproject.Constants.Companion.JSON
 import com.example.iotproject.Constants.Companion.URL
 import com.example.iotproject.Constants.Companion.invalid_data
-import com.example.iotproject.Constants.Companion.no_gates
 import com.example.iotproject.Constants.Companion.server_error
 import okhttp3.*
 import okhttp3.RequestBody.Companion.toRequestBody
-import org.json.JSONArray
 import java.io.IOException
 
 
