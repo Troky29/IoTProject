@@ -9,7 +9,7 @@ import okhttp3.RequestBody.Companion.toRequestBody
 import org.json.JSONArray
 import java.io.IOException
 
-class GateFragmentViewModel(private val repository: GateRepository) : ViewModel() {
+class GateFragmentViewModel(private val repository: AppRepository) : ViewModel() {
     val TAG = "GateFragmentViewModel"
 
     private var client: OkHttpClient = OkHttpClient().newBuilder()
@@ -45,6 +45,7 @@ class GateFragmentViewModel(private val repository: GateRepository) : ViewModel(
                             //insert(Gate(name, location, code, null))
                         }
                         //TODO: see if this actually works
+                        //deleteAll()
                         insertAll(list)
                     } catch (e: Exception) {
                         message.postValue(Constants.server_error)
@@ -87,11 +88,15 @@ class GateFragmentViewModel(private val repository: GateRepository) : ViewModel(
     }
 
     private fun insert(gate: Gate) = viewModelScope.launch {
-        repository.insert(gate)
+        repository.insertGate(gate)
     }
 
     private fun insertAll(gates: List<Gate>) = viewModelScope.launch {
-        repository.insertAll(gates)
+        repository.insertAllGates(gates)
+    }
+
+    fun deleteAll() = viewModelScope.launch {
+        repository.deleteAllGates()
     }
 
     override fun onCleared() {
@@ -100,7 +105,7 @@ class GateFragmentViewModel(private val repository: GateRepository) : ViewModel(
     }
 }
 
-class GateViewModelFactory(private val repository: GateRepository) : ViewModelProvider.Factory {
+class GateViewModelFactory(private val repository: AppRepository) : ViewModelProvider.Factory {
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         if (modelClass.isAssignableFrom(GateFragmentViewModel::class.java)) {
             @Suppress("UNCHECKED_CAST")

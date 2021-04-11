@@ -6,9 +6,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.iotproject.IoTApplication
 import com.example.iotproject.R
 import java.util.ArrayList
 
@@ -28,7 +30,9 @@ class ActivityFragment: Fragment() {
         recyclerView.layoutManager = LinearLayoutManager(activity)
         recyclerView.setHasFixedSize(true)
 
-        val viewModel = ViewModelProvider(this).get(ActivityFragmentViewModel::class.java)
+        val viewModel: ActivityFragmentViewModel by viewModels {
+            ActivityViewModelFactory((requireActivity().application as IoTApplication).repository)
+        }
         viewModel.message.observe(viewLifecycleOwner, { message ->
             messenger(message)
         })
@@ -45,7 +49,7 @@ class ActivityFragment: Fragment() {
         recyclerView.adapter!!.notifyDataSetChanged()
     }
 
-    fun flushActivityCards() {
+    private fun flushActivityCards() {
         activityCardList.clear()
         recyclerView.adapter!!.notifyDataSetChanged()
     }

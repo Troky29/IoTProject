@@ -5,7 +5,6 @@ import androidx.room.*
 
 @Dao
 interface GateDao {
-
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insert(gate: Gate)
 
@@ -14,13 +13,15 @@ interface GateDao {
 
     @Update
     fun update(gate: Gate)
-
+/*
     @Delete
     fun delete(gate: Gate)
-
+*/
     @Query("DELETE FROM gate")
-    fun deleteAll()
+    suspend fun deleteAll()
 
     @Query("SELECT * FROM gate ORDER BY name DESC")
     fun getAll(): LiveData<List<Gate>>
+
+    //TODO: see if you need more Dao
 }

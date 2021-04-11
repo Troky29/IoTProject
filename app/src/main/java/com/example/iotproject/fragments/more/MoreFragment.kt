@@ -7,8 +7,12 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
+import com.example.iotproject.IoTApplication
 import com.example.iotproject.R
+import com.example.iotproject.fragments.gate.GateFragmentViewModel
+import com.example.iotproject.fragments.gate.GateViewModelFactory
 import com.example.iotproject.login.Login
 import com.example.iotproject.login.LoginViewModel
 
@@ -21,6 +25,8 @@ class MoreFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+
+
         view.findViewById<Button>(R.id.registerCarButton).setOnClickListener() {
             RegisterCarDialog().show(childFragmentManager, "RegisterCarDialog")
         }
@@ -31,6 +37,16 @@ class MoreFragment : Fragment() {
         }
 
         view.findViewById<Button>(R.id.loguotButton).setOnClickListener() { logout() }
+
+        view.findViewById<Button>(R.id.deleteGateButton).setOnClickListener() { deleteAllGates() }
+    }
+
+    private fun deleteAllGates() {
+        val viewModel: GateFragmentViewModel by viewModels {
+            GateViewModelFactory((requireActivity().application as IoTApplication).repository)
+        }
+        viewModel.deleteAll()
+        //TODO: eventually make also a call to delete the servers gate
     }
 
     private fun logout() {
