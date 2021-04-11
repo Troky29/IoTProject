@@ -48,6 +48,7 @@ class RegisterCarDialog : DialogFragment() {
                 return@setOnClickListener
             }
 
+            //TODO: see if we need to have a reference of theese, otherwise we do not need db integration
             val viewModel = ViewModelProvider(this).get(MainActivityViewModel::class.java)
             viewModel.addCar(license, color, brand)
             dismiss()
@@ -62,5 +63,7 @@ class RegisterCarDialog : DialogFragment() {
         dialog!!.window?.setLayout(width, ViewGroup.LayoutParams.WRAP_CONTENT)
     }
 
-    private fun messenger(message: String) = Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
+    private fun messenger(message: String) {
+        Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
+    }
 }

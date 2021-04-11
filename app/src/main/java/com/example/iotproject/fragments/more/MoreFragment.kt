@@ -15,6 +15,7 @@ import com.example.iotproject.fragments.gate.GateFragmentViewModel
 import com.example.iotproject.fragments.gate.GateViewModelFactory
 import com.example.iotproject.login.Login
 import com.example.iotproject.login.LoginViewModel
+import kotlin.contracts.contract
 
 class MoreFragment : Fragment() {
 
@@ -33,6 +34,12 @@ class MoreFragment : Fragment() {
 
         view.findViewById<Button>(R.id.registerGateButton).setOnClickListener() {
             val intent = Intent(context, RegisterGateActivity::class.java)
+            startActivity(intent)
+        }
+
+        view.findViewById<Button>(R.id.addSpecialRuleButton).setOnClickListener() {
+            //SpecialRuleDialog().show(childFragmentManager, "SpecialRuleDialog")
+            val intent = Intent(context, SpecialRuleActivity::class.java)
             startActivity(intent)
         }
 

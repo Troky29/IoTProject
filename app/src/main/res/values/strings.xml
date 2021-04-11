@@ -15,7 +15,7 @@
     <string name="car_brand">Car brand</string>
     <string name="confirm">Confirm</string>
     <string name="register_gate">Register gate</string>
-    <string name="car_details">Car Details</string>
+    <string name="registe_car_title">Car Details</string>
     <string name="no_gates">No gates</string>
 
     <string-array name="car_colors">
@@ -37,5 +37,7 @@
 
     <string name="hello_world">Hello Square World!</string>
     <string name="toolbar_default">Name Surname</string>
+    <string name="rule_dialog_title">Rule Details</string>
+    <string name="nickname_hint">Nickname</string>
 
 </resources>

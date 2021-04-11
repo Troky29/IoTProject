@@ -10,7 +10,7 @@
         android:id="@+id/newCarTextView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/car_details"
+        android:text="@string/registe_car_title"
         android:textSize="24sp"
         android:textColor="@color/white"
         android:layout_margin="16dp"

@@ -10,6 +10,7 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
 import android.widget.Toast
+import androidx.activity.viewModels
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.security.crypto.EncryptedSharedPreferences
@@ -80,6 +81,7 @@ class Login : AppCompatActivity() {
             //TODO: we skip login to test without the need to connect to the server
             //loginViewModel.login(email, password)
             loadingDialog.show(supportFragmentManager, "LoadingDialog")
+            login("", "")
         }
 
         findViewById<TextView>(R.id.signInTextView).setOnClickListener() {

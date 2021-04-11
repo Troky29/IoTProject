@@ -44,7 +44,7 @@ class ActivityFragment: Fragment() {
     }
 
     private fun addActivityCard(activity: Activity) {
-        val item = ActivityCardItem(R.drawable.hqdefault, "Granted", "29/19/2020")
+        val item = ActivityCardItem(R.drawable.hqdefault, activity.state,activity.datetime)
         activityCardList.add(item)
         recyclerView.adapter!!.notifyDataSetChanged()
     }
