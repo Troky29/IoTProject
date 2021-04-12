@@ -4,19 +4,31 @@ import android.app.DatePickerDialog
 import android.app.TimePickerDialog
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.widget.*
 import androidx.lifecycle.ViewModelProvider
+import com.example.iotproject.LoadingDialog
 import com.example.iotproject.MainActivityViewModel
 import com.example.iotproject.R
 import java.text.SimpleDateFormat
+import java.time.LocalDate
 import java.util.*
+import kotlin.Exception
 
 class SpecialRuleActivity : AppCompatActivity() {
     private val calendar = Calendar.getInstance()
+    private val loadingDialog = LoadingDialog()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.fragment_special_rule)
+
+        val viewModel = ViewModelProvider(this).get(MainActivityViewModel::class.java)
+        viewModel.message.observe(this, { message ->
+            loadingDialog.dismiss()
+            messenger(message)
+        })
+
         val colorTextView = findViewById<AutoCompleteTextView>(R.id.colorAutoCompleteTextView)
         val colors: Array<out String> = resources.getStringArray(R.array.car_colors)
         ArrayAdapter(this, android.R.layout.simple_list_item_1, colors).also { adapter ->
@@ -70,6 +82,9 @@ class SpecialRuleActivity : AppCompatActivity() {
             val corrected = license.replace("\\s".toRegex(), "").toUpperCase(Locale.ROOT)
             val format = "^[A-Z]{2}[0-9]{3}[A-Z]{2}$".toRegex()
 
+            val correctedDate = date.trim().replace("/", "-")
+            val correctedTime = time.trim().replace(".", ":")
+
             if (nickname.isEmpty()) {
                 messenger("Please insert a nickname")
                 return@setOnClickListener
@@ -87,36 +102,60 @@ class SpecialRuleActivity : AppCompatActivity() {
                 return@setOnClickListener
             }
             //TODO: check for actual date and time format
-            if(date.isEmpty()) {
-                messenger("Insert a date (day/month/year)")
+            if(correctedDate.isEmpty() || !checkDate(correctedDate)) {
+                messenger("Insert a valid date (day-month-year)")
                 return@setOnClickListener
             }
-            if (time.isEmpty()) {
-                messenger("Insert time (hour:minute")
+            if (correctedTime.isEmpty() || !checkTime(correctedTime)) {
+                messenger("Insert a valid time (hour:minute)")
                 return@setOnClickListener
             }
-
+            val datetime = "$date $time:00"
             //TODO: see if we need to have a reference of these, otherwise we do not need db integration
-            val viewModel = ViewModelProvider(this).get(MainActivityViewModel::class.java)
-            //TODO: implement the actual call to the server
-            //TODO: wait for the correct execution of the task befor returning
-            finish()
+            loadingDialog.show(supportFragmentManager, "LoadingDialog")
+            viewModel.addSpecialRule(nickname, license, color, brand,datetime)
         }
     }
 
     private fun updateDateInView() {
-        val myFormat = "dd/MM/yyyy"
-        val sdf = SimpleDateFormat(myFormat, Locale.ITALY)
+        val dateFormat = "dd-MM-yyyy"
+        val sdf = SimpleDateFormat(dateFormat, Locale.ITALY)
         findViewById<EditText>(R.id.dateEditText).setText(sdf.format(calendar.time))
     }
 
     private fun updateTimeInView() {
-        val myFormat = "HH:mm"
-        val sdf = SimpleDateFormat(myFormat, Locale.ITALY)
+        val timeFormat = "HH:mm"
+        val sdf = SimpleDateFormat(timeFormat, Locale.ITALY)
         findViewById<EditText>(R.id.timeEditText).setText(sdf.format(calendar.time))
+    }
+
+    private fun checkDate(date: String): Boolean {
+        val dateFormat = "dd-MM-yyyy"
+        val sdf = SimpleDateFormat(dateFormat, Locale.ITALY)
+        sdf.isLenient = false
+        return try {
+            sdf.parse(date)
+            true
+        } catch (e: Exception) {
+            false
+        }
+    }
+
+    private fun checkTime(time: String): Boolean {
+        val timeFormat = "HH:mm"
+        val sdf = SimpleDateFormat(timeFormat, Locale.ITALY)
+        sdf.isLenient = false
+        return try {
+            sdf.parse(time)
+            true
+        } catch (e: Exception) {
+            false
+        }
     }
 
     private fun messenger(message: String) {
         Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
+        if (message == "Successfully added rule!")
+            finish()
     }
 }

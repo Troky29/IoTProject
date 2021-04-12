@@ -24,7 +24,7 @@ class MainActivityViewModel : ViewModel() {
 
     //TODO: move this in the view model of the more fragment, since we have many operation to deal with
     fun addCar(license: String, color: String, brand: String) {
-        val body = """{"license":"$license", "color":"$color", "brand":"$brand"}"""
+        val body = """{"license":"$license", "color":"$color", "brand":"$brand"}""".trimMargin()
         val requestBody = body.toRequestBody(JSON)
 
         val request = Request.Builder()
@@ -42,6 +42,31 @@ class MainActivityViewModel : ViewModel() {
                     200 -> message.postValue("Successfully added car!")
                     400 -> message.postValue(invalid_data)
                     409 -> message.postValue("Car already exists!")
+                }
+            }
+        })
+    }
+
+    fun addSpecialRule(nickname: String, license: String, color: String, brand: String, datetime: String) {
+        val body = """{"nickname":"$nickname", "license":"$license", 
+            |"color":"$color", "brand":"$brand", "dead_line":"$datetime"}""".trimMargin()
+        val requestBody = body.toRequestBody(JSON)
+
+        val request = Request.Builder()
+                .url(URL + "guest")
+                .post(requestBody)
+                .build()
+
+        client.newCall(request).enqueue(object : Callback {
+            override fun onFailure(call: Call, e: IOException) {
+                message.postValue(server_error)
+            }
+
+            override fun onResponse(call: Call, response: Response) {
+                when (response.code) {
+                    200 -> message.postValue("Successfully added rule!")
+                    400 -> message.postValue(invalid_data)
+                    500 -> message.postValue(server_error)
                 }
             }
         })
