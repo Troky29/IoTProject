@@ -25,36 +25,37 @@ class ActivityCardAdapter(private val activityList: List<ActivityCardItem>, val 
 
     override fun onBindViewHolder(holder: CardViewHolder, position: Int) {
         val currentItem = activityList[position]
+        //TODO:maybe you should save a thumbnail, and then load only id
+        Glide.with(context).load(currentItem.imageResource)
+            .placeholder(R.drawable.hqdefault)
+            .into(holder.activityImage)
 
-        if (!currentItem.imageResource.isNullOrEmpty())
-            Glide.with(context).load(currentItem.imageResource).into(holder.activityImage)
-        else
-            holder.activityImage.setImageResource(R.drawable.hqdefault)
-        Log.i("ActivityCardAdapter", currentItem.imageResource!!)
         holder.activityAccess.text = currentItem.access
         holder.activityDate.text = currentItem.date
 
         holder.activityImage.setOnClickListener() {
-            showActivityImage(holder.activityImage.context, holder.activityImage.drawable)
+            showActivityImage(holder.activityImage.context, currentItem.imageResource)
         }
     }
 
     override fun getItemCount(): Int = activityList.size
 
-    private fun showActivityImage(context: Context, content: Drawable) {
+    private fun showActivityImage(context: Context, imageResource: String?) {
         val imageDialog: Dialog = Dialog(context).apply {
             requestWindowFeature(Window.FEATURE_NO_TITLE)
             setContentView(R.layout.dialog_activity)
         }
 
-        val image: Drawable? = content.constantState?.newDrawable() ?:
-            ResourcesCompat.getDrawable(context.resources, R.drawable.hqdefault, null)
+        val image = imageDialog.findViewById<ImageView>(R.id.activityDialogImageView)
 
+        Glide.with(context).load(imageResource)
+            .placeholder(R.drawable.hqdefault)
+            .into(image)
 
-        imageDialog.findViewById<ImageView>(R.id.activityDialogImageView).apply {
-            setImageDrawable(image)
-            setOnClickListener { imageDialog.cancel() }
+        image.setOnClickListener {
+                imageDialog.cancel()
         }
+
         imageDialog.window?.setBackgroundDrawableResource(android.R.color.transparent)
 
         imageDialog.show()
