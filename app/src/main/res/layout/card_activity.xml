@@ -12,7 +12,7 @@
         android:padding="16dp">
 
         <ImageView
-            android:id="@+id/cardImageView"
+            android:id="@+id/activityImageView"
             android:layout_width="100dp"
             android:layout_height="100dp"
             android:contentDescription="Image of activity"
@@ -22,9 +22,9 @@
             android:id="@+id/access_textView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@id/cardImageView"
-            android:layout_toRightOf="@id/cardImageView"
-            android:layout_toEndOf="@id/cardImageView"
+            android:layout_below="@id/activityImageView"
+            android:layout_toRightOf="@id/activityImageView"
+            android:layout_toEndOf="@id/activityImageView"
             android:layout_alignParentTop="true"
             android:layout_marginTop="16dp"
             android:layout_marginLeft="16dp"

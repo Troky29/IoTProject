@@ -5,6 +5,6 @@ import androidx.room.PrimaryKey
 import com.example.iotproject.fragments.gate.Gate
 
 @Entity(tableName = "activity")
-data class Activity(val gate: String, val datetime: String, var state: String, val image: String?) {
+data class Activity(val gate: String, val datetime: String, var state: String, val imageURL: String?) {
     @PrimaryKey(autoGenerate = true) var id: Int = 0
 }

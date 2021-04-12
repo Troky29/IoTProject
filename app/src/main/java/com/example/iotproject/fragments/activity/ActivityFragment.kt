@@ -26,7 +26,7 @@ class ActivityFragment: Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         recyclerView = view.findViewById(R.id.activityRecycleView)
-        recyclerView.adapter = ActivityCardAdapter(activityCardList)
+        recyclerView.adapter = ActivityCardAdapter(activityCardList, requireContext())
         recyclerView.layoutManager = LinearLayoutManager(activity)
         recyclerView.setHasFixedSize(true)
 
@@ -41,10 +41,11 @@ class ActivityFragment: Fragment() {
             for (activity in activityList)
                 addActivityCard(activity)
         })
+
     }
 
     private fun addActivityCard(activity: Activity) {
-        val item = ActivityCardItem(R.drawable.hqdefault, activity.state,activity.datetime)
+        val item = ActivityCardItem(activity.state,activity.datetime, activity.imageURL)
         activityCardList.add(item)
         recyclerView.adapter!!.notifyDataSetChanged()
     }

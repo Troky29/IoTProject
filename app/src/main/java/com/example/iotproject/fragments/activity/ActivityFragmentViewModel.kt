@@ -54,7 +54,7 @@ class ActivityFragmentViewModel(private val repository: AppRepository) : ViewMod
         })
     }
 
-    private fun insertAll(activities: ArrayList<Activity>) = viewModelScope.launch {
+   private fun insertAll(activities: List<Activity>) = viewModelScope.launch {
         repository.insertAllActivities(activities)
     }
 

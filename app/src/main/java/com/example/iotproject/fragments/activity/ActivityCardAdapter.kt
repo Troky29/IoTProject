@@ -3,18 +3,20 @@ package com.example.iotproject.fragments.activity
 import android.app.Dialog
 import android.content.Context
 import android.graphics.drawable.Drawable
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.Window
 import android.widget.ImageView
 import android.widget.TextView
-import androidx.cardview.widget.CardView
 import androidx.core.content.res.ResourcesCompat
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.example.iotproject.R
 
-class ActivityCardAdapter(private val activityList: List<ActivityCardItem>) : RecyclerView.Adapter<ActivityCardAdapter.CardViewHolder>() {
+class ActivityCardAdapter(private val activityList: List<ActivityCardItem>, val context: Context)
+    : RecyclerView.Adapter<ActivityCardAdapter.CardViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CardViewHolder {
         val itemView = LayoutInflater.from(parent.context).inflate(R.layout.card_activity, parent, false)
@@ -24,12 +26,16 @@ class ActivityCardAdapter(private val activityList: List<ActivityCardItem>) : Re
     override fun onBindViewHolder(holder: CardViewHolder, position: Int) {
         val currentItem = activityList[position]
 
-        holder.imageView.setImageResource(currentItem.imageResource)
-        holder.accessTextView.text = currentItem.access
-        holder.dateTextView.text = currentItem.date
+        if (!currentItem.imageResource.isNullOrEmpty())
+            Glide.with(context).load(currentItem.imageResource).into(holder.activityImage)
+        else
+            holder.activityImage.setImageResource(R.drawable.hqdefault)
+        Log.i("ActivityCardAdapter", currentItem.imageResource!!)
+        holder.activityAccess.text = currentItem.access
+        holder.activityDate.text = currentItem.date
 
-        holder.imageView.setOnClickListener() {
-            showActivityImage(holder.imageView.context, holder.imageView.drawable)
+        holder.activityImage.setOnClickListener() {
+            showActivityImage(holder.activityImage.context, holder.activityImage.drawable)
         }
     }
 
@@ -45,7 +51,7 @@ class ActivityCardAdapter(private val activityList: List<ActivityCardItem>) : Re
             ResourcesCompat.getDrawable(context.resources, R.drawable.hqdefault, null)
 
 
-        imageDialog.findViewById<ImageView>(R.id.activityImageView).apply {
+        imageDialog.findViewById<ImageView>(R.id.activityDialogImageView).apply {
             setImageDrawable(image)
             setOnClickListener { imageDialog.cancel() }
         }
@@ -55,11 +61,11 @@ class ActivityCardAdapter(private val activityList: List<ActivityCardItem>) : Re
     }
 
     class CardViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        val imageView: ImageView = itemView.findViewById(R.id.cardImageView)
-        val accessTextView: TextView = itemView.findViewById(R.id.access_textView)
-        val dateTextView: TextView = itemView.findViewById(R.id.date_textView)
-        val activityCard: CardView = itemView.findViewById(R.id.activityCardView)
+        val activityImage: ImageView = itemView.findViewById(R.id.activityImageView)
+        val activityAccess: TextView = itemView.findViewById(R.id.access_textView)
+        val activityDate: TextView = itemView.findViewById(R.id.date_textView)
+        //val activityCard: CardView = itemView.findViewById(R.id.activityCardView)
     }
 }
 
-data class ActivityCardItem (val imageResource: Int, val access: String, val date: String)
+data class ActivityCardItem (val access: String, val date: String, val imageResource: String?)
