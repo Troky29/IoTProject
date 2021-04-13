@@ -2,11 +2,8 @@ package com.example.iotproject.fragments.activity
 
 import androidx.lifecycle.*
 import com.example.iotproject.*
-import com.example.iotproject.fragments.gate.Gate
-import com.example.iotproject.fragments.gate.GateFragmentViewModel
 import kotlinx.coroutines.launch
 import okhttp3.*
-import org.json.JSONArray
 import org.json.JSONObject
 import java.io.IOException
 

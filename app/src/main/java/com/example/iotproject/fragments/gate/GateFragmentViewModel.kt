@@ -18,6 +18,7 @@ class GateFragmentViewModel(private val repository: AppRepository) : ViewModel()
             .build()
 
     val message: MutableLiveData<String> by lazy { MutableLiveData<String>() }
+    val loading: MutableLiveData<Boolean> by lazy { MutableLiveData<Boolean>() }
     val gateList: LiveData<List<Gate>> = repository.allGates
 
     fun loadGates() {
@@ -26,12 +27,15 @@ class GateFragmentViewModel(private val repository: AppRepository) : ViewModel()
                 .url(Constants.URL + "gate")
                 .build()
 
+        loading.postValue(true)
         client.newCall(request).enqueue(object : Callback {
             override fun onFailure(call: Call, e: IOException) {
+                loading.postValue(false)
                 message.postValue(Constants.server_error)
             }
 
             override fun onResponse(call: Call, response: Response) {
+                loading.postValue(false)
                 when (response.code) {
                     200 -> try {
                         val json = JSONObject(response.body!!.string())
@@ -75,6 +79,8 @@ class GateFragmentViewModel(private val repository: AppRepository) : ViewModel()
 
         client.newCall(request).enqueue(object : Callback {
             override fun onFailure(call: Call, e: IOException) {
+                //TODO: delete this
+                insert(Gate(name, location, code, null))
                 message.postValue(Constants.server_error)
             }
 

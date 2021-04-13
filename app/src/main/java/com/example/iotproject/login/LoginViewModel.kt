@@ -42,11 +42,12 @@ class LoginViewModel : ViewModel() {
         loading.postValue(true)
         client.newCall(request).enqueue(object : Callback {
             override fun onFailure(call: Call, e: IOException) {
-                message.postValue(server_error)
                 loading.postValue(false)
+                message.postValue(server_error)
             }
 
             override fun onResponse(call: Call, response: Response) {
+                loading.postValue(false)
                 when (response.code) {
                     200 -> try {
                         val jwtExpiry = JSONObject(response.body!!.string()).get("jwt_token_expiry").toString()
@@ -62,7 +63,6 @@ class LoginViewModel : ViewModel() {
                     }
 
                 }
-                loading.postValue(false)
             }
 
         })
@@ -78,11 +78,12 @@ class LoginViewModel : ViewModel() {
         loading.postValue(true)
         client.newCall(request).enqueue(object : Callback {
             override fun onFailure(call: Call, e: IOException) {
-                message.postValue(server_error)
                 loading.postValue(false)
+                message.postValue(server_error)
             }
 
             override fun onResponse(call: Call, response: Response) {
+                loading.postValue(false)
                 when (response.code) {
                     200 -> try {
                         val json = JSONObject(response.body!!.string())
@@ -96,7 +97,6 @@ class LoginViewModel : ViewModel() {
                     400 -> message.postValue(invalid_data)
                     401 -> message.postValue(invalid_user)
                 }
-                loading.postValue(false)
             }
         })
     }

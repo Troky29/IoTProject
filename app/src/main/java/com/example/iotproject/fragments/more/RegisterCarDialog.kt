@@ -33,9 +33,9 @@ class RegisterCarDialog : DialogFragment() {
             val color = colorTextView.text.toString()
             val brand = brandTextView.text.toString()
 
-            val corrected = license.replace("\\s".toRegex(), "").toUpperCase(Locale.ROOT)
+            val correctedLicense = license.replace("\\s".toRegex(), "").toUpperCase(Locale.ROOT)
             val format = "^[A-Z]{2}[0-9]{3}[A-Z]{2}$".toRegex()
-            if (corrected.length != 7 || !corrected.matches(format)) {
+            if (correctedLicense.length != 7 || !correctedLicense.matches(format)) {
                 messenger("Incorrect license plate")
                 return@setOnClickListener
             }
@@ -48,9 +48,9 @@ class RegisterCarDialog : DialogFragment() {
                 return@setOnClickListener
             }
 
-            //TODO: see if we need to have a reference of theese, otherwise we do not need db integration
+            //TODO: see if we need to have a reference of these, otherwise we do not need db integration
             val viewModel = ViewModelProvider(this).get(MainActivityViewModel::class.java)
-            viewModel.addCar(corrected, color, brand)
+            viewModel.addCar(correctedLicense, color, brand)
             dismiss()
         }
 

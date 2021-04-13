@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.LinearSnapHelper
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.SnapHelper
 import com.example.iotproject.IoTApplication
+import com.example.iotproject.LoadingDialog
 import com.example.iotproject.R
 
 class GateFragment: Fragment() {
@@ -41,19 +42,24 @@ class GateFragment: Fragment() {
         viewModel.message.observe(viewLifecycleOwner, { message ->
             messenger(message)
         })
+        viewModel.loading.observe(viewLifecycleOwner, { loading ->
+            if (loading)
+                view.findViewById<ProgressBar>(R.id.gateProgressBar)!!.visibility = View.VISIBLE
+            else
+                view.findViewById<ProgressBar>(R.id.gateProgressBar)!!.visibility = View.INVISIBLE
+        })
         viewModel.gateList.observe(viewLifecycleOwner, { gateList ->
+            val emptyGateTextView = view.findViewById<TextView>(R.id.emptyGateTextView)
             flushGateCards()
-            hideProgressBar()
             for (gate in gateList)
                 addGateCard(gate)
-            if (gateList.isNotEmpty())
-                hideNoGateMessage()
+            if (gateList.isEmpty())
+                emptyGateTextView.visibility = View.VISIBLE
         })
 
         //TODO: study a strategy for reloading gates
         viewModel.loadGates()
 
-        showProgressBar()
     }
 
     private fun addGateCard(gate: Gate) {
@@ -65,29 +71,6 @@ class GateFragment: Fragment() {
     private fun flushGateCards() {
         gateCardList.clear()
         recyclerView.adapter!!.notifyDataSetChanged()
-    }
-
-    override fun onResume() {
-        super.onResume()
-        if (gateCardList.isEmpty())
-            showNoGateMessage()
-    }
-
-    //TODO: make observers to the viewmodel, this is awful
-    private fun hideNoGateMessage() {
-        view?.findViewById<TextView>(R.id.emptyGateTextView)!!.visibility = View.INVISIBLE
-    }
-
-    private fun showNoGateMessage() {
-        view?.findViewById<TextView>(R.id.emptyGateTextView)!!.visibility = View.VISIBLE
-    }
-
-    private fun hideProgressBar() {
-        view?.findViewById<ProgressBar>(R.id.gateProgressBar)!!.visibility = View.INVISIBLE
-    }
-
-    private fun showProgressBar() {
-        view?.findViewById<ProgressBar>(R.id.gateProgressBar)!!.visibility = View.VISIBLE
     }
 
     private fun messenger(message: String) {

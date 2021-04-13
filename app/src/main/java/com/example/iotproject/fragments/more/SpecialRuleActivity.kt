@@ -11,7 +11,6 @@ import com.example.iotproject.LoadingDialog
 import com.example.iotproject.MainActivityViewModel
 import com.example.iotproject.R
 import java.text.SimpleDateFormat
-import java.time.LocalDate
 import java.util.*
 import kotlin.Exception
 
@@ -79,7 +78,7 @@ class SpecialRuleActivity : AppCompatActivity() {
             val date = findViewById<EditText>(R.id.dateEditText).text.toString()
             val time = findViewById<EditText>(R.id.timeEditText).text.toString()
 
-            val corrected = license.replace("\\s".toRegex(), "").toUpperCase(Locale.ROOT)
+            val correctedLicense = license.replace("\\s".toRegex(), "").toUpperCase(Locale.ROOT)
             val format = "^[A-Z]{2}[0-9]{3}[A-Z]{2}$".toRegex()
 
             val correctedDate = date.trim().replace("/", "-")
@@ -89,7 +88,7 @@ class SpecialRuleActivity : AppCompatActivity() {
                 messenger("Please insert a nickname")
                 return@setOnClickListener
             }
-            if (corrected.length != 7 || !corrected.matches(format)) {
+            if (correctedLicense.length != 7 || !correctedLicense.matches(format)) {
                 messenger("Incorrect license plate")
                 return@setOnClickListener
             }
@@ -110,10 +109,12 @@ class SpecialRuleActivity : AppCompatActivity() {
                 messenger("Insert a valid time (hour:minute)")
                 return@setOnClickListener
             }
-            val datetime = "$date $time:00"
+
+            val dateTime = getISO(date, time)
+            Log.i("Special rule", dateTime)
             //TODO: see if we need to have a reference of these, otherwise we do not need db integration
             loadingDialog.show(supportFragmentManager, "LoadingDialog")
-            viewModel.addSpecialRule(nickname, license, color, brand,datetime)
+            viewModel.addSpecialRule(nickname, correctedLicense, color, brand,dateTime)
         }
     }
 
@@ -151,6 +152,13 @@ class SpecialRuleActivity : AppCompatActivity() {
         } catch (e: Exception) {
             false
         }
+    }
+
+    private fun getISO(date: String, time: String): String {
+        val sdf = SimpleDateFormat("dd-MM-yyyy", Locale.ITALY)
+        val sdfISO = SimpleDateFormat("yyyy-MM-dd", Locale.ITALY)
+        val convertedDate = sdfISO.format(sdf.parse(date)!!)
+        return "$convertedDate $time:00"
     }
 
     private fun messenger(message: String) {
