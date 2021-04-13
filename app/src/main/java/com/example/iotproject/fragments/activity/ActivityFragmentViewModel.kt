@@ -7,6 +7,7 @@ import com.example.iotproject.fragments.gate.GateFragmentViewModel
 import kotlinx.coroutines.launch
 import okhttp3.*
 import org.json.JSONArray
+import org.json.JSONObject
 import java.io.IOException
 
 class ActivityFragmentViewModel(private val repository: AppRepository) : ViewModel() {
@@ -20,7 +21,7 @@ class ActivityFragmentViewModel(private val repository: AppRepository) : ViewMod
     val message: MutableLiveData<String> by lazy { MutableLiveData<String>() }
     val activityList: LiveData<List<Activity>> = repository.allActivities
 
-    private fun loadActivities() {
+    fun loadActivities() {
         val request = Request.Builder()
             .url(Constants.URL + "activity")
             .build()
@@ -33,14 +34,19 @@ class ActivityFragmentViewModel(private val repository: AppRepository) : ViewMod
             override fun onResponse(call: Call, response: Response) {
                 when (response.code) {
                     200 -> try {
-                        val json = JSONArray(response.body!!.string())
+                        val json = JSONObject(response.body!!.string())
+                        val activities = json.getJSONArray("activities")
+                        val guestActivities = json.getJSONArray("guest_activities")
+                        //val json = JSONArray(response.body!!.string())
+                        //TODO: if it works remember to include also guest activities
                         val list = ArrayList<Activity>()
-                        for (index in 0 until json.length()) {
-                            val item = json.getJSONObject(index)
-                            val gate = item.get("gate").toString()
-                            val dateTime = item.get("datetime").toString()
-                            val state = item.get("state").toString()
-                            list.add(Activity(gate, dateTime, state, null))
+                        for (index in 0 until activities.length()) {
+                            val item = activities.getJSONObject(index)
+                            val gate = item.get("ID_Gate").toString()
+                            val dateTime = item.get("Date_Time").toString()
+                            val state = item.get("Outcome").toString()
+                            val imageResource = item.get("Photo").toString()
+                            list.add(Activity(gate, dateTime, state, imageResource))
                         }
                         insertAll(list)
                     } catch (e: Exception) {

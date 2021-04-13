@@ -41,7 +41,8 @@ class ActivityFragment: Fragment() {
             for (activity in activityList)
                 addActivityCard(activity)
         })
-
+        //TODO: decide a strategy for reloading activities
+        viewModel.loadActivities()
     }
 
     private fun addActivityCard(activity: Activity) {

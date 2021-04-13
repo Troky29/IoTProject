@@ -4,6 +4,8 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 
 @Entity(tableName = "gate")
-data class Gate(val name: String, val location: String, val code: String, val imageURL: String?) {
-    @PrimaryKey(autoGenerate = true) var id: Int = 0
+data class Gate(val name: String,
+                val location: String,
+                @PrimaryKey val code: String,
+                val imageURL: String?) {
 }

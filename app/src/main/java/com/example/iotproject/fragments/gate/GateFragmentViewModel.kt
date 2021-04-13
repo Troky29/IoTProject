@@ -3,10 +3,12 @@ package com.example.iotproject.fragments.gate
 import android.util.Log
 import androidx.lifecycle.*
 import com.example.iotproject.*
+import com.example.iotproject.Constants.Companion.PHOTO_URL
 import kotlinx.coroutines.launch
 import okhttp3.*
 import okhttp3.RequestBody.Companion.toRequestBody
 import org.json.JSONArray
+import org.json.JSONObject
 import java.io.IOException
 
 class GateFragmentViewModel(private val repository: AppRepository) : ViewModel() {
@@ -34,14 +36,18 @@ class GateFragmentViewModel(private val repository: AppRepository) : ViewModel()
             override fun onResponse(call: Call, response: Response) {
                 when (response.code) {
                     200 -> try {
-                        val json = JSONArray(response.body!!.string())
+                        val json = JSONObject(response.body!!.string())
+                        val gates = json.getJSONArray("gates")
                         val list = mutableListOf<Gate>()
-                        for (index in 0 until json.length()) {
-                            val item = json.getJSONObject(index)
-                            val name = item.get("name").toString()
-                            val location = item.get("location").toString()
-                            val code = item.get("code").toString()
-                            list.add(Gate(name, location, code, null))
+                        for (index in 0 until gates.length()) {
+                            val item = gates.getJSONObject(index)
+                            //TODO: check if usefull, we can also get latitude and longitude if needed
+                            //val idUser = item.get("ID_User")
+                            val name = item.get("Name").toString()
+                            val location = item.get("Location").toString()
+                            val code = item.get("ID").toString()
+                            val imageURL = item.get("Photo").toString()
+                            list.add(Gate(name, location, code, imageURL))
                             //insert(Gate(name, location, code, null))
                         }
                         //TODO: see if this actually works
@@ -60,7 +66,7 @@ class GateFragmentViewModel(private val repository: AppRepository) : ViewModel()
 
     fun addGate(name: String, location: String, latitude: Double, longitude: Double, code: String) {
         val body = """{"name":"$name", "location":"$location", "latitude":"$latitude", 
-            |"longitude", "$longitude" "id_gate":"$code"}""".trimMargin()
+            |"longitude", "$longitude", "id_gate":"$code", "photo":""}""".trimMargin()
         val requestBody = body.toRequestBody(Constants.JSON)
 
         val request = Request.Builder()
@@ -77,6 +83,14 @@ class GateFragmentViewModel(private val repository: AppRepository) : ViewModel()
                 when (response.code) {
                     200 -> {
                         message.postValue("Successfully added gate!")
+                        val json = JSONObject(response.body!!.string())
+                        //TODO: after checking the functionality correct
+                        try {
+                            val imageUrl = json.getString("url_image")
+                            Log.i(TAG, "Success: $imageUrl")
+                        } catch (e: Exception) {
+                            Log.i(TAG, "è crashato")
+                        }
                         insert(Gate(name, location, code, null))
                     }
                     400 -> message.postValue(Constants.invalid_data)

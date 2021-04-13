@@ -81,10 +81,3 @@ class MainActivityViewModel : ViewModel() {
     data class Car(val license: String, val color: String, val brand: String)
 
 }
-/*
-class MainActivityViewModelFactory(private val accessRepository: AccessTokenRepository) : ViewModelProvider.Factory {
-    override fun <T : ViewModel?> create(modelClass: Class<T>): T {
-        return MainActivityViewModel(accessRepository) as T
-    }
-}
-*/

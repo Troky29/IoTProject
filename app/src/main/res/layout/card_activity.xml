@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:id="@+id/activityCardView"
@@ -23,24 +24,53 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@id/activityImageView"
-            android:layout_toRightOf="@id/activityImageView"
             android:layout_toEndOf="@id/activityImageView"
             android:layout_alignParentTop="true"
             android:layout_marginTop="16dp"
-            android:layout_marginLeft="16dp"
             android:layout_marginStart="16dp"
             android:textSize="30sp"
-            android:text="Acesso: tipo"/>
+            android:text="Gate name"/>
 
         <TextView
-            android:id="@+id/date_textView"
+            android:id="@+id/dateTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@id/access_textView"
-            android:layout_alignLeft="@id/access_textView"
             android:layout_alignStart="@id/access_textView"
             android:textSize="16sp"
             android:text="Data:01/01/2000"/>
+
+        <ImageView
+            android:id="@+id/acceptImageView"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_below="@+id/dateTextView"
+            android:layout_alignStart="@+id/activityImageView"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="16dp"
+            android:clickable="true"
+            android:focusable="true"
+            app:srcCompat="@drawable/ic_baseline_check_24"/>
+
+        <ImageView
+            android:id="@+id/denyImageView"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_below="@+id/dateTextView"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="16dp"
+            android:layout_toEndOf="@+id/acceptImageView"
+            app:srcCompat="@drawable/ic_baseline_clear_24" />
+
+        <ImageView
+            android:id="@+id/reportImageView"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_below="@+id/dateTextView"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="16dp"
+            android:layout_toEndOf="@+id/denyImageView"
+            app:srcCompat="@drawable/ic_gate_access" />
 
 
     </RelativeLayout>

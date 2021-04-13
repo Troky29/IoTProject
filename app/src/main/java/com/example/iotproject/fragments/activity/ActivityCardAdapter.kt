@@ -2,15 +2,12 @@ package com.example.iotproject.fragments.activity
 
 import android.app.Dialog
 import android.content.Context
-import android.graphics.drawable.Drawable
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.Window
 import android.widget.ImageView
 import android.widget.TextView
-import androidx.core.content.res.ResourcesCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.iotproject.R
@@ -25,7 +22,7 @@ class ActivityCardAdapter(private val activityList: List<ActivityCardItem>, val 
 
     override fun onBindViewHolder(holder: CardViewHolder, position: Int) {
         val currentItem = activityList[position]
-        //TODO:maybe you should save a thumbnail, and then load only id
+
         Glide.with(context).load(currentItem.imageResource)
             .placeholder(R.drawable.hqdefault)
             .into(holder.activityImage)
@@ -64,8 +61,7 @@ class ActivityCardAdapter(private val activityList: List<ActivityCardItem>, val 
     class CardViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val activityImage: ImageView = itemView.findViewById(R.id.activityImageView)
         val activityAccess: TextView = itemView.findViewById(R.id.access_textView)
-        val activityDate: TextView = itemView.findViewById(R.id.date_textView)
-        //val activityCard: CardView = itemView.findViewById(R.id.activityCardView)
+        val activityDate: TextView = itemView.findViewById(R.id.dateTextView)
     }
 }
 

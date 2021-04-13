@@ -10,21 +10,27 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.example.iotproject.LoadingDialog
 import com.example.iotproject.R
-import java.util.regex.Pattern
 
 class SignIn : AppCompatActivity() {
     private val loadingDialog by lazy { LoadingDialog() }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_sign_in)
 
         val messageObserver = Observer<String> { message ->
-            loadingDialog.dismiss()
             messenger(message)
+        }
+        val loadingObserver = Observer<Boolean> { loading ->
+            if (loading)
+                loadingDialog.show(supportFragmentManager, "LoadingDialog")
+            else
+                loadingDialog.dismiss()
         }
 
         val loginViewModel = ViewModelProvider(this).get(LoginViewModel::class.java)
         loginViewModel.message.observe(this, messageObserver)
+        loginViewModel.loading.observe(this, loadingObserver)
 
         findViewById<Button>(R.id.signInButton).setOnClickListener() {
             val email = findViewById<EditText>(R.id.emailEditText).text.toString()
@@ -47,7 +53,6 @@ class SignIn : AppCompatActivity() {
                 messenger("Repeat the password")
             }
             if (password == repeatPassword) {
-                loadingDialog.show(supportFragmentManager, "LoadingDialog")
                 loginViewModel.signIn(email, password)
             } else {
                 messenger("The passwords don't match!")

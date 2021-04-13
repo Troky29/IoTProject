@@ -49,6 +49,10 @@ class GateFragment: Fragment() {
             if (gateList.isNotEmpty())
                 hideNoGateMessage()
         })
+
+        //TODO: study a strategy for reloading gates
+        viewModel.loadGates()
+
         showProgressBar()
     }
 

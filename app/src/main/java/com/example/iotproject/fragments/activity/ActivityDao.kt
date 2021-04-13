@@ -2,7 +2,6 @@ package com.example.iotproject.fragments.activity
 
 import androidx.lifecycle.LiveData
 import androidx.room.*
-import com.example.iotproject.fragments.gate.Gate
 
 @Dao
 interface ActivityDao {
@@ -14,10 +13,7 @@ interface ActivityDao {
 
     @Update
     suspend fun update(activity: Activity)
-/*
-    @Delete
-    fun delete(activity: Activity)
-*/
+
     @Query("DELETE FROM activity")
     suspend fun deleteAll()
 

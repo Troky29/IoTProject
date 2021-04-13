@@ -12,7 +12,9 @@ import com.example.iotproject.Constants.Companion.URL
 import com.example.iotproject.Constants.Companion.invalid_data
 import com.example.iotproject.Constants.Companion.invalid_token
 import com.example.iotproject.Constants.Companion.invalid_user
+import com.example.iotproject.Constants.Companion.not_found
 import com.example.iotproject.Constants.Companion.server_error
+import com.example.iotproject.Constants.Companion.success
 import okhttp3.*
 import okhttp3.RequestBody.Companion.toRequestBody
 import org.json.JSONObject
@@ -24,6 +26,7 @@ class LoginViewModel : ViewModel() {
     private val client = OkHttpClient()
 
     val message: MutableLiveData<String> by lazy { MutableLiveData<String>() }
+    val loading: MutableLiveData<Boolean> by lazy { MutableLiveData<Boolean>() }
     val token: MutableLiveData<String> by lazy { MutableLiveData<String>() }
     val refreshToken: MutableLiveData<String> by lazy { MutableLiveData<String>() }
 
@@ -36,9 +39,11 @@ class LoginViewModel : ViewModel() {
                 .post(requestBody)
                 .build()
 
+        loading.postValue(true)
         client.newCall(request).enqueue(object : Callback {
             override fun onFailure(call: Call, e: IOException) {
                 message.postValue(server_error)
+                loading.postValue(false)
             }
 
             override fun onResponse(call: Call, response: Response) {
@@ -55,8 +60,11 @@ class LoginViewModel : ViewModel() {
                         token.postValue("")
                         refreshToken.postValue("")
                     }
+
                 }
+                loading.postValue(false)
             }
+
         })
     }
 
@@ -67,9 +75,11 @@ class LoginViewModel : ViewModel() {
                 .addHeader("Authorization", credential)
                 .build()
 
+        loading.postValue(true)
         client.newCall(request).enqueue(object : Callback {
             override fun onFailure(call: Call, e: IOException) {
                 message.postValue(server_error)
+                loading.postValue(false)
             }
 
             override fun onResponse(call: Call, response: Response) {
@@ -86,6 +96,7 @@ class LoginViewModel : ViewModel() {
                     400 -> message.postValue(invalid_data)
                     401 -> message.postValue(invalid_user)
                 }
+                loading.postValue(false)
             }
         })
     }
@@ -99,17 +110,20 @@ class LoginViewModel : ViewModel() {
             .post(requestBody)
             .build()
 
+        loading.postValue(true)
         client.newCall(request).enqueue(object : Callback {
             override fun onFailure(call: Call, e: IOException) {
                 message.postValue(server_error)
+                loading.postValue(false)
             }
 
             override fun onResponse(call: Call, response: Response) {
                 when (response.code) {
-                    200 -> message.postValue(Constants.success)
+                    200 -> message.postValue(success)
                     409 -> message.postValue("User already exists!")
                     500 -> message.postValue(server_error)
                 }
+                loading.postValue(false)
             }
         })
     }
@@ -131,14 +145,13 @@ class LoginViewModel : ViewModel() {
 
             override fun onResponse(call: Call, response: Response) {
                 when (response.code) {
-                    200 -> { message.postValue("Done!") }
-                    401 -> { Log.i(TAG, Constants.invalid_token)}
-                    404 -> { Log.i(TAG, Constants.not_found)}
+                    200 -> Log.i(TAG, success)
+                    401 -> Log.i(TAG, invalid_token)
+                    404 -> Log.i(TAG, not_found)
                     500 -> message.postValue(server_error)
                 }
             }
         })
-
         AccessTokenRepository.logout = true
     }
 

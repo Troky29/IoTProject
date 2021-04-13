@@ -10,8 +10,8 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import com.example.iotproject.Constants.Companion.EMAIL
 import com.example.iotproject.fragments.more.MoreFragment
 import com.example.iotproject.fragments.activity.ActivityFragment
 import com.example.iotproject.fragments.gate.GateFragment
@@ -31,14 +31,13 @@ class MainActivity : AppCompatActivity() {
         setSupportActionBar(findViewById(R.id.toolbar))
 
         val viewModel = ViewModelProvider(this).get(MainActivityViewModel::class.java)
-        //val messageObserver = Observer<String> { message -> messenger(message) }
         viewModel.message.observe(this, { message -> messenger(message) })
 
         val moreFragment = MoreFragment()
         val gateFragment = GateFragment()
         val activityFragment = ActivityFragment()
 
-        findViewById<TextView>(R.id.toolbarTextView).text = "Insert user info"
+        findViewById<TextView>(R.id.toolbarTextView).text = intent.getStringExtra(EMAIL)
         val profilePicture = findViewById<ImageButton>(R.id.profileButton)
 
         val bottomNavigation: BottomNavigationView = findViewById(R.id.bottom_navigation)
@@ -60,32 +59,13 @@ class MainActivity : AppCompatActivity() {
             }
         }
         bottomNavigation.selectedItemId = R.id.gate_page
-
-/*
-        viewModel.getGates().observe(this, { gates ->
-            gateFragment.flushGateCards()
-            if (gates.isNotEmpty())
-                gateFragment.hideEmpty()
-            for (gate in gates)
-                gateFragment.addGateCard(gate.name, gate.location, gate.code)
-        })
-
-
-        viewModel.getActivities().observe(this, { activities ->
-            //TODO: Update UI with list of activities
-        })
-
- */
-
         //We check for the permission for obtaining the location and start the service
         checkPermissions()
-        val intent = Intent(this, LocationService::class.java)
+        val locationService = Intent(this, LocationService::class.java)
         //TODO: Insert back location updates
-        //startService(intent)
-
+        //startService(locationService)
         //We need this authorization for implementing the notification inside the application
         checkGooglePlayServices()
-
         //This code updates the token that unequivocally identifies the device
         FirebaseService.sharedPreferences = getSharedPreferences("sharedPref", MODE_PRIVATE)
         FirebaseMessaging.getInstance().token.addOnSuccessListener { token ->
