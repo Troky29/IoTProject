@@ -50,7 +50,7 @@ class RegisterCarDialog : DialogFragment() {
 
             //TODO: see if we need to have a reference of theese, otherwise we do not need db integration
             val viewModel = ViewModelProvider(this).get(MainActivityViewModel::class.java)
-            viewModel.addCar(license, color, brand)
+            viewModel.addCar(corrected, color, brand)
             dismiss()
         }
 
