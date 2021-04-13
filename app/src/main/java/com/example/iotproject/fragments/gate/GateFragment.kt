@@ -73,6 +73,7 @@ class GateFragment: Fragment() {
             showNoGateMessage()
     }
 
+    //TODO: make observers to the viewmodel, this is awful
     private fun hideNoGateMessage() {
         view?.findViewById<TextView>(R.id.emptyGateTextView)!!.visibility = View.INVISIBLE
     }

@@ -3,11 +3,9 @@ package com.example.iotproject.fragments.gate
 import android.util.Log
 import androidx.lifecycle.*
 import com.example.iotproject.*
-import com.example.iotproject.Constants.Companion.PHOTO_URL
 import kotlinx.coroutines.launch
 import okhttp3.*
 import okhttp3.RequestBody.Companion.toRequestBody
-import org.json.JSONArray
 import org.json.JSONObject
 import java.io.IOException
 
@@ -65,8 +63,9 @@ class GateFragmentViewModel(private val repository: AppRepository) : ViewModel()
     }
 
     fun addGate(name: String, location: String, latitude: Double, longitude: Double, code: String) {
+        val imageResource = null
         val body = """{"name":"$name", "location":"$location", "latitude":"$latitude", 
-            |"longitude", "$longitude", "id_gate":"$code", "photo":""}""".trimMargin()
+            |"longitude":"$longitude", "id_gate":"$code", "photo":"$imageResource"}""".trimMargin()
         val requestBody = body.toRequestBody(Constants.JSON)
 
         val request = Request.Builder()
