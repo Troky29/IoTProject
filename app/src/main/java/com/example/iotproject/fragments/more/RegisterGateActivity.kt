@@ -65,12 +65,18 @@ class RegisterGateActivity : AppCompatActivity() {
                 messenger("Gate name is too long (MAX 30 characters)")
                 return@setOnClickListener
             }
-            //TODO: check for not admissible characters for the name
+
             if (thoroughfare.isEmpty() || feature.isEmpty() || locality.isEmpty() || postalCode.isEmpty()) {
                 messenger("Insert a location")
                 return@setOnClickListener
             }
-            //TODO: check for a valid location
+            val locationHelper = LocationHelper(this)
+            val location = locationHelper.getNearestLocation(thoroughfare, feature, locality, postalCode)
+            if (location == null){
+                messenger("Insert a valid location")
+                return@setOnClickListener
+            }
+
             try {
                 UUID.fromString(code)
             } catch (e: Exception) {
@@ -78,8 +84,6 @@ class RegisterGateActivity : AppCompatActivity() {
                 return@setOnClickListener
             }
 
-            val locationHelper = LocationHelper(this)
-            val location = locationHelper.getNearestLocation(thoroughfare, feature, locality, postalCode)
             for (neighbour in locationHelper.getNeighbours(location, NEIGHBOUR_RADIUS))
                 //TODO: enable this only at the end
                 //FirebaseMessaging.getInstance().subscribeToTopic(neighbour)

@@ -12,10 +12,20 @@ import kotlin.math.sin
 class LocationHelper(val context: Context) {
     val geocoder = Geocoder(context, Locale.getDefault())
 
-    fun getNearestLocation(thoroughfare: String, feature: String, locality: String, postalCode: String): LocationInfo {
+    fun getNearestLocation(thoroughfare: String, feature: String, locality: String, postalCode: String): LocationInfo? {
         val query = "$thoroughfare, $feature, $postalCode, $locality"
-        val location = geocoder.getFromLocationName(query, 1)[0]
-        return LocationInfo(location.getAddressLine(0), location.latitude, location.longitude)
+        //We try to check if the query given by the user bears an actual location
+        return try {
+            val location = geocoder.getFromLocationName(query, 1)[0]
+            if (location.thoroughfare.isNullOrEmpty() || location.featureName.isNullOrEmpty() ||
+                    location.locality.isNullOrEmpty() || location.postalCode.isNullOrEmpty())
+                null
+            else
+                LocationInfo(location.getAddressLine(0), location.latitude, location.longitude)
+        } catch (e: Exception) {
+            Log.e("LocationHelper", e.toString())
+            null
+        }
     }
 
     fun getNeighbours(location: LocationInfo, meterRadius: Int) : MutableList<String> {

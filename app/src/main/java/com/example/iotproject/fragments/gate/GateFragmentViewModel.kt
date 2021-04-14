@@ -55,9 +55,8 @@ class GateFragmentViewModel(private val repository: AppRepository) : ViewModel()
                     } catch (e: Exception) {
                         message.postValue(Constants.server_error)
                     }
-                    400 -> message.postValue(Constants.server_error)
                     404 -> message.postValue(Constants.no_gates)
-                    //TODO: curate the responses, they are wrong as is
+                    500 -> message.postValue(Constants.server_error)
                 }
             }
         })
