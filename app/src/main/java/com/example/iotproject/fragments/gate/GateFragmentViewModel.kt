@@ -43,17 +43,14 @@ class GateFragmentViewModel(private val repository: AppRepository) : ViewModel()
                         val list = mutableListOf<Gate>()
                         for (index in 0 until gates.length()) {
                             val item = gates.getJSONObject(index)
-                            //TODO: check if usefull, we can also get latitude and longitude if needed
+                            //TODO: check if useful, we can also get latitude and longitude if needed
                             //val idUser = item.get("ID_User")
                             val name = item.get("Name").toString()
                             val location = item.get("Location").toString()
                             val code = item.get("ID").toString()
                             val imageURL = item.get("Photo").toString()
                             list.add(Gate(name, location, code, imageURL))
-                            //insert(Gate(name, location, code, null))
                         }
-                        //TODO: see if this actually works
-                        //deleteAll()
                         insertAll(list)
                     } catch (e: Exception) {
                         message.postValue(Constants.server_error)
@@ -77,14 +74,16 @@ class GateFragmentViewModel(private val repository: AppRepository) : ViewModel()
                 .post(requestBody)
                 .build()
 
+        loading.postValue(true)
         client.newCall(request).enqueue(object : Callback {
             override fun onFailure(call: Call, e: IOException) {
-                //TODO: delete this
+                loading.postValue(false)
                 insert(Gate(name, location, code, null))
                 message.postValue(Constants.server_error)
             }
 
             override fun onResponse(call: Call, response: Response) {
+                loading.postValue(false)
                 when (response.code) {
                     200 -> {
                         message.postValue("Successfully added gate!")

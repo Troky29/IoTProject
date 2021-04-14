@@ -1,5 +1,6 @@
 package com.example.iotproject.fragments.gate
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -16,6 +17,8 @@ import androidx.recyclerview.widget.SnapHelper
 import com.example.iotproject.IoTApplication
 import com.example.iotproject.LoadingDialog
 import com.example.iotproject.R
+import com.example.iotproject.fragments.more.RegisterGateActivity
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 
 class GateFragment: Fragment() {
     private val gateCardList by lazy { ArrayList<GateCardItem>() }
@@ -57,9 +60,13 @@ class GateFragment: Fragment() {
                 emptyGateTextView.visibility = View.VISIBLE
         })
 
-        //TODO: study a strategy for reloading gates
-        viewModel.loadGates()
+        view.findViewById<FloatingActionButton>(R.id.addGateFAB).setOnClickListener() {
+            val intent = Intent(context, RegisterGateActivity::class.java)
+            startActivity(intent)
+        }
 
+        //TODO: study a strategy for reloading gates, probably just if we have no gate, or the user intentionally reloads
+        viewModel.loadGates()
     }
 
     private fun addGateCard(gate: Gate) {

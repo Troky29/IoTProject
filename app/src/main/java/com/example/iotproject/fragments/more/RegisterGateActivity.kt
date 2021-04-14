@@ -36,6 +36,12 @@ class RegisterGateActivity : AppCompatActivity() {
         viewModel.message.observe(this, { message ->
             messenger(message)
         })
+        viewModel.loading.observe(this, { loading ->
+            if (loading)
+                loadingDialog.show(supportFragmentManager, "LoadingDialog")
+            else
+                loadingDialog.dismiss()
+        })
 
         autocompleteLocation()
 
@@ -78,7 +84,6 @@ class RegisterGateActivity : AppCompatActivity() {
                 //TODO: enable this only at the end
                 //FirebaseMessaging.getInstance().subscribeToTopic(neighbour)
                 continue
-            loadingDialog.show(supportFragmentManager, "LoadingDialog")
             viewModel.addGate(name, location.address, location.latitude, location.longitude, code)
         }
     }
@@ -134,7 +139,6 @@ class RegisterGateActivity : AppCompatActivity() {
     }
 
     private fun messenger(message: String) {
-        loadingDialog.dismiss()
         Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
         if(message == "Successfully added gate!")
             finish()
