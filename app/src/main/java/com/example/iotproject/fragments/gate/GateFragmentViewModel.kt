@@ -77,7 +77,6 @@ class GateFragmentViewModel(private val repository: AppRepository) : ViewModel()
         client.newCall(request).enqueue(object : Callback {
             override fun onFailure(call: Call, e: IOException) {
                 loading.postValue(false)
-                insert(Gate(name, location, code, null))
                 message.postValue(Constants.server_error)
             }
 

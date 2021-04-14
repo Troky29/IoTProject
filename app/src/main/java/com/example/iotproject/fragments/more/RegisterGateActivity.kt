@@ -1,10 +1,13 @@
 package com.example.iotproject.fragments.more
 
 import android.Manifest
+import android.content.ActivityNotFoundException
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.graphics.Bitmap
 import android.location.Geocoder
 import android.os.Bundle
+import android.provider.MediaStore
 import android.util.Log
 import android.widget.*
 import androidx.activity.viewModels
@@ -19,12 +22,16 @@ import com.example.iotproject.fragments.gate.GateViewModelFactory
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import com.google.zxing.integration.android.IntentIntegrator
+import java.io.ByteArrayOutputStream
 import java.util.*
 
 class RegisterGateActivity : AppCompatActivity() {
     private lateinit var fusedLocationClient: FusedLocationProviderClient
+    private var image: ByteArray? = null
     private val loadingDialog by lazy { LoadingDialog() }
     private var REQUEST_CODE = 1
+    private val REQUEST_IMAGE_CAPTURE = 1
+    private val REQUEST_QR_CAPTURE = 49374
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -47,6 +54,10 @@ class RegisterGateActivity : AppCompatActivity() {
 
         findViewById<ImageButton>(R.id.qrCodeImageButton).setOnClickListener {
             scanQR()
+        }
+
+        findViewById<ImageButton>(R.id.cameraImageButton).setOnClickListener() {
+            captureImage()
         }
 
         findViewById<Button>(R.id.confirmButton).setOnClickListener {
@@ -93,12 +104,21 @@ class RegisterGateActivity : AppCompatActivity() {
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        val result = IntentIntegrator.parseActivityResult(requestCode, resultCode, data)
-        if (result != null) {
+        if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
+            val imageBitmap = data?.extras?.get("data") as Bitmap
+            val imageBiteArray = ByteArrayOutputStream()
+            imageBitmap.compress(Bitmap.CompressFormat.JPEG,100,imageBiteArray)
+            image = imageBiteArray.toByteArray()
+            //TODO: see if this is correct, or we need to generate a b64 encoded string
+            //val base64 = Base64.getEncoder().encodeToString(image)
+        }
+
+        if (requestCode == REQUEST_QR_CAPTURE && resultCode == RESULT_OK) {
+            val result = IntentIntegrator.parseActivityResult(requestCode, resultCode, data)
             if (result.contents != null)
                 findViewById<EditText>(R.id.gateCodeEditText).setText(result.contents)
-        } else {
-            super.onActivityResult(requestCode, resultCode, data)
+            else
+                super.onActivityResult(requestCode, resultCode, data)
         }
     }
 
@@ -140,6 +160,25 @@ class RegisterGateActivity : AppCompatActivity() {
             setBarcodeImageEnabled(true)
         }
         integrator.initiateScan()
+    }
+
+    private fun captureImage() {
+        /*
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.CAMERA) !=
+                PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this,
+                    arrayOf(Manifest.permission.CAMERA),
+                    REQUEST_CODE)
+            return
+        }
+
+         */
+        val intent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
+        try {
+            startActivityForResult(intent, REQUEST_IMAGE_CAPTURE)
+        } catch (e: ActivityNotFoundException) {
+            //TODO: user error message
+        }
     }
 
     private fun messenger(message: String) {
