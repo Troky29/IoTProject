@@ -26,7 +26,7 @@ class Constants {
         const val destroyed = "Destroyed!"
         const val EARTH = 6371  //Radius of the earth in Km, used for position calculation
         const val NEIGHBOUR_RADIUS = 50 //Radius to check for finding neighbours in meter
-        enum class State{ ALLOW, DENY, REPORT }
+        enum class State{ ALLOW, DENY, REPORT, IGNORE }
     }
 }
 

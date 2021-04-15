@@ -29,7 +29,7 @@ class GateCardAdapter(private val gateList: List<GateCardItem>, val context: Con
         holder.gateName.text = currentItem.name
         holder.gateLocation.text = currentItem.location
 
-        holder.gateButton.setOnClickListener() {
+        holder.gateButton.setOnClickListener {
             holder.onClick(holder.itemView)
         }
     }

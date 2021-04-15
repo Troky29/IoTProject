@@ -168,7 +168,7 @@ class RegisterGateActivity : AppCompatActivity() {
                 findViewById<EditText>(R.id.gateLocalityEditText).setText(address.locality)
                 findViewById<EditText>(R.id.gatePostalCodeEditText).setText(address.postalCode)
                 //TODO: delete after you are done
-                findViewById<EditText>(R.id.gateCodeEditText).setText("d8c0e668-b59e-455e-af78-77470ba291c5")
+                findViewById<EditText>(R.id.gateCodeEditText).setText(getString(R.string.test_gate_code))
                 findViewById<EditText>(R.id.gateNameEditText).setText("TestName")
             } catch (e: Exception) {
                 Log.e("RegisterGateActivity", e.message.toString())

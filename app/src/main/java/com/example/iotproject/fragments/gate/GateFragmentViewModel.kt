@@ -3,6 +3,8 @@ package com.example.iotproject.fragments.gate
 import android.util.Log
 import androidx.lifecycle.*
 import com.example.iotproject.*
+import com.example.iotproject.Constants.Companion.JSON
+import com.example.iotproject.Constants.Companion.URL
 import kotlinx.coroutines.launch
 import okhttp3.*
 import okhttp3.RequestBody.Companion.toRequestBody
@@ -66,10 +68,10 @@ class GateFragmentViewModel(private val repository: AppRepository) : ViewModel()
     fun addGate(name: String, location: String, latitude: Double, longitude: Double, code: String, image: String?) {
         val body = """{"name":"$name", "location":"$location", "latitude":"$latitude", 
             |"longitude":"$longitude", "id_gate":"$code", "photo":"$image"}""".trimMargin()
-        val requestBody = body.toRequestBody(Constants.JSON)
+        val requestBody = body.toRequestBody(JSON)
 
         val request = Request.Builder()
-                .url(Constants.URL + "gate")
+                .url(URL + "gate")
                 .post(requestBody)
                 .build()
 
@@ -105,6 +107,7 @@ class GateFragmentViewModel(private val repository: AppRepository) : ViewModel()
         })
     }
 
+    //TODO: update with call to the corresponding endpoint
     fun openGate(position: Int) {
         Log.i(TAG, gateList.value?.get(position)!!.code)
     }

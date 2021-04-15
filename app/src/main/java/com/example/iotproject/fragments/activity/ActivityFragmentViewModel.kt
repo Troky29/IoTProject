@@ -1,14 +1,19 @@
 package com.example.iotproject.fragments.activity
 
+import android.util.Log
 import androidx.lifecycle.*
 import com.example.iotproject.*
+import com.example.iotproject.Constants.Companion.JSON
+import com.example.iotproject.Constants.Companion.URL
+import com.example.iotproject.Constants.Companion.server_error
 import kotlinx.coroutines.launch
 import okhttp3.*
+import okhttp3.RequestBody.Companion.toRequestBody
 import org.json.JSONObject
 import java.io.IOException
 
 class ActivityFragmentViewModel(private val repository: AppRepository) : ViewModel() {
-    val TAG = "ActivityFragmentViewModel"
+    val TAG = "ActivityViewModel"
 
     private var client: OkHttpClient = OkHttpClient().newBuilder()
         .authenticator(AccessTokenAuthenticator(AccessTokenRepository))
@@ -57,11 +62,39 @@ class ActivityFragmentViewModel(private val repository: AppRepository) : ViewMod
         })
     }
 
-   private fun insertAll(activities: List<Activity>) = viewModelScope.launch {
+    fun updateActivity(position: Int, action: String) {
+        val gate = activityList.value?.get(position)!!.gate
+        val body = """{"id_gate":"$gate", "outcome":"$action"}""".trimMargin()
+
+        val requestBody = body.toRequestBody(JSON)
+
+        val request = Request.Builder()
+                .url(URL + "activity")
+                .put(requestBody)
+                .build()
+
+        client.newCall(request).enqueue(object : Callback {
+            override fun onFailure(call: Call, e: IOException) {
+                message.postValue(Constants.server_error)
+            }
+
+            override fun onResponse(call: Call, response: Response) {
+                when (response.code) {
+                    200 -> message.postValue("Successfully updated gate")
+                    404 -> message.postValue("Error, no activity found")
+                    500 -> message.postValue(Constants.server_error)
+                }
+            }
+        })
+    }
+
+    //TODO: keep private
+   fun insertAll(activities: List<Activity>) = viewModelScope.launch {
         repository.insertAllActivities(activities)
     }
 
-    private fun deleteAll() = viewModelScope.launch {
+    //TODO: keep private
+    fun deleteAll() = viewModelScope.launch {
         repository.deleteAllActivities()
     }
 }

@@ -40,39 +40,38 @@
             android:textSize="16sp"
             android:text="Data:01/01/2000"/>
 
-        <ImageView
-            android:id="@+id/acceptImageView"
+        <ImageButton
+            android:id="@+id/acceptImageButton"
             android:layout_width="48dp"
             android:layout_height="48dp"
             android:layout_below="@+id/dateTextView"
             android:layout_alignStart="@+id/activityImageView"
             android:layout_marginStart="16dp"
             android:layout_marginTop="16dp"
-            android:clickable="true"
-            android:focusable="true"
+            android:background="@null"
             app:srcCompat="@drawable/ic_baseline_check_24"/>
 
-        <ImageView
-            android:id="@+id/denyImageView"
+        <ImageButton
+            android:id="@+id/denyImageButton"
             android:layout_width="48dp"
             android:layout_height="48dp"
             android:layout_below="@+id/dateTextView"
+            android:layout_toEndOf="@+id/acceptImageButton"
             android:layout_marginStart="16dp"
             android:layout_marginTop="16dp"
-            android:layout_toEndOf="@+id/acceptImageView"
+            android:background="@null"
             app:srcCompat="@drawable/ic_baseline_clear_24" />
 
-        <ImageView
-            android:id="@+id/reportImageView"
+        <ImageButton
+            android:id="@+id/reportImageButton"
             android:layout_width="48dp"
             android:layout_height="48dp"
             android:layout_below="@+id/dateTextView"
+            android:layout_toEndOf="@+id/denyImageButton"
             android:layout_marginStart="16dp"
             android:layout_marginTop="16dp"
-            android:layout_toEndOf="@+id/denyImageView"
+            android:background="@null"
             app:srcCompat="@drawable/ic_gate_access" />
-
-
     </RelativeLayout>
 
 </androidx.cardview.widget.CardView>

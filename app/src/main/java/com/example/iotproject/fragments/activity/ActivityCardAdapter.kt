@@ -6,18 +6,23 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.Window
+import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.example.iotproject.Constants
 import com.example.iotproject.R
+import com.example.iotproject.Constants.Companion.State
 
-class ActivityCardAdapter(private val activityList: List<ActivityCardItem>, val context: Context)
+class ActivityCardAdapter(private val activityList: List<ActivityCardItem>,
+                          val context: Context,
+                          private val onActionListener: OnActionListener)
     : RecyclerView.Adapter<ActivityCardAdapter.CardViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CardViewHolder {
         val itemView = LayoutInflater.from(parent.context).inflate(R.layout.card_activity, parent, false)
-        return CardViewHolder(itemView)
+        return CardViewHolder(itemView, onActionListener)
     }
 
     override fun onBindViewHolder(holder: CardViewHolder, position: Int) {
@@ -30,8 +35,23 @@ class ActivityCardAdapter(private val activityList: List<ActivityCardItem>, val 
         holder.activityAccess.text = currentItem.access
         holder.activityDate.text = currentItem.date
 
-        holder.activityImage.setOnClickListener() {
+        holder.activityImage.setOnClickListener {
             showActivityImage(holder.activityImage.context, currentItem.imageResource)
+        }
+
+        holder.acceptButton.setOnClickListener {
+            holder.action = State.ALLOW
+            holder.onClick(holder.itemView)
+        }
+
+        holder.denyButton.setOnClickListener {
+            holder.action = State.DENY
+            holder.onClick(holder.itemView)
+        }
+
+        holder.reportButton.setOnClickListener {
+            holder.action = State.REPORT
+            holder.onClick(holder.itemView)
         }
     }
 
@@ -58,10 +78,23 @@ class ActivityCardAdapter(private val activityList: List<ActivityCardItem>, val 
         imageDialog.show()
     }
 
-    class CardViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+    class CardViewHolder(itemView: View, private val onOpenListener: OnActionListener) :
+            RecyclerView.ViewHolder(itemView), View.OnClickListener {
         val activityImage: ImageView = itemView.findViewById(R.id.activityImageView)
         val activityAccess: TextView = itemView.findViewById(R.id.access_textView)
         val activityDate: TextView = itemView.findViewById(R.id.dateTextView)
+        val acceptButton: ImageButton = itemView.findViewById(R.id.acceptImageButton)
+        val denyButton: ImageButton = itemView.findViewById(R.id.denyImageButton)
+        val reportButton: ImageButton = itemView.findViewById(R.id.reportImageButton)
+        var action = State.IGNORE
+
+        override fun onClick(view: View?) {
+            onOpenListener.onClick(adapterPosition, action)
+        }
+    }
+
+    interface OnActionListener {
+        fun onClick(position: Int, action: State)
     }
 }
 
