@@ -6,6 +6,7 @@ import com.example.iotproject.*
 import kotlinx.coroutines.launch
 import okhttp3.*
 import okhttp3.RequestBody.Companion.toRequestBody
+import okio.ByteString
 import org.json.JSONObject
 import java.io.IOException
 
@@ -62,10 +63,9 @@ class GateFragmentViewModel(private val repository: AppRepository) : ViewModel()
         })
     }
 
-    fun addGate(name: String, location: String, latitude: Double, longitude: Double, code: String) {
-        val imageResource = null
+    fun addGate(name: String, location: String, latitude: Double, longitude: Double, code: String, image: String?) {
         val body = """{"name":"$name", "location":"$location", "latitude":"$latitude", 
-            |"longitude":"$longitude", "id_gate":"$code", "photo":"$imageResource"}""".trimMargin()
+            |"longitude":"$longitude", "id_gate":"$code", "photo":"$image"}""".trimMargin()
         val requestBody = body.toRequestBody(Constants.JSON)
 
         val request = Request.Builder()
@@ -76,6 +76,8 @@ class GateFragmentViewModel(private val repository: AppRepository) : ViewModel()
         loading.postValue(true)
         client.newCall(request).enqueue(object : Callback {
             override fun onFailure(call: Call, e: IOException) {
+                //TODO: delete this
+                insert(Gate(name, location, code, null))
                 loading.postValue(false)
                 message.postValue(Constants.server_error)
             }
@@ -101,6 +103,10 @@ class GateFragmentViewModel(private val repository: AppRepository) : ViewModel()
                 }
             }
         })
+    }
+
+    fun openGate(position: Int) {
+        Log.i(TAG, gateList.value?.get(position)!!.code)
     }
 
     private fun insert(gate: Gate) = viewModelScope.launch {

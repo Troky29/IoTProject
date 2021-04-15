@@ -20,5 +20,4 @@ interface ActivityDao {
     @Query("SELECT * FROM activity ORDER BY datetime DESC")
     fun getAll(): LiveData<List<Activity>>
 
-    //TODO: see if we need more query
 }

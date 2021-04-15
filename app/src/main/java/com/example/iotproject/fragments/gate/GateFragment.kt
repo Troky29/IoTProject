@@ -2,6 +2,7 @@ package com.example.iotproject.fragments.gate
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -15,14 +16,15 @@ import androidx.recyclerview.widget.LinearSnapHelper
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.SnapHelper
 import com.example.iotproject.IoTApplication
-import com.example.iotproject.LoadingDialog
 import com.example.iotproject.R
-import com.example.iotproject.fragments.more.RegisterGateActivity
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 
-class GateFragment: Fragment() {
+class GateFragment: Fragment(), GateCardAdapter.OnOpenListener {
     private val gateCardList by lazy { ArrayList<GateCardItem>() }
     private lateinit var recyclerView: RecyclerView
+    private val viewModel: GateFragmentViewModel by viewModels {
+        GateViewModelFactory((requireActivity().application as IoTApplication).repository)
+    }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.fragment_gate, container, false)
@@ -32,16 +34,13 @@ class GateFragment: Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         recyclerView = view.findViewById(R.id.gateRecycleView)
-        recyclerView.adapter = GateCardAdapter(gateCardList, requireContext())
+        recyclerView.adapter = GateCardAdapter(gateCardList, requireContext(), this)
         recyclerView.layoutManager = LinearLayoutManager(activity, LinearLayoutManager.HORIZONTAL, false)
         recyclerView.setHasFixedSize(true)
 
         val snapHelper: SnapHelper = SnapHelperOneByOne()
         snapHelper.attachToRecyclerView(recyclerView)
 
-        val viewModel: GateFragmentViewModel by viewModels {
-            GateViewModelFactory((requireActivity().application as IoTApplication).repository)
-        }
         viewModel.message.observe(viewLifecycleOwner, { message ->
             messenger(message)
         })
@@ -66,7 +65,7 @@ class GateFragment: Fragment() {
         }
 
         //TODO: study a strategy for reloading gates, probably just if we have no gate, or the user intentionally reloads
-        viewModel.loadGates()
+        //viewModel.loadGates()
     }
 
     private fun addGateCard(gate: Gate) {
@@ -78,6 +77,10 @@ class GateFragment: Fragment() {
     private fun flushGateCards() {
         gateCardList.clear()
         recyclerView.adapter!!.notifyDataSetChanged()
+    }
+
+    override fun onClick(position: Int) {
+        viewModel.openGate(position)
     }
 
     private fun messenger(message: String) {

@@ -13,9 +13,9 @@ import com.example.iotproject.IoTApplication
 import com.example.iotproject.R
 import com.example.iotproject.fragments.gate.GateFragmentViewModel
 import com.example.iotproject.fragments.gate.GateViewModelFactory
+import com.example.iotproject.fragments.gate.RegisterGateActivity
 import com.example.iotproject.login.Login
 import com.example.iotproject.login.LoginViewModel
-import kotlin.contracts.contract
 
 class MoreFragment : Fragment() {
 

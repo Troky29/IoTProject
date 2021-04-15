@@ -17,7 +17,7 @@ interface GateDao {
     @Query("DELETE FROM gate")
     suspend fun deleteAll()
 
-    @Query("SELECT * FROM gate ORDER BY name DESC")
+    @Query("SELECT * FROM gate ORDER BY name ASC")
     fun getAll(): LiveData<List<Gate>>
 
     //TODO: see if you need more Dao

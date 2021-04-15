@@ -1,4 +1,4 @@
-package com.example.iotproject.fragments.more
+package com.example.iotproject.fragments.gate
 
 import android.Manifest
 import android.content.ActivityNotFoundException
@@ -17,17 +17,19 @@ import com.example.iotproject.Constants.Companion.NEIGHBOUR_RADIUS
 import com.example.iotproject.IoTApplication
 import com.example.iotproject.LoadingDialog
 import com.example.iotproject.R
-import com.example.iotproject.fragments.gate.GateFragmentViewModel
-import com.example.iotproject.fragments.gate.GateViewModelFactory
+import com.example.iotproject.fragments.more.LocationHelper
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import com.google.zxing.integration.android.IntentIntegrator
+import okio.ByteString
 import java.io.ByteArrayOutputStream
+import java.math.BigInteger
+import java.nio.charset.Charset
 import java.util.*
 
 class RegisterGateActivity : AppCompatActivity() {
     private lateinit var fusedLocationClient: FusedLocationProviderClient
-    private var image: ByteArray? = null
+    private var image: String? = null
     private val loadingDialog by lazy { LoadingDialog() }
     private var REQUEST_CODE = 1
     private val REQUEST_IMAGE_CAPTURE = 1
@@ -99,18 +101,41 @@ class RegisterGateActivity : AppCompatActivity() {
                 //TODO: enable this only at the end
                 //FirebaseMessaging.getInstance().subscribeToTopic(neighbour)
                 continue
-            viewModel.addGate(name, location.address, location.latitude, location.longitude, code)
+            viewModel.addGate(name, location.address, location.latitude, location.longitude, code, image)
         }
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        //TODO use this structure, is more organized
+        /*
+         super.onActivityResult(requestCode, resultCode, data)
+        if (resultCode == RESULT_OK) {
+            when (requestCode) {
+                REQUEST_IMAGE_CAPTURE -> {}
+                REQUEST_QR_CAPTURE -> {}
+            }
+        }
+         */
+
         if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
             val imageBitmap = data?.extras?.get("data") as Bitmap
             val imageBiteArray = ByteArrayOutputStream()
-            imageBitmap.compress(Bitmap.CompressFormat.JPEG,100,imageBiteArray)
-            image = imageBiteArray.toByteArray()
+            imageBitmap.compress(Bitmap.CompressFormat.JPEG,50,imageBiteArray)
+            val byteArray: ByteArray = imageBiteArray.toByteArray()
+
+            image = BigInteger(1, byteArray).toString(2)
+            //TODO: test all these option today, i'm stuck
+            //image = ByteString.of(*byteArray)
+            //Log.i("RegisterGate", image)
+            //Log.i("RegisterGate", imageString)
+            //image = imageBiteArray.toByteArray()
             //TODO: see if this is correct, or we need to generate a b64 encoded string
             //val base64 = Base64.getEncoder().encodeToString(image)
+            //val test: Byte = image[1]
+            //Log.i("Register gate", test.toString())
+            //val test = image?.let { bytes -> bytes[1] }
+            //Log.i("RegisterGate", test)
+            //image = data?.extras.get("data") as Bitmap
         }
 
         if (requestCode == REQUEST_QR_CAPTURE && resultCode == RESULT_OK) {
@@ -163,7 +188,6 @@ class RegisterGateActivity : AppCompatActivity() {
     }
 
     private fun captureImage() {
-        /*
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.CAMERA) !=
                 PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(this,
@@ -172,12 +196,11 @@ class RegisterGateActivity : AppCompatActivity() {
             return
         }
 
-         */
         val intent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
         try {
             startActivityForResult(intent, REQUEST_IMAGE_CAPTURE)
         } catch (e: ActivityNotFoundException) {
-            //TODO: user error message
+            messenger("Failed to capture image")
         }
     }
 
