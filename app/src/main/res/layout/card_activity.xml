@@ -20,7 +20,7 @@
             android:src="@drawable/hqdefault"/>
 
         <TextView
-            android:id="@+id/access_textView"
+            android:id="@+id/accessTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@id/activityImageView"
@@ -35,8 +35,8 @@
             android:id="@+id/dateTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@id/access_textView"
-            android:layout_alignStart="@id/access_textView"
+            android:layout_below="@id/accessTextView"
+            android:layout_alignStart="@id/accessTextView"
             android:textSize="16sp"
             android:text="Data:01/01/2000"/>
 

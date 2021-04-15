@@ -11,7 +11,6 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
-import com.example.iotproject.Constants
 import com.example.iotproject.R
 import com.example.iotproject.Constants.Companion.State
 
@@ -81,7 +80,7 @@ class ActivityCardAdapter(private val activityList: List<ActivityCardItem>,
     class CardViewHolder(itemView: View, private val onOpenListener: OnActionListener) :
             RecyclerView.ViewHolder(itemView), View.OnClickListener {
         val activityImage: ImageView = itemView.findViewById(R.id.activityImageView)
-        val activityAccess: TextView = itemView.findViewById(R.id.access_textView)
+        val activityAccess: TextView = itemView.findViewById(R.id.accessTextView)
         val activityDate: TextView = itemView.findViewById(R.id.dateTextView)
         val acceptButton: ImageButton = itemView.findViewById(R.id.acceptImageButton)
         val denyButton: ImageButton = itemView.findViewById(R.id.denyImageButton)

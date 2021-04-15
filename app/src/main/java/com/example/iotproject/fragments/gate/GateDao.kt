@@ -19,6 +19,4 @@ interface GateDao {
 
     @Query("SELECT * FROM gate ORDER BY name ASC")
     fun getAll(): LiveData<List<Gate>>
-
-    //TODO: see if you need more Dao
 }

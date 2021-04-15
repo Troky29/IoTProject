@@ -63,8 +63,8 @@ class ActivityFragmentViewModel(private val repository: AppRepository) : ViewMod
     }
 
     fun updateActivity(position: Int, action: String) {
-        val gate = activityList.value?.get(position)!!.gate
-        val body = """{"id_gate":"$gate", "outcome":"$action"}""".trimMargin()
+        val activity = activityList.value?.get(position)!!
+        val body = """{"id_gate":"${activity.gate}", "outcome":"$action"}""".trimMargin()
 
         val requestBody = body.toRequestBody(JSON)
 
@@ -80,7 +80,10 @@ class ActivityFragmentViewModel(private val repository: AppRepository) : ViewMod
 
             override fun onResponse(call: Call, response: Response) {
                 when (response.code) {
-                    200 -> message.postValue("Successfully updated gate")
+                    200 -> {
+                        message.postValue("Successfully updated gate")
+                        updateActivity(Activity(activity.gate, activity.datetime, action, activity.imageURL))
+                    }
                     404 -> message.postValue("Error, no activity found")
                     500 -> message.postValue(Constants.server_error)
                 }
@@ -96,6 +99,10 @@ class ActivityFragmentViewModel(private val repository: AppRepository) : ViewMod
     //TODO: keep private
     fun deleteAll() = viewModelScope.launch {
         repository.deleteAllActivities()
+    }
+
+    fun updateActivity(activity: Activity) = viewModelScope.launch {
+        repository.update(activity)
     }
 }
 
