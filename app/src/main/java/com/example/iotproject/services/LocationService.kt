@@ -92,7 +92,7 @@ class LocationService : Service() {
         val requestBody = body.toRequestBody(JSON)
 
         val request = Request.Builder()
-                .url(Constants.URL + "location")
+                .url(Constants.URL + "user/location")
                 .addHeader("x-access-token", AccessTokenRepository.token)
                 .post(requestBody)
                 .build()
