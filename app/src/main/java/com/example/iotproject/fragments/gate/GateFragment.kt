@@ -65,7 +65,8 @@ class GateFragment: Fragment(), GateCardAdapter.OnOpenListener {
         }
 
         //TODO: study a strategy for reloading gates, probably just if we have no gate, or the user intentionally reloads
-        //viewModel.loadGates()
+        //if (gateCardList.isEmpty())
+         viewModel.loadGates()
     }
 
     private fun addGateCard(gate: Gate) {

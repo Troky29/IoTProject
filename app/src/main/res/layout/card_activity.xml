@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:id="@+id/activityCardView"
@@ -21,16 +22,34 @@
             android:src="@drawable/hqdefault"/>
 
         <TextView
+            android:id="@+id/gateNameTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignTop="@+id/activityImageView"
+            android:layout_marginStart="32dp"
+            android:layout_marginTop="8dp"
+            android:layout_toEndOf="@+id/activityImageView"
+            android:text="Gate name"
+            android:textSize="32dp"/>
+
+        <ImageView
+            android:id="@+id/imageView"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_alignTop="@+id/gateNameTextView"
+            android:layout_marginStart="32dp"
+            android:layout_toEndOf="@+id/gateNameTextView"
+            app:srcCompat="@drawable/ic_baseline_expand_more_24" />
+
+        <TextView
             android:id="@+id/accessTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@id/activityImageView"
-            android:layout_toEndOf="@id/activityImageView"
-            android:layout_alignParentTop="true"
-            android:layout_marginTop="8dp"
             android:layout_marginStart="32dp"
-            android:textSize="30sp"
-            android:text="Gate name"/>
+            android:layout_toEndOf="@id/activityImageView"
+            android:layout_below="@id/gateNameTextView"
+            android:text="Access state"
+            android:textSize="16sp" />
 
         <TextView
             android:id="@+id/dateTextView"
@@ -39,40 +58,54 @@
             android:layout_below="@id/accessTextView"
             android:layout_alignStart="@id/accessTextView"
             android:textSize="16sp"
-            android:text="Data:01/01/2000"/>
+            android:text="01/01/2000"/>
 
-        <ImageButton
-            android:id="@+id/acceptImageButton"
-            android:layout_width="48dp"
-            android:layout_height="48dp"
-            android:layout_below="@+id/dateTextView"
-            android:layout_marginStart="32dp"
-            android:layout_marginTop="16dp"
-            android:layout_toEndOf="@+id/activityImageView"
-            android:background="@null"
-            app:srcCompat="@drawable/ic_baseline_check_24" />
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/actionConstraintLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/activityImageView">
 
-        <ImageButton
-            android:id="@+id/denyImageButton"
-            android:layout_width="48dp"
-            android:layout_height="48dp"
-            android:layout_below="@+id/dateTextView"
-            android:layout_toEndOf="@+id/acceptImageButton"
-            android:layout_marginStart="16dp"
-            android:layout_marginTop="16dp"
-            android:background="@null"
-            app:srcCompat="@drawable/ic_baseline_clear_24" />
+            <ImageView
+                android:id="@+id/acceptImageButton"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:layout_marginEnd="36dp"
+                android:background="@null"
+                android:clickable="true"
+                android:focusable="true"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/denyImageButton"
+                app:layout_constraintTop_toTopOf="parent"
+                app:srcCompat="@drawable/ic_baseline_check_24" />
 
-        <ImageButton
-            android:id="@+id/reportImageButton"
-            android:layout_width="48dp"
-            android:layout_height="48dp"
-            android:layout_below="@+id/dateTextView"
-            android:layout_toEndOf="@+id/denyImageButton"
-            android:layout_marginStart="16dp"
-            android:layout_marginTop="16dp"
-            android:background="@null"
-            app:srcCompat="@drawable/ic_gate_access" />
+            <ImageView
+                android:id="@+id/denyImageButton"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:layout_marginEnd="36dp"
+                android:background="@null"
+                android:clickable="true"
+                android:focusable="true"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/reportImageButton"
+                app:layout_constraintTop_toTopOf="parent"
+                app:srcCompat="@drawable/ic_baseline_clear_24" />
+
+            <ImageView
+                android:id="@+id/reportImageButton"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:layout_marginEnd="16dp"
+                android:background="@null"
+                android:clickable="true"
+                android:focusable="true"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:srcCompat="@drawable/ic_gate_access" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
     </RelativeLayout>
 
 </androidx.cardview.widget.CardView>

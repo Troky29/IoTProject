@@ -14,6 +14,7 @@ import com.example.iotproject.IoTApplication
 import com.example.iotproject.R
 import java.util.ArrayList
 import com.example.iotproject.Constants.Companion.State
+import com.example.iotproject.fragments.gate.Gate
 
 class ActivityFragment: Fragment(),ActivityCardAdapter.OnActionListener {
     private val activityCardList by lazy { ArrayList<ActivityCardItem>() }
@@ -45,23 +46,21 @@ class ActivityFragment: Fragment(),ActivityCardAdapter.OnActionListener {
                 addActivityCard(activity)
         })
         //TODO: decide a strategy for reloading activities
-        //viewModel.loadActivities()
+        viewModel.loadActivities()
 
         //TODO: used for testing, delete
-        /*
-        viewModel.deleteAll()
-        val testActivities = listOf(
-            Activity(getString(R.string.test_gate_code), "1990-11-12 12:32:00", "Pending", null),
-            Activity(getString(R.string.test_gate_code), "2021-12-11 10:02:00", "Pending", null),
-            Activity(getString(R.string.test_gate_code), "2005-21-15 07:52:00", "Pending", null)
-        )
-        viewModel.insertAll(testActivities)
-
-         */
+//        viewModel.deleteAll()
+//        val testActivities = listOf(
+//            Activity(0, getString(R.string.test_gate_code), "1990-11-12 12:32:00", "Pending", null),
+//            Activity(0, getString(R.string.test_gate_code), "2021-12-11 10:02:00", "Pending", null),
+//            Activity(0, getString(R.string.test_gate_code), "2005-21-15 07:52:00", "Pending", null)
+//        )
+//        viewModel.insertAll(testActivities)
     }
 
     private fun addActivityCard(activity: Activity) {
-        val item = ActivityCardItem(activity.state,activity.datetime, activity.imageURL)
+        val gateName = viewModel.getGateName(activity.gate) ?: "Missing name"
+        val item = ActivityCardItem(gateName, activity.state,activity.datetime, activity.imageURL)
         activityCardList.add(item)
         recyclerView.adapter!!.notifyDataSetChanged()
     }
@@ -73,9 +72,9 @@ class ActivityFragment: Fragment(),ActivityCardAdapter.OnActionListener {
 
     override fun onClick(position: Int, action: State) {
         when (action) {
-            State.ALLOW -> viewModel.updateActivity(position, "Granted")
-            State.DENY -> viewModel.updateActivity(position, "Denied")
-            State.REPORT -> viewModel.updateActivity(position, "Reported")
+            State.ALLOW -> viewModel.setAction(position, "Granted")
+            State.DENY -> viewModel.setAction(position, "Denied")
+            State.REPORT -> viewModel.setAction(position, "Reported")
             else -> Log.e("ActivityFragment", "Received unexpected action")
         }
     }

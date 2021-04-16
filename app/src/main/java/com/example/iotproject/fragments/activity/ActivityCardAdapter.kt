@@ -2,7 +2,8 @@ package com.example.iotproject.fragments.activity
 
 import android.app.Dialog
 import android.content.Context
-import android.graphics.drawable.Drawable
+import android.transition.AutoTransition
+import android.transition.TransitionManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -11,8 +12,7 @@ import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.RelativeLayout
 import android.widget.TextView
-import androidx.core.content.ContextCompat
-import androidx.core.graphics.drawable.toDrawable
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.view.children
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
@@ -36,10 +36,21 @@ class ActivityCardAdapter(private val activityList: List<ActivityCardItem>,
             .placeholder(R.drawable.hqdefault)
             .into(holder.activityImage)
 
-        //TODO: instead of changing background see if we can diffferentiate
+        holder.gateName.text = currentItem.gate
+
         holder.activityAccess.text = currentItem.access
-        if (holder.activityAccess.text != "Pending")
-            holder.cardBackground.background = ContextCompat.getDrawable(context, R.drawable.toolbar_background)
+        when (holder.activityAccess.text) {
+            "Pending" -> holder.setLoading(false)
+            "Updating" -> holder.setLoading(true)
+            else -> {
+                if(holder.actions.visibility != View.GONE) {
+                    TransitionManager.beginDelayedTransition(holder.actions, AutoTransition())
+                    holder.actions.visibility = View.GONE
+                }
+                holder.setLoading(false)
+                //TODO: hide the buttons, we can not change an activity retroactivly
+            }
+        }
 
         holder.activityDate.text = currentItem.date
 
@@ -89,21 +100,31 @@ class ActivityCardAdapter(private val activityList: List<ActivityCardItem>,
     class CardViewHolder(itemView: View, private val onOpenListener: OnActionListener) :
             RecyclerView.ViewHolder(itemView), View.OnClickListener {
         val activityImage: ImageView = itemView.findViewById(R.id.activityImageView)
+        val gateName: TextView = itemView.findViewById(R.id.gateNameTextView)
         val activityAccess: TextView = itemView.findViewById(R.id.accessTextView)
         val activityDate: TextView = itemView.findViewById(R.id.dateTextView)
-        val acceptButton: ImageButton = itemView.findViewById(R.id.acceptImageButton)
-        val denyButton: ImageButton = itemView.findViewById(R.id.denyImageButton)
-        val reportButton: ImageButton = itemView.findViewById(R.id.reportImageButton)
+        val acceptButton: ImageView = itemView.findViewById(R.id.acceptImageButton)
+        val denyButton: ImageView = itemView.findViewById(R.id.denyImageButton)
+        val reportButton: ImageView = itemView.findViewById(R.id.reportImageButton)
+        val actions: ConstraintLayout = itemView.findViewById(R.id.actionConstraintLayout)
         val cardBackground: RelativeLayout = itemView.findViewById(R.id.activityCardRelativeLayout)
         var action = State.IGNORE
 
         override fun onClick(view: View?) {
+            onOpenListener.onClick(adapterPosition, action)
+        }
+        //This is used for graying out and disable a certain card while contacting the server
+        fun setLoading(loading: Boolean) {
             val activityCard: RelativeLayout = itemView.findViewById(R.id.activityCardRelativeLayout)
             for (child  in activityCard.children) {
-                child.alpha = 0.5f
-                //child.isEnabled = false
+                if (loading) {
+                    child.alpha = 0.5f
+                    child.isEnabled = false
+                } else {
+                  child.alpha = 1.0f
+                  child.isEnabled = true
+                }
             }
-            onOpenListener.onClick(adapterPosition, action)
         }
     }
 
@@ -112,4 +133,4 @@ class ActivityCardAdapter(private val activityList: List<ActivityCardItem>,
     }
 }
 
-data class ActivityCardItem (val access: String, val date: String, val imageResource: String?)
+data class ActivityCardItem (val gate: String, val access: String, val date: String, val imageResource: String?)

@@ -1,17 +1,14 @@
 package com.example.iotproject.fragments.activity
 
-import android.util.Log
 import androidx.lifecycle.*
 import com.example.iotproject.*
 import com.example.iotproject.Constants.Companion.JSON
 import com.example.iotproject.Constants.Companion.URL
-import com.example.iotproject.Constants.Companion.server_error
 import kotlinx.coroutines.launch
 import okhttp3.*
 import okhttp3.RequestBody.Companion.toRequestBody
 import org.json.JSONObject
 import java.io.IOException
-import java.util.*
 import kotlin.collections.ArrayList
 
 class ActivityFragmentViewModel(private val repository: AppRepository) : ViewModel() {
@@ -25,7 +22,15 @@ class ActivityFragmentViewModel(private val repository: AppRepository) : ViewMod
     val message: MutableLiveData<String> by lazy { MutableLiveData<String>() }
     val loading: MutableLiveData<Boolean> by lazy { MutableLiveData<Boolean>() }
     val activityList: LiveData<List<Activity>> = repository.allActivities
+/*
+    for (activity in activityList.value!!) {
+        Log.i (TAG, "Starting with activity ${activity.id}")
+        if (activity.state == "Pending" && activity != activityList.value!!.first())
+            updateActivity(Activity(activity.id, activity.gate, activity.datetime, "Ignored", activity.imageURL))
+    }
 
+ */
+    //TODO: think of a way to update all the values to be  ignored if they are pending, but not the last activity
     fun loadActivities() {
         val request = Request.Builder()
             .url(Constants.URL + "activity")
@@ -56,20 +61,20 @@ class ActivityFragmentViewModel(private val repository: AppRepository) : ViewMod
                             val imageResource = item.get("Photo").toString()
                             list.add(Activity(0, gate, dateTime, state, imageResource))
                         }
+                        deleteAll()
                         insertAll(list)
                     } catch (e: Exception) {
                         message.postValue(Constants.server_error)
                     }
-                    400 -> message.postValue(Constants.server_error)
-                    404 -> message.postValue(Constants.no_gates)
-                    //TODO: curate the responses, they are wrong as is
+                    500 -> message.postValue(Constants.server_error)
                 }
             }
         })
     }
 
-    fun updateActivity(position: Int, action: String) {
+    fun setAction (position: Int, action: String) {
         val activity = activityList.value?.get(position)!!
+        updateActivity(Activity(activity.id, activity.gate, activity.datetime, "Updating", activity.imageURL))
         val body = """{"id_gate":"${activity.gate}", "outcome":"$action"}""".trimMargin()
 
         val requestBody = body.toRequestBody(JSON)
@@ -84,6 +89,7 @@ class ActivityFragmentViewModel(private val repository: AppRepository) : ViewMod
             override fun onFailure(call: Call, e: IOException) {
                 loading.postValue(false)
                 message.postValue(Constants.server_error)
+                updateActivity(activity)
             }
 
             override fun onResponse(call: Call, response: Response) {
@@ -113,6 +119,8 @@ class ActivityFragmentViewModel(private val repository: AppRepository) : ViewMod
     fun updateActivity(activity: Activity) = viewModelScope.launch {
         repository.updateActivity(activity)
     }
+
+    fun getGateName(code: String) = repository.allGates.value?.first { it.code == code }?.name
 }
 
 class ActivityViewModelFactory(private val repository: AppRepository) : ViewModelProvider.Factory {
