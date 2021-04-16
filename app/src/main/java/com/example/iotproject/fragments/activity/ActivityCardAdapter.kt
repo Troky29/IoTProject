@@ -4,6 +4,7 @@ import android.app.Dialog
 import android.content.Context
 import android.transition.AutoTransition
 import android.transition.TransitionManager
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -40,7 +41,13 @@ class ActivityCardAdapter(private val activityList: List<ActivityCardItem>,
 
         holder.activityAccess.text = currentItem.access
         when (holder.activityAccess.text) {
-            "Pending" -> holder.setLoading(false)
+            "Pending" -> {
+                holder.setLoading(false)
+                if (position != 0){
+                    holder.actions.visibility = View.GONE
+                    holder.activityAccess.text = "Ignored"
+                }
+            }
             "Updating" -> holder.setLoading(true)
             else -> {
                 if(holder.actions.visibility != View.GONE) {
@@ -48,7 +55,6 @@ class ActivityCardAdapter(private val activityList: List<ActivityCardItem>,
                     holder.actions.visibility = View.GONE
                 }
                 holder.setLoading(false)
-                //TODO: hide the buttons, we can not change an activity retroactivly
             }
         }
 

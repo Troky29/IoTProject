@@ -49,13 +49,13 @@ class ActivityFragment: Fragment(),ActivityCardAdapter.OnActionListener {
         viewModel.loadActivities()
 
         //TODO: used for testing, delete
-//        viewModel.deleteAll()
-//        val testActivities = listOf(
-//            Activity(0, getString(R.string.test_gate_code), "1990-11-12 12:32:00", "Pending", null),
-//            Activity(0, getString(R.string.test_gate_code), "2021-12-11 10:02:00", "Pending", null),
-//            Activity(0, getString(R.string.test_gate_code), "2005-21-15 07:52:00", "Pending", null)
-//        )
-//        viewModel.insertAll(testActivities)
+        viewModel.deleteAll()
+        val testActivities = listOf(
+            Activity(0, getString(R.string.test_gate_code), "1990-11-12 12:32:00", "Pending", null),
+            Activity(0, getString(R.string.test_gate_code), "2021-12-11 10:02:00", "Pending", null),
+            Activity(0, getString(R.string.test_gate_code), "2005-21-15 07:52:00", "Pending", null)
+        )
+        viewModel.insertAll(testActivities)
     }
 
     private fun addActivityCard(activity: Activity) {

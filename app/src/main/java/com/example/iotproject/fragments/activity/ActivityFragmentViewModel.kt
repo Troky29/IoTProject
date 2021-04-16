@@ -22,15 +22,7 @@ class ActivityFragmentViewModel(private val repository: AppRepository) : ViewMod
     val message: MutableLiveData<String> by lazy { MutableLiveData<String>() }
     val loading: MutableLiveData<Boolean> by lazy { MutableLiveData<Boolean>() }
     val activityList: LiveData<List<Activity>> = repository.allActivities
-/*
-    for (activity in activityList.value!!) {
-        Log.i (TAG, "Starting with activity ${activity.id}")
-        if (activity.state == "Pending" && activity != activityList.value!!.first())
-            updateActivity(Activity(activity.id, activity.gate, activity.datetime, "Ignored", activity.imageURL))
-    }
 
- */
-    //TODO: think of a way to update all the values to be  ignored if they are pending, but not the last activity
     fun loadActivities() {
         val request = Request.Builder()
             .url(Constants.URL + "activity")
@@ -50,7 +42,6 @@ class ActivityFragmentViewModel(private val repository: AppRepository) : ViewMod
                         val json = JSONObject(response.body!!.string())
                         val activities = json.getJSONArray("activities")
                         val guestActivities = json.getJSONArray("guests_activities")
-                        //val json = JSONArray(response.body!!.string())
                         //TODO: if it works remember to include also guest activities
                         val list = ArrayList<Activity>()
                         for (index in 0 until activities.length()) {

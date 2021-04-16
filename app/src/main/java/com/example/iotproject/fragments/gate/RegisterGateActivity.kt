@@ -21,10 +21,8 @@ import com.example.iotproject.fragments.more.LocationHelper
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import com.google.zxing.integration.android.IntentIntegrator
-import okio.ByteString
 import java.io.ByteArrayOutputStream
 import java.math.BigInteger
-import java.nio.charset.Charset
 import java.util.*
 
 class RegisterGateActivity : AppCompatActivity() {
@@ -106,45 +104,26 @@ class RegisterGateActivity : AppCompatActivity() {
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        //TODO use this structure, is more organized
-        /*
-         super.onActivityResult(requestCode, resultCode, data)
+        super.onActivityResult(requestCode, resultCode, data)
         if (resultCode == RESULT_OK) {
             when (requestCode) {
-                REQUEST_IMAGE_CAPTURE -> {}
-                REQUEST_QR_CAPTURE -> {}
+                REQUEST_IMAGE_CAPTURE -> {
+                    val imageBitmap = data?.extras?.get("data") as Bitmap
+                    val imageBiteArray = ByteArrayOutputStream()
+                    //TODO: check for resolution
+                    imageBitmap.compress(Bitmap.CompressFormat.JPEG,100,imageBiteArray)
+                    val byteArray: ByteArray = imageBiteArray.toByteArray()
+
+                    image = BigInteger(1, byteArray).toString(16)
+                }
+                REQUEST_QR_CAPTURE -> {
+                    val result = IntentIntegrator.parseActivityResult(requestCode, resultCode, data)
+                    if (result.contents != null)
+                        findViewById<EditText>(R.id.gateCodeEditText).setText(result.contents)
+                    else
+                        super.onActivityResult(requestCode, resultCode, data)
+                }
             }
-        }
-         */
-
-        if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
-            val imageBitmap = data?.extras?.get("data") as Bitmap
-            val imageBiteArray = ByteArrayOutputStream()
-            //TODO: check for resolution
-            imageBitmap.compress(Bitmap.CompressFormat.JPEG,100,imageBiteArray)
-            val byteArray: ByteArray = imageBiteArray.toByteArray()
-
-            image = BigInteger(1, byteArray).toString(16)
-            //TODO: test all these option today, i'm stuck
-            //image = ByteString.of(*byteArray)
-            //Log.i("RegisterGate", image)
-            //Log.i("RegisterGate", imageString)
-            //image = imageBiteArray.toByteArray()
-            //TODO: see if this is correct, or we need to generate a b64 encoded string
-            //val base64 = Base64.getEncoder().encodeToString(image)
-            //val test: Byte = image[1]
-            //Log.i("Register gate", test.toString())
-            //val test = image?.let { bytes -> bytes[1] }
-            //Log.i("RegisterGate", test)
-            //image = data?.extras.get("data") as Bitmap
-        }
-
-        if (requestCode == REQUEST_QR_CAPTURE && resultCode == RESULT_OK) {
-            val result = IntentIntegrator.parseActivityResult(requestCode, resultCode, data)
-            if (result.contents != null)
-                findViewById<EditText>(R.id.gateCodeEditText).setText(result.contents)
-            else
-                super.onActivityResult(requestCode, resultCode, data)
         }
     }
 
