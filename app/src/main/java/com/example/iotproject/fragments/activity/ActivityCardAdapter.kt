@@ -2,17 +2,22 @@ package com.example.iotproject.fragments.activity
 
 import android.app.Dialog
 import android.content.Context
+import android.graphics.drawable.Drawable
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.Window
 import android.widget.ImageButton
 import android.widget.ImageView
+import android.widget.RelativeLayout
 import android.widget.TextView
+import androidx.core.content.ContextCompat
+import androidx.core.graphics.drawable.toDrawable
+import androidx.core.view.children
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
-import com.example.iotproject.R
 import com.example.iotproject.Constants.Companion.State
+import com.example.iotproject.R
 
 class ActivityCardAdapter(private val activityList: List<ActivityCardItem>,
                           val context: Context,
@@ -31,7 +36,11 @@ class ActivityCardAdapter(private val activityList: List<ActivityCardItem>,
             .placeholder(R.drawable.hqdefault)
             .into(holder.activityImage)
 
+        //TODO: instead of changing background see if we can diffferentiate
         holder.activityAccess.text = currentItem.access
+        if (holder.activityAccess.text != "Pending")
+            holder.cardBackground.background = ContextCompat.getDrawable(context, R.drawable.toolbar_background)
+
         holder.activityDate.text = currentItem.date
 
         holder.activityImage.setOnClickListener {
@@ -85,9 +94,15 @@ class ActivityCardAdapter(private val activityList: List<ActivityCardItem>,
         val acceptButton: ImageButton = itemView.findViewById(R.id.acceptImageButton)
         val denyButton: ImageButton = itemView.findViewById(R.id.denyImageButton)
         val reportButton: ImageButton = itemView.findViewById(R.id.reportImageButton)
+        val cardBackground: RelativeLayout = itemView.findViewById(R.id.activityCardRelativeLayout)
         var action = State.IGNORE
 
         override fun onClick(view: View?) {
+            val activityCard: RelativeLayout = itemView.findViewById(R.id.activityCardRelativeLayout)
+            for (child  in activityCard.children) {
+                child.alpha = 0.5f
+                //child.isEnabled = false
+            }
             onOpenListener.onClick(adapterPosition, action)
         }
     }

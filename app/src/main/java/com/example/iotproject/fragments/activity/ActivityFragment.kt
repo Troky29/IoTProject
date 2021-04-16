@@ -39,6 +39,7 @@ class ActivityFragment: Fragment(),ActivityCardAdapter.OnActionListener {
             messenger(message)
         })
         viewModel.activityList.observe(viewLifecycleOwner, { activityList ->
+            Log.i("ActivityFragment", activityList.toString())
             flushActivityCards()
             for (activity in activityList)
                 addActivityCard(activity)
@@ -46,7 +47,8 @@ class ActivityFragment: Fragment(),ActivityCardAdapter.OnActionListener {
         //TODO: decide a strategy for reloading activities
         //viewModel.loadActivities()
 
-        //TODO: userd for testing, delete
+        //TODO: used for testing, delete
+        /*
         viewModel.deleteAll()
         val testActivities = listOf(
             Activity(getString(R.string.test_gate_code), "1990-11-12 12:32:00", "Pending", null),
@@ -54,6 +56,8 @@ class ActivityFragment: Fragment(),ActivityCardAdapter.OnActionListener {
             Activity(getString(R.string.test_gate_code), "2005-21-15 07:52:00", "Pending", null)
         )
         viewModel.insertAll(testActivities)
+
+         */
     }
 
     private fun addActivityCard(activity: Activity) {
@@ -69,11 +73,15 @@ class ActivityFragment: Fragment(),ActivityCardAdapter.OnActionListener {
 
     override fun onClick(position: Int, action: State) {
         when (action) {
-            State.ALLOW -> viewModel.updateActivity(position, "granted")
-            State.DENY -> viewModel.updateActivity(position, "denied")
-            State.REPORT -> viewModel.updateActivity(position, "reported")
+            State.ALLOW -> viewModel.updateActivity(position, "Granted")
+            State.DENY -> viewModel.updateActivity(position, "Denied")
+            State.REPORT -> viewModel.updateActivity(position, "Reported")
             else -> Log.e("ActivityFragment", "Received unexpected action")
         }
+    }
+
+    private fun loading() {
+        //TODO: implement UI modification while waiting for activity update
     }
 
     private fun messenger(message: String) {

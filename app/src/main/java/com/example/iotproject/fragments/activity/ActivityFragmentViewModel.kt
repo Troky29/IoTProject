@@ -11,6 +11,8 @@ import okhttp3.*
 import okhttp3.RequestBody.Companion.toRequestBody
 import org.json.JSONObject
 import java.io.IOException
+import java.util.*
+import kotlin.collections.ArrayList
 
 class ActivityFragmentViewModel(private val repository: AppRepository) : ViewModel() {
     val TAG = "ActivityViewModel"
@@ -21,6 +23,7 @@ class ActivityFragmentViewModel(private val repository: AppRepository) : ViewMod
         .build()
 
     val message: MutableLiveData<String> by lazy { MutableLiveData<String>() }
+    val loading: MutableLiveData<Boolean> by lazy { MutableLiveData<Boolean>() }
     val activityList: LiveData<List<Activity>> = repository.allActivities
 
     fun loadActivities() {
@@ -28,12 +31,15 @@ class ActivityFragmentViewModel(private val repository: AppRepository) : ViewMod
             .url(Constants.URL + "activity")
             .build()
 
+        loading.postValue(true)
         client.newCall(request).enqueue(object : Callback {
             override fun onFailure(call: Call, e: IOException) {
+                loading.postValue(false)
                 message.postValue(Constants.server_error)
             }
             //TODO:correct with updated information
             override fun onResponse(call: Call, response: Response) {
+                loading.postValue(false)
                 when (response.code) {
                     200 -> try {
                         val json = JSONObject(response.body!!.string())
@@ -48,7 +54,7 @@ class ActivityFragmentViewModel(private val repository: AppRepository) : ViewMod
                             val dateTime = item.get("Date_Time").toString()
                             val state = item.get("Outcome").toString()
                             val imageResource = item.get("Photo").toString()
-                            list.add(Activity(gate, dateTime, state, imageResource))
+                            list.add(Activity(0, gate, dateTime, state, imageResource))
                         }
                         insertAll(list)
                     } catch (e: Exception) {
@@ -73,16 +79,19 @@ class ActivityFragmentViewModel(private val repository: AppRepository) : ViewMod
                 .put(requestBody)
                 .build()
 
+        loading.postValue(true)
         client.newCall(request).enqueue(object : Callback {
             override fun onFailure(call: Call, e: IOException) {
+                loading.postValue(false)
                 message.postValue(Constants.server_error)
             }
 
             override fun onResponse(call: Call, response: Response) {
+                loading.postValue(false)
                 when (response.code) {
                     200 -> {
                         message.postValue("Successfully updated gate")
-                        updateActivity(Activity(activity.gate, activity.datetime, action, activity.imageURL))
+                        updateActivity(Activity(activity.id, activity.gate, activity.datetime, action, activity.imageURL))
                     }
                     404 -> message.postValue("Error, no activity found")
                     500 -> message.postValue(Constants.server_error)
@@ -102,7 +111,7 @@ class ActivityFragmentViewModel(private val repository: AppRepository) : ViewMod
     }
 
     fun updateActivity(activity: Activity) = viewModelScope.launch {
-        repository.update(activity)
+        repository.updateActivity(activity)
     }
 }
 

@@ -23,7 +23,7 @@ class AppRepository (private val gateDao: GateDao, private val activityDao: Acti
     }
 
     @WorkerThread
-    suspend fun update(activity: Activity) {
+    suspend fun updateActivity(activity: Activity) {
         activityDao.update(activity)
     }
 

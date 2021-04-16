@@ -10,10 +10,9 @@ import com.example.iotproject.fragments.gate.Gate
                 parentColumns = ["code"],
                 childColumns = ["gate"])])
 data class Activity(
+        @PrimaryKey(autoGenerate = true) val id: Int,
         val gate: String,
         val datetime: String,
-        var state: String,
+        val state: String,
         val imageURL: String?,
-) {
-    @PrimaryKey(autoGenerate = true) var id: Int = 0
-}
+)
