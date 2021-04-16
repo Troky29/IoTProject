@@ -87,13 +87,13 @@ class LocationService : Service() {
         val altitude = location!!.altitude.toString()
         val latitude = location.latitude.toString()
         val longitude = location.longitude.toString()
+        Log.i(TAG, "$altitude $latitude $longitude")
 
-        val body = """{"altitude":"$altitude", "latitude:"$latitude", "longitude":"$longitude"}"""
+        val body = """{"altitude":"$altitude", "latitude":"$latitude", "longitude":"$longitude"}"""
         val requestBody = body.toRequestBody(JSON)
 
         val request = Request.Builder()
                 .url(Constants.URL + "user/location")
-                .addHeader("x-access-token", AccessTokenRepository.token)
                 .post(requestBody)
                 .build()
 

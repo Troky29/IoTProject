@@ -120,10 +120,11 @@ class RegisterGateActivity : AppCompatActivity() {
         if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
             val imageBitmap = data?.extras?.get("data") as Bitmap
             val imageBiteArray = ByteArrayOutputStream()
-            imageBitmap.compress(Bitmap.CompressFormat.JPEG,50,imageBiteArray)
+            //TODO: check for resolution
+            imageBitmap.compress(Bitmap.CompressFormat.JPEG,100,imageBiteArray)
             val byteArray: ByteArray = imageBiteArray.toByteArray()
 
-            image = BigInteger(1, byteArray).toString(2)
+            image = BigInteger(1, byteArray).toString(16)
             //TODO: test all these option today, i'm stuck
             //image = ByteString.of(*byteArray)
             //Log.i("RegisterGate", image)

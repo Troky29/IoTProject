@@ -32,15 +32,6 @@
             android:text="Gate name"
             android:textSize="32dp"/>
 
-        <ImageView
-            android:id="@+id/imageView"
-            android:layout_width="48dp"
-            android:layout_height="48dp"
-            android:layout_alignTop="@+id/gateNameTextView"
-            android:layout_marginStart="32dp"
-            android:layout_toEndOf="@+id/gateNameTextView"
-            app:srcCompat="@drawable/ic_baseline_expand_more_24" />
-
         <TextView
             android:id="@+id/accessTextView"
             android:layout_width="wrap_content"

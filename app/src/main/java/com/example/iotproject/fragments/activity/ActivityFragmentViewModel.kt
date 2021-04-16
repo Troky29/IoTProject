@@ -49,7 +49,7 @@ class ActivityFragmentViewModel(private val repository: AppRepository) : ViewMod
                     200 -> try {
                         val json = JSONObject(response.body!!.string())
                         val activities = json.getJSONArray("activities")
-                        val guestActivities = json.getJSONArray("guest_activities")
+                        val guestActivities = json.getJSONArray("guests_activities")
                         //val json = JSONArray(response.body!!.string())
                         //TODO: if it works remember to include also guest activities
                         val list = ArrayList<Activity>()

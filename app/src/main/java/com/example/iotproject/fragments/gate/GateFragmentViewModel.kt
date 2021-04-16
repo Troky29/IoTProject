@@ -109,7 +109,28 @@ class GateFragmentViewModel(private val repository: AppRepository) : ViewModel()
 
     //TODO: update with call to the corresponding endpoint
     fun openGate(position: Int) {
-        Log.i(TAG, gateList.value?.get(position)!!.code)
+        val gate = gateList.value?.get(position)?.code
+        val body = """{"id_gate":"$gate"}"""
+        val requestBody = body.toRequestBody(JSON)
+
+        val request = Request.Builder()
+                .url(URL + "gate/open")
+                .post(requestBody)
+                .build()
+
+        //TODO: add loading
+        client.newCall(request).enqueue(object : Callback {
+            override fun onFailure(call: Call, e: IOException) {
+                message.postValue(Constants.server_error)
+            }
+
+            override fun onResponse(call: Call, response: Response) {
+                when (response.code) {
+                    200 -> message.postValue("Success!")
+                    400 -> message.postValue("Error with the gate")
+                }
+            }
+        })
     }
 
     private fun insert(gate: Gate) = viewModelScope.launch {
