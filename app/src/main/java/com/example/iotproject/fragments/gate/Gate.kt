@@ -5,8 +5,8 @@ import androidx.room.PrimaryKey
 
 @Entity(tableName = "gate")
 data class Gate(
+        @PrimaryKey val code: String,
         val name: String,
         val location: String,
-        @PrimaryKey val code: String,
-        val imageURL: String?,
+        val imageURL: String?
 )

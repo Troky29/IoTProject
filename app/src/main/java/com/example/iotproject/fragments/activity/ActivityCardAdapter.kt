@@ -44,7 +44,7 @@ class ActivityCardAdapter(private val activityList: List<ActivityCardItem>,
                 holder.setLoading(false)
                 if (position != 0){
                     holder.actions.visibility = View.GONE
-                    holder.activityAccess.text = "Ignored"
+                    holder.activityAccess.text = context.getString(R.string.ignored)
                 }
             }
 

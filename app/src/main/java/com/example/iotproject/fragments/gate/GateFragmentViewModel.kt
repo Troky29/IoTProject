@@ -3,8 +3,7 @@ package com.example.iotproject.fragments.gate
 import android.util.Log
 import androidx.lifecycle.*
 import com.example.iotproject.*
-import com.example.iotproject.Constants.Companion.JSON
-import com.example.iotproject.Constants.Companion.URL
+import com.example.iotproject.Constants.Companion
 import kotlinx.coroutines.launch
 import okhttp3.*
 import okhttp3.RequestBody.Companion.toRequestBody
@@ -25,7 +24,6 @@ class GateFragmentViewModel(private val repository: AppRepository) : ViewModel()
     val gateList: LiveData<List<Gate>> = repository.allGates
 
     fun loadGates() {
-        Log.i(TAG, "Updating gates")
         val request = Request.Builder()
                 .url(Constants.URL + "gate")
                 .build()
@@ -34,6 +32,7 @@ class GateFragmentViewModel(private val repository: AppRepository) : ViewModel()
         client.newCall(request).enqueue(object : Callback {
             override fun onFailure(call: Call, e: IOException) {
                 loading.postValue(false)
+                Log.e(TAG, "Failed contacting server for GET gates")
                 message.postValue(Constants.server_error)
             }
 
@@ -46,20 +45,25 @@ class GateFragmentViewModel(private val repository: AppRepository) : ViewModel()
                         val list = mutableListOf<Gate>()
                         for (index in 0 until gates.length()) {
                             val item = gates.getJSONObject(index)
-                            //TODO: check if useful, we can also get latitude and longitude if needed
-                            //val idUser = item.get("ID_User")
+                            val code = item.get("ID").toString()
                             val name = item.get("Name").toString()
                             val location = item.get("Location").toString()
-                            val code = item.get("ID").toString()
                             val imageURL = item.get("Photo").toString()
-                            list.add(Gate(name, location, code, imageURL))
+                            list.add(Gate(code, name, location, imageURL))
                         }
                         insertAll(list)
                     } catch (e: Exception) {
+                        Log.e(TAG, "Wrong Json from GET gates")
                         message.postValue(Constants.server_error)
                     }
-                    404 -> message.postValue(Constants.no_gates)
-                    500 -> message.postValue(Constants.server_error)
+                    404 -> {
+                        Log.i(TAG, "No gates found, deleting all local gates")
+                        deleteAll()
+                    }
+                    500 -> {
+                        Log.e(TAG, "Server failed GET gates")
+                        message.postValue(Constants.server_error)
+                    }
                 }
             }
         })
@@ -68,19 +72,18 @@ class GateFragmentViewModel(private val repository: AppRepository) : ViewModel()
     fun addGate(name: String, location: String, latitude: Double, longitude: Double, code: String, image: String?) {
         val body = """{"name":"$name", "location":"$location", "latitude":"$latitude", 
             |"longitude":"$longitude", "id_gate":"$code", "photo":"$image"}""".trimMargin()
-        val requestBody = body.toRequestBody(JSON)
+        val requestBody = body.toRequestBody(Constants.JSON)
 
         val request = Request.Builder()
-                .url(URL + "gate")
+                .url(Constants.URL + "gate")
                 .post(requestBody)
                 .build()
 
         loading.postValue(true)
         client.newCall(request).enqueue(object : Callback {
             override fun onFailure(call: Call, e: IOException) {
-                //TODO: delete this
-                insert(Gate(name, location, code, null))
                 loading.postValue(false)
+                Log.e(TAG, "Failed contacting server for POST gate")
                 message.postValue(Constants.server_error)
             }
 
@@ -90,31 +93,38 @@ class GateFragmentViewModel(private val repository: AppRepository) : ViewModel()
                     200 -> {
                         message.postValue("Successfully added gate!")
                         val json = JSONObject(response.body!!.string())
-                        //TODO: after checking the functionality correct
-                        try {
-                            val imageUrl = json.getString("url_image")
-                            Log.i(TAG, "Success: $imageUrl")
-                        } catch (e: Exception) {
-                            Log.i(TAG, "è crashato")
-                        }
-                        insert(Gate(name, location, code, null))
+                        //The server returns a Json with the url of the saved image only if its uploaded
+                        val imageURL: String? = try {
+                            json.getString("url_image")
+                        } catch (e: Exception) { null }
+
+                        insert(Gate(code, name, location, imageURL))
                     }
-                    400 -> message.postValue(Constants.invalid_data)
-                    409 -> message.postValue("Gate already exists!")
-                    500 -> message.postValue(Constants.server_error)
+                    400 -> {
+                        Log.e(TAG, "Invalid data provided to POST gate")
+                        message.postValue(Constants.invalid_data)
+                    }
+                    409 -> {
+                        Log.e(TAG, "The gate in the POST request is already registered")
+                        message.postValue("Gate already exists!")
+                    }
+                    500 -> {
+                        Log.e(TAG, "Server failed POST gate")
+                        message.postValue(Constants.server_error)
+                    }
                 }
             }
         })
     }
 
-    //TODO: update with call to the corresponding endpoint
+
     fun openGate(position: Int) {
         val gate = gateList.value?.get(position)?.code
         val body = """{"id_gate":"$gate"}"""
-        val requestBody = body.toRequestBody(JSON)
+        val requestBody = body.toRequestBody(Constants.JSON)
 
         val request = Request.Builder()
-                .url(URL + "gate/open")
+                .url(Constants.URL + "gate/open")
                 .post(requestBody)
                 .build()
 

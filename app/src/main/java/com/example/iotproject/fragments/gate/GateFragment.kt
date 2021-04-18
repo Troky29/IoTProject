@@ -2,7 +2,6 @@ package com.example.iotproject.fragments.gate
 
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -64,9 +63,8 @@ class GateFragment: Fragment(), GateCardAdapter.OnOpenListener {
             startActivity(intent)
         }
 
-        //TODO: study a strategy for reloading gates, probably just if we have no gate, or the user intentionally reloads
-        //if (gateCardList.isEmpty())
-         viewModel.loadGates()
+        //TODO: We arrive here before the sql initializzation, we should wait or initialize it before
+        viewModel.loadGates()
     }
 
     private fun addGateCard(gate: Gate) {

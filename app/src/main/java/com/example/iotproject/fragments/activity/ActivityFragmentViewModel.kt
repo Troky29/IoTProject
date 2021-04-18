@@ -1,5 +1,6 @@
 package com.example.iotproject.fragments.activity
 
+import android.util.Log
 import androidx.lifecycle.*
 import com.example.iotproject.*
 import com.example.iotproject.Constants.Companion.JSON
@@ -11,6 +12,7 @@ import java.io.IOException
 import kotlin.collections.ArrayList
 
 class ActivityFragmentViewModel(private val repository: AppRepository) : ViewModel() {
+    private val TAG = "ActivityFragmentViewModel"
 
     private var client: OkHttpClient = OkHttpClient().newBuilder()
         .authenticator(AccessTokenAuthenticator(AccessTokenRepository))
@@ -30,9 +32,10 @@ class ActivityFragmentViewModel(private val repository: AppRepository) : ViewMod
         client.newCall(request).enqueue(object : Callback {
             override fun onFailure(call: Call, e: IOException) {
                 loading.postValue(false)
+                Log.e(TAG, "Failed contacting server for GET activities")
                 message.postValue(Constants.server_error)
             }
-            //TODO:correct with updated information
+
             override fun onResponse(call: Call, response: Response) {
                 loading.postValue(false)
                 when (response.code) {
@@ -40,29 +43,31 @@ class ActivityFragmentViewModel(private val repository: AppRepository) : ViewMod
                         val json = JSONObject(response.body!!.string())
                         val activities = json.getJSONArray("activities")
                         val guestActivities = json.getJSONArray("guests_activities")
-                        //TODO: if it works remember to include also guest activities
                         val list = ArrayList<Activity>()
                         for (index in 0 until activities.length()) {
-                            val item = activities.getJSONObject(index)
-                            val gate = item.get("ID_Gate").toString()
-                            val dateTime = item.get("Date_Time").toString()
-                            val state = item.get("Outcome").toString()
-                            val car = item.get("ID_Car").toString()
-                            val imageResource = item.get("Photo").toString()
-                            list.add(Activity(0, gate, dateTime, state, car, imageResource))
+                            val activity = getActivity(activities.getJSONObject(index))
+                            list.add(activity)
+                        }
+                        for(index in 0 until guestActivities.length()) {
+                            val guestActivity = getActivity(guestActivities.getJSONObject(index))
+                            list.add(guestActivity)
                         }
                         deleteAll()
                         insertAll(list)
                     } catch (e: Exception) {
+                        Log.e(TAG, "Wrong Json from GET actives")
                         message.postValue(Constants.server_error)
                     }
-                    500 -> message.postValue(Constants.server_error)
+                    500 -> {
+                        Log.e(TAG, "Server failed GET activities")
+                        message.postValue(Constants.server_error)
+                    }
                 }
             }
         })
     }
 
-    fun setAction (position: Int, action: String) {
+    fun setAction(position: Int, action: String) {
         val activity = activityList.value?.get(position)!!
         updateActivity(Activity(activity.id, activity.gate, activity.datetime, "Updating",
                 activity.car, activity.imageURL))
@@ -79,6 +84,7 @@ class ActivityFragmentViewModel(private val repository: AppRepository) : ViewMod
         client.newCall(request).enqueue(object : Callback {
             override fun onFailure(call: Call, e: IOException) {
                 loading.postValue(false)
+                Log.e(TAG, "Failed contacting server for PUT updating activity")
                 message.postValue(Constants.server_error)
                 updateActivity(activity)
             }
@@ -87,28 +93,46 @@ class ActivityFragmentViewModel(private val repository: AppRepository) : ViewMod
                 loading.postValue(false)
                 when (response.code) {
                     200 -> {
-                        message.postValue("Successfully updated gate")
+                        message.postValue("Action received!")
                         updateActivity(Activity(activity.id, activity.gate, activity.datetime,
                                 action, activity.car, activity.imageURL))
                     }
-                    404 -> message.postValue("Error, no activity found")
-                    500 -> message.postValue(Constants.server_error)
+                    404 -> {
+                        Log.e(TAG, "Error, no activity found")
+                        message.postValue("Internal error, deleted activity")
+                        deleteActivity(activity)
+                    }
+                    500 -> {
+                        Log.e(TAG, "Server failed PUT update activity")
+                        message.postValue(Constants.server_error)
+                    }
                 }
             }
         })
     }
 
-    //TODO: keep private
-   fun insertAll(activities: List<Activity>) = viewModelScope.launch {
+    private fun getActivity(item: JSONObject): Activity {
+        val gate = item.get("ID_Gate").toString()
+        val dateTime = item.get("Date_Time").toString()
+        val state = item.get("Outcome").toString()
+        val car = item.get("ID_Car").toString()
+        val imageResource = item.get("Photo").toString()
+        return Activity(0, gate, dateTime, state, car, imageResource)
+    }
+
+   private fun insertAll(activities: List<Activity>) = viewModelScope.launch {
         repository.insertAllActivities(activities)
     }
 
-    //TODO: keep private
-    fun deleteAll() = viewModelScope.launch {
+    private fun deleteActivity(activity: Activity) = viewModelScope.launch {
+        repository.deleteActivity(activity)
+    }
+
+    private fun deleteAll() = viewModelScope.launch {
         repository.deleteAllActivities()
     }
 
-    fun updateActivity(activity: Activity) = viewModelScope.launch {
+    private fun updateActivity(activity: Activity) = viewModelScope.launch {
         repository.updateActivity(activity)
     }
 

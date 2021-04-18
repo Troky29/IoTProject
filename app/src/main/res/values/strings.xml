@@ -40,5 +40,6 @@
     <string name="rule_dialog_title">Rule Details</string>
     <string name="nickname_hint">Nickname</string>
     <string name="test_gate_code">d8c0e668-b59e-455e-af78-77470ba291c5</string>
+    <string name="ignored">Ignored</string>
 
 </resources>

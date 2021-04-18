@@ -14,10 +14,12 @@ interface ActivityDao {
     @Update
     suspend fun update(activity: Activity)
 
+    @Delete
+    suspend fun delete(activity: Activity)
+
     @Query("DELETE FROM activity")
     suspend fun deleteAll()
 
     @Query("SELECT * FROM activity ORDER BY datetime DESC")
     fun getAll(): LiveData<List<Activity>>
-
 }
