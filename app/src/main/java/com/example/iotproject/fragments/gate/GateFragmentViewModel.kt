@@ -3,11 +3,9 @@ package com.example.iotproject.fragments.gate
 import android.util.Log
 import androidx.lifecycle.*
 import com.example.iotproject.*
-import com.example.iotproject.Constants.Companion
 import kotlinx.coroutines.launch
 import okhttp3.*
 import okhttp3.RequestBody.Companion.toRequestBody
-import okio.ByteString
 import org.json.JSONObject
 import java.io.IOException
 
@@ -119,8 +117,9 @@ class GateFragmentViewModel(private val repository: AppRepository) : ViewModel()
 
 
     fun openGate(position: Int) {
-        val gate = gateList.value?.get(position)?.code
-        val body = """{"id_gate":"$gate"}"""
+        val gate = gateList.value?.get(position)
+        val code = gate?.code
+        val body = """{"id_gate":"$code"}"""
         val requestBody = body.toRequestBody(Constants.JSON)
 
         val request = Request.Builder()
@@ -128,16 +127,23 @@ class GateFragmentViewModel(private val repository: AppRepository) : ViewModel()
                 .post(requestBody)
                 .build()
 
-        //TODO: add loading
+        loading.postValue(true)
         client.newCall(request).enqueue(object : Callback {
             override fun onFailure(call: Call, e: IOException) {
+                loading.postValue(false)
+                Log.e(TAG, "Failed contacting the server for POST open gate")
                 message.postValue(Constants.server_error)
             }
 
             override fun onResponse(call: Call, response: Response) {
+                loading.postValue(false)
                 when (response.code) {
-                    200 -> message.postValue("Success!")
-                    400 -> message.postValue("Error with the gate")
+                    200 -> message.postValue("Gate open!")
+                    400 -> {
+                        Log.e(TAG, "Error in POST, no gate found")
+                        message.postValue("Internal error, deleted gate")
+                        delete(gate!!)
+                    }
                 }
             }
         })
@@ -149,6 +155,10 @@ class GateFragmentViewModel(private val repository: AppRepository) : ViewModel()
 
     private fun insertAll(gates: List<Gate>) = viewModelScope.launch {
         repository.insertAllGates(gates)
+    }
+
+    private fun delete(gate: Gate) = viewModelScope.launch {
+        repository.deleteGate(gate)
     }
 
     fun deleteAll() = viewModelScope.launch {

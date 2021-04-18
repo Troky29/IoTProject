@@ -98,9 +98,9 @@ class ActivityFragmentViewModel(private val repository: AppRepository) : ViewMod
                                 action, activity.car, activity.imageURL))
                     }
                     404 -> {
-                        Log.e(TAG, "Error, no activity found")
+                        Log.e(TAG, "Error in PUT, no activity found")
                         message.postValue("Internal error, deleted activity")
-                        deleteActivity(activity)
+                        delete(activity)
                     }
                     500 -> {
                         Log.e(TAG, "Server failed PUT update activity")
@@ -124,7 +124,7 @@ class ActivityFragmentViewModel(private val repository: AppRepository) : ViewMod
         repository.insertAllActivities(activities)
     }
 
-    private fun deleteActivity(activity: Activity) = viewModelScope.launch {
+    private fun delete(activity: Activity) = viewModelScope.launch {
         repository.deleteActivity(activity)
     }
 

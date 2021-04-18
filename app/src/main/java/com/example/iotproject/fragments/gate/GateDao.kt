@@ -14,6 +14,9 @@ interface GateDao {
     @Update
     fun update(gate: Gate)
 
+    @Delete
+    suspend fun delete(gate: Gate)
+
     @Query("DELETE FROM gate")
     suspend fun deleteAll()
 
