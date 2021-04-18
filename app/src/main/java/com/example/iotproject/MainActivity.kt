@@ -4,9 +4,11 @@ import android.Manifest
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
+import android.util.Log
 import android.widget.ImageButton
 import android.widget.TextView
 import android.widget.Toast
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.fragment.app.Fragment
@@ -14,6 +16,8 @@ import androidx.lifecycle.ViewModelProvider
 import com.example.iotproject.Constants.Companion.EMAIL
 import com.example.iotproject.fragments.more.MoreFragment
 import com.example.iotproject.fragments.activity.ActivityFragment
+import com.example.iotproject.fragments.activity.ActivityFragmentViewModel
+import com.example.iotproject.fragments.activity.ActivityViewModelFactory
 import com.example.iotproject.fragments.gate.GateFragment
 import com.example.iotproject.services.FirebaseService
 import com.example.iotproject.services.LocationService
@@ -62,7 +66,6 @@ class MainActivity : AppCompatActivity() {
         //We check for the permission for obtaining the location and start the service
         checkPermissions()
         val locationService = Intent(this, LocationService::class.java)
-        //TODO: Insert back location updates
         startService(locationService)
         //We need this authorization for implementing the notification inside the application
         checkGooglePlayServices()
@@ -73,6 +76,12 @@ class MainActivity : AppCompatActivity() {
                 FirebaseService.token = token
             }
         }
+
+        //TODO: complete the initial call here, also load the user info and add them
+        val activityViewModel: ActivityFragmentViewModel by viewModels {
+            ActivityViewModelFactory((application as IoTApplication).repository)
+        }
+        activityViewModel.loadActivities()
     }
 
     override fun onResume() {

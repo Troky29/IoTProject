@@ -8,12 +8,15 @@ import com.example.iotproject.fragments.activity.Activity
 import com.example.iotproject.fragments.activity.ActivityDao
 import com.example.iotproject.fragments.gate.Gate
 import com.example.iotproject.fragments.gate.GateDao
+import com.example.iotproject.fragments.more.Car
+import com.example.iotproject.fragments.more.CarDao
 
 
-@Database(entities = arrayOf(Gate::class, Activity::class), version = 1)
+@Database(entities = [Gate::class, Activity::class, Car::class], version = 1)
 abstract class AppDatabase : RoomDatabase() {
     abstract fun gateDao() : GateDao
     abstract fun activityDao() : ActivityDao
+    abstract fun carDao() : CarDao
 
     companion object {
         // Singleton prevents multiple instances of database opening at the

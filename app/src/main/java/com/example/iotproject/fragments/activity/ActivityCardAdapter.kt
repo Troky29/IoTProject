@@ -4,12 +4,10 @@ import android.app.Dialog
 import android.content.Context
 import android.transition.AutoTransition
 import android.transition.TransitionManager
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.Window
-import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.RelativeLayout
 import android.widget.TextView
@@ -41,6 +39,7 @@ class ActivityCardAdapter(private val activityList: List<ActivityCardItem>,
 
         holder.activityAccess.text = currentItem.access
         when (holder.activityAccess.text) {
+
             "Pending" -> {
                 holder.setLoading(false)
                 if (position != 0){
@@ -48,7 +47,9 @@ class ActivityCardAdapter(private val activityList: List<ActivityCardItem>,
                     holder.activityAccess.text = "Ignored"
                 }
             }
+
             "Updating" -> holder.setLoading(true)
+
             else -> {
                 if(holder.actions.visibility != View.GONE) {
                     TransitionManager.beginDelayedTransition(holder.actions, AutoTransition())

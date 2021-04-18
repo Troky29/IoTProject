@@ -14,7 +14,6 @@ import com.example.iotproject.IoTApplication
 import com.example.iotproject.R
 import java.util.ArrayList
 import com.example.iotproject.Constants.Companion.State
-import com.example.iotproject.fragments.gate.Gate
 
 class ActivityFragment: Fragment(),ActivityCardAdapter.OnActionListener {
     private val activityCardList by lazy { ArrayList<ActivityCardItem>() }
@@ -40,22 +39,10 @@ class ActivityFragment: Fragment(),ActivityCardAdapter.OnActionListener {
             messenger(message)
         })
         viewModel.activityList.observe(viewLifecycleOwner, { activityList ->
-            Log.i("ActivityFragment", activityList.toString())
             flushActivityCards()
             for (activity in activityList)
                 addActivityCard(activity)
         })
-        //TODO: decide a strategy for reloading activities
-        viewModel.loadActivities()
-
-        //TODO: used for testing, delete
-        viewModel.deleteAll()
-        val testActivities = listOf(
-            Activity(0, getString(R.string.test_gate_code), "1990-11-12 12:32:00", "Pending", null),
-            Activity(0, getString(R.string.test_gate_code), "2021-12-11 10:02:00", "Pending", null),
-            Activity(0, getString(R.string.test_gate_code), "2005-21-15 07:52:00", "Pending", null)
-        )
-        viewModel.insertAll(testActivities)
     }
 
     private fun addActivityCard(activity: Activity) {
@@ -77,10 +64,6 @@ class ActivityFragment: Fragment(),ActivityCardAdapter.OnActionListener {
             State.REPORT -> viewModel.setAction(position, "Reported")
             else -> Log.e("ActivityFragment", "Received unexpected action")
         }
-    }
-
-    private fun loading() {
-        //TODO: implement UI modification while waiting for activity update
     }
 
     private fun messenger(message: String) {

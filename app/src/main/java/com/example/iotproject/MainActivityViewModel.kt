@@ -76,8 +76,4 @@ class MainActivityViewModel : ViewModel() {
         super.onCleared()
         Log.i(TAG, Constants.destroyed)
     }
-
-    //TODO:make this in their own classes
-    data class Car(val license: String, val color: String, val brand: String)
-
 }

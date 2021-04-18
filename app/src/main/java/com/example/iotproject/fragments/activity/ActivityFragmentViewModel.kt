@@ -3,7 +3,6 @@ package com.example.iotproject.fragments.activity
 import androidx.lifecycle.*
 import com.example.iotproject.*
 import com.example.iotproject.Constants.Companion.JSON
-import com.example.iotproject.Constants.Companion.URL
 import kotlinx.coroutines.launch
 import okhttp3.*
 import okhttp3.RequestBody.Companion.toRequestBody
@@ -12,7 +11,6 @@ import java.io.IOException
 import kotlin.collections.ArrayList
 
 class ActivityFragmentViewModel(private val repository: AppRepository) : ViewModel() {
-    val TAG = "ActivityViewModel"
 
     private var client: OkHttpClient = OkHttpClient().newBuilder()
         .authenticator(AccessTokenAuthenticator(AccessTokenRepository))
@@ -49,8 +47,9 @@ class ActivityFragmentViewModel(private val repository: AppRepository) : ViewMod
                             val gate = item.get("ID_Gate").toString()
                             val dateTime = item.get("Date_Time").toString()
                             val state = item.get("Outcome").toString()
+                            val car = item.get("ID_Car").toString()
                             val imageResource = item.get("Photo").toString()
-                            list.add(Activity(0, gate, dateTime, state, imageResource))
+                            list.add(Activity(0, gate, dateTime, state, car, imageResource))
                         }
                         deleteAll()
                         insertAll(list)
@@ -65,13 +64,14 @@ class ActivityFragmentViewModel(private val repository: AppRepository) : ViewMod
 
     fun setAction (position: Int, action: String) {
         val activity = activityList.value?.get(position)!!
-        updateActivity(Activity(activity.id, activity.gate, activity.datetime, "Updating", activity.imageURL))
+        updateActivity(Activity(activity.id, activity.gate, activity.datetime, "Updating",
+                activity.car, activity.imageURL))
         val body = """{"id_gate":"${activity.gate}", "outcome":"$action"}""".trimMargin()
 
         val requestBody = body.toRequestBody(JSON)
 
         val request = Request.Builder()
-                .url(URL + "activity")
+                .url(Constants.URL + "activity")
                 .put(requestBody)
                 .build()
 
@@ -88,7 +88,8 @@ class ActivityFragmentViewModel(private val repository: AppRepository) : ViewMod
                 when (response.code) {
                     200 -> {
                         message.postValue("Successfully updated gate")
-                        updateActivity(Activity(activity.id, activity.gate, activity.datetime, action, activity.imageURL))
+                        updateActivity(Activity(activity.id, activity.gate, activity.datetime,
+                                action, activity.car, activity.imageURL))
                     }
                     404 -> message.postValue("Error, no activity found")
                     500 -> message.postValue(Constants.server_error)

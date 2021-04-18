@@ -6,11 +6,17 @@ import com.example.iotproject.fragments.activity.Activity
 import com.example.iotproject.fragments.activity.ActivityDao
 import com.example.iotproject.fragments.gate.Gate
 import com.example.iotproject.fragments.gate.GateDao
+import com.example.iotproject.fragments.more.Car
+import com.example.iotproject.fragments.more.CarDao
 
 
-class AppRepository (private val gateDao: GateDao, private val activityDao: ActivityDao) {
+class AppRepository (private val gateDao: GateDao,
+                     private val activityDao: ActivityDao,
+                     private val carDao: CarDao) {
+
     val allGates: LiveData<List<Gate>> = gateDao.getAll()
     val allActivities: LiveData<List<Activity>> = activityDao.getAll()
+    val allCar: LiveData<List<Car>> = carDao.getAll()
 
     @WorkerThread
     suspend fun insertGate(gate: Gate) {
@@ -40,6 +46,11 @@ class AppRepository (private val gateDao: GateDao, private val activityDao: Acti
     @WorkerThread
     suspend fun insertAllActivities(activities: List<Activity>) {
         activityDao.insertAll(activities)
+    }
+
+    @WorkerThread
+    suspend fun insertAllCars(cars: List<Car>) {
+        carDao.insertAll(cars)
     }
 
     @WorkerThread
