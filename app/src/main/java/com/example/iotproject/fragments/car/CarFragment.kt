@@ -19,14 +19,15 @@ import com.example.iotproject.login.LoginViewModel
 class CarFragment : Fragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return inflater.inflate(R.layout.fragment_more, container, false)
+        return inflater.inflate(R.layout.fragment_car, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
 
-
+//TODO: change accordingly
+        /*
         view.findViewById<Button>(R.id.registerCarButton).setOnClickListener {
             RegisterCarDialog().show(childFragmentManager, "RegisterCarDialog")
         }
@@ -39,6 +40,8 @@ class CarFragment : Fragment() {
         view.findViewById<Button>(R.id.loguotButton).setOnClickListener { logout() }
 
         view.findViewById<Button>(R.id.deleteGateButton).setOnClickListener { deleteAllGates() }
+
+         */
     }
 
     private fun deleteAllGates() {
@@ -49,6 +52,7 @@ class CarFragment : Fragment() {
         //TODO: eventually make also a call to delete the servers gate
     }
 
+    //TODO: move to the user fragment
     private fun logout() {
         val intent = Intent(context, Login::class.java)
         intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK

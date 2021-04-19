@@ -1,8 +1,6 @@
 package com.example.iotproject.database
 
-import android.provider.ContactsContract
 import androidx.room.Entity
-import androidx.room.ForeignKey
 import androidx.room.PrimaryKey
 
 @Entity(tableName = "car")
