@@ -16,6 +16,7 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.SnapHelper
 import com.example.iotproject.IoTApplication
 import com.example.iotproject.R
+import com.example.iotproject.database.Gate
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 
 class GateFragment: Fragment(), GateCardAdapter.OnOpenListener {

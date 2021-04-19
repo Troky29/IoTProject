@@ -2,12 +2,6 @@ package com.example.iotproject.database
 
 import androidx.annotation.WorkerThread
 import androidx.lifecycle.LiveData
-import com.example.iotproject.fragments.activity.Activity
-import com.example.iotproject.fragments.activity.ActivityDao
-import com.example.iotproject.fragments.gate.Gate
-import com.example.iotproject.fragments.gate.GateDao
-import com.example.iotproject.fragments.more.Car
-import com.example.iotproject.fragments.more.CarDao
 
 
 class AppRepository (private val gateDao: GateDao,
@@ -16,7 +10,7 @@ class AppRepository (private val gateDao: GateDao,
 
     val allGates: LiveData<List<Gate>> = gateDao.getAll()
     val allActivities: LiveData<List<Activity>> = activityDao.getAll()
-    val allCar: LiveData<List<Car>> = carDao.getAll()
+    val allCars: LiveData<List<Car>> = carDao.getAll()
 
     @WorkerThread
     suspend fun insertGate(gate: Gate) {
@@ -26,6 +20,11 @@ class AppRepository (private val gateDao: GateDao,
     @WorkerThread
     suspend fun insertActivity(activity : Activity) {
         activityDao.insert(activity)
+    }
+
+    @WorkerThread
+    suspend fun insertCar(car: Car) {
+        carDao.insert(car)
     }
 
     @WorkerThread

@@ -1,4 +1,4 @@
-package com.example.iotproject.fragments.more
+package com.example.iotproject.fragments.car
 
 import android.content.Intent
 import android.os.Bundle
@@ -13,11 +13,10 @@ import com.example.iotproject.IoTApplication
 import com.example.iotproject.R
 import com.example.iotproject.fragments.gate.GateFragmentViewModel
 import com.example.iotproject.fragments.gate.GateViewModelFactory
-import com.example.iotproject.fragments.gate.RegisterGateActivity
 import com.example.iotproject.login.Login
 import com.example.iotproject.login.LoginViewModel
 
-class MoreFragment : Fragment() {
+class CarFragment : Fragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.fragment_more, container, false)
@@ -30,11 +29,6 @@ class MoreFragment : Fragment() {
 
         view.findViewById<Button>(R.id.registerCarButton).setOnClickListener {
             RegisterCarDialog().show(childFragmentManager, "RegisterCarDialog")
-        }
-
-        view.findViewById<Button>(R.id.registerGateButton).setOnClickListener {
-            val intent = Intent(context, RegisterGateActivity::class.java)
-            startActivity(intent)
         }
 
         view.findViewById<Button>(R.id.addSpecialRuleButton).setOnClickListener {

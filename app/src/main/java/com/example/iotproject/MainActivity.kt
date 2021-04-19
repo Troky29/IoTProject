@@ -4,7 +4,6 @@ import android.Manifest
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
-import android.util.Log
 import android.widget.ImageButton
 import android.widget.TextView
 import android.widget.Toast
@@ -14,7 +13,7 @@ import androidx.core.app.ActivityCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.example.iotproject.Constants.Companion.EMAIL
-import com.example.iotproject.fragments.more.MoreFragment
+import com.example.iotproject.fragments.car.CarFragment
 import com.example.iotproject.fragments.activity.ActivityFragment
 import com.example.iotproject.fragments.activity.ActivityFragmentViewModel
 import com.example.iotproject.fragments.activity.ActivityViewModelFactory
@@ -37,7 +36,7 @@ class MainActivity : AppCompatActivity() {
         val viewModel = ViewModelProvider(this).get(MainActivityViewModel::class.java)
         viewModel.message.observe(this, { message -> messenger(message) })
 
-        val moreFragment = MoreFragment()
+        val moreFragment = CarFragment()
         val gateFragment = GateFragment()
         val activityFragment = ActivityFragment()
 

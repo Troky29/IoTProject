@@ -4,12 +4,6 @@ import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
-import com.example.iotproject.fragments.activity.Activity
-import com.example.iotproject.fragments.activity.ActivityDao
-import com.example.iotproject.fragments.gate.Gate
-import com.example.iotproject.fragments.gate.GateDao
-import com.example.iotproject.fragments.more.Car
-import com.example.iotproject.fragments.more.CarDao
 
 
 @Database(entities = [Gate::class, Activity::class, Car::class], version = 1)

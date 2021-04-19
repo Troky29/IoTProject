@@ -1,8 +1,9 @@
-package com.example.iotproject.fragments.more
+package com.example.iotproject.database
 
 import androidx.lifecycle.LiveData
 import androidx.room.*
 import com.example.iotproject.database.BaseDao
+import com.example.iotproject.database.Car
 
 @Dao
 interface CarDao : BaseDao<Car> {

@@ -1,10 +1,8 @@
-package com.example.iotproject.fragments.activity
+package com.example.iotproject.database
 
 import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.PrimaryKey
-import com.example.iotproject.fragments.gate.Gate
-import com.example.iotproject.fragments.more.Car
 
 @Entity(tableName = "activity",
         foreignKeys = [

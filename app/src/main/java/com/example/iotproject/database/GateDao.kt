@@ -1,8 +1,9 @@
-package com.example.iotproject.fragments.gate
+package com.example.iotproject.database
 
 import androidx.lifecycle.LiveData
 import androidx.room.*
 import com.example.iotproject.database.BaseDao
+import com.example.iotproject.database.Gate
 
 @Dao
 interface GateDao : BaseDao<Gate> {

@@ -4,6 +4,7 @@ import android.util.Log
 import androidx.lifecycle.*
 import com.example.iotproject.*
 import com.example.iotproject.database.AppRepository
+import com.example.iotproject.database.Gate
 import kotlinx.coroutines.launch
 import okhttp3.*
 import okhttp3.RequestBody.Companion.toRequestBody

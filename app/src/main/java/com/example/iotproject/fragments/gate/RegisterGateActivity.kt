@@ -17,7 +17,6 @@ import com.example.iotproject.Constants.Companion.NEIGHBOUR_RADIUS
 import com.example.iotproject.IoTApplication
 import com.example.iotproject.LoadingDialog
 import com.example.iotproject.R
-import com.example.iotproject.fragments.more.LocationHelper
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import com.google.zxing.integration.android.IntentIntegrator

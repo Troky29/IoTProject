@@ -1,4 +1,4 @@
-package com.example.iotproject.fragments.more
+package com.example.iotproject.fragments.gate
 
 import android.content.Context
 import android.location.Geocoder

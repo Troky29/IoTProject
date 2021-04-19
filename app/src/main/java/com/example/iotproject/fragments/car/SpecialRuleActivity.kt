@@ -1,4 +1,4 @@
-package com.example.iotproject.fragments.more
+package com.example.iotproject.fragments.car
 
 import android.app.DatePickerDialog
 import android.app.TimePickerDialog

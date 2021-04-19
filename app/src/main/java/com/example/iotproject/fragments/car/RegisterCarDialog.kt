@@ -1,4 +1,4 @@
-package com.example.iotproject.fragments.more
+package com.example.iotproject.fragments.car
 
 import android.os.Bundle
 import android.view.LayoutInflater

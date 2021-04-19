@@ -1,7 +1,8 @@
-package com.example.iotproject.fragments.activity
+package com.example.iotproject.database
 
 import androidx.lifecycle.LiveData
 import androidx.room.*
+import com.example.iotproject.database.Activity
 import com.example.iotproject.database.BaseDao
 
 @Dao

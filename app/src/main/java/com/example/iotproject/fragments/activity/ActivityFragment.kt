@@ -14,6 +14,7 @@ import com.example.iotproject.IoTApplication
 import com.example.iotproject.R
 import java.util.ArrayList
 import com.example.iotproject.Constants.Companion.State
+import com.example.iotproject.database.Activity
 
 class ActivityFragment: Fragment(),ActivityCardAdapter.OnActionListener {
     private val activityCardList by lazy { ArrayList<ActivityCardItem>() }
