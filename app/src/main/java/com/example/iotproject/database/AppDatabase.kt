@@ -1,4 +1,4 @@
-package com.example.iotproject
+package com.example.iotproject.database
 
 import android.content.Context
 import androidx.room.Database

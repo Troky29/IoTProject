@@ -2,18 +2,10 @@ package com.example.iotproject.fragments.more
 
 import androidx.lifecycle.LiveData
 import androidx.room.*
+import com.example.iotproject.database.BaseDao
 
 @Dao
-interface CarDao {
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insert(car: Car)
-
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertAll(cars: List<Car>)
-
-    @Update
-    fun update(car: Car)
-
+interface CarDao : BaseDao<Car> {
     @Query("DELETE FROM car")
     suspend fun deleteAll()
 

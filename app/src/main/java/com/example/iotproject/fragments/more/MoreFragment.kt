@@ -28,24 +28,23 @@ class MoreFragment : Fragment() {
 
 
 
-        view.findViewById<Button>(R.id.registerCarButton).setOnClickListener() {
+        view.findViewById<Button>(R.id.registerCarButton).setOnClickListener {
             RegisterCarDialog().show(childFragmentManager, "RegisterCarDialog")
         }
 
-        view.findViewById<Button>(R.id.registerGateButton).setOnClickListener() {
+        view.findViewById<Button>(R.id.registerGateButton).setOnClickListener {
             val intent = Intent(context, RegisterGateActivity::class.java)
             startActivity(intent)
         }
 
-        view.findViewById<Button>(R.id.addSpecialRuleButton).setOnClickListener() {
-            //SpecialRuleDialog().show(childFragmentManager, "SpecialRuleDialog")
+        view.findViewById<Button>(R.id.addSpecialRuleButton).setOnClickListener {
             val intent = Intent(context, SpecialRuleActivity::class.java)
             startActivity(intent)
         }
 
-        view.findViewById<Button>(R.id.loguotButton).setOnClickListener() { logout() }
+        view.findViewById<Button>(R.id.loguotButton).setOnClickListener { logout() }
 
-        view.findViewById<Button>(R.id.deleteGateButton).setOnClickListener() { deleteAllGates() }
+        view.findViewById<Button>(R.id.deleteGateButton).setOnClickListener { deleteAllGates() }
     }
 
     private fun deleteAllGates() {

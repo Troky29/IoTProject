@@ -2,21 +2,10 @@ package com.example.iotproject.fragments.gate
 
 import androidx.lifecycle.LiveData
 import androidx.room.*
+import com.example.iotproject.database.BaseDao
 
 @Dao
-interface GateDao {
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insert(gate: Gate)
-
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertAll(gates: List<Gate>)
-
-    @Update
-    fun update(gate: Gate)
-
-    @Delete
-    suspend fun delete(gate: Gate)
-
+interface GateDao : BaseDao<Gate> {
     @Query("DELETE FROM gate")
     suspend fun deleteAll()
 

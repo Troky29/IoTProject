@@ -8,6 +8,6 @@ data class Car(
         @PrimaryKey val license: String,
         val color: String,
         val brand: String,
-        val isGuest: Boolean,
         val imageURL: String?
 )
+

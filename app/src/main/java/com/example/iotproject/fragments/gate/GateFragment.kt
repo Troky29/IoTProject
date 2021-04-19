@@ -63,7 +63,7 @@ class GateFragment: Fragment(), GateCardAdapter.OnOpenListener {
             startActivity(intent)
         }
 
-        //TODO: We arrive here before the sql initializzation, we should wait or initialize it before
+        //TODO: We arrive here before the sql initialization, we should wait or initialize it before
         viewModel.loadGates()
     }
 

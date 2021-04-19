@@ -2,21 +2,10 @@ package com.example.iotproject.fragments.activity
 
 import androidx.lifecycle.LiveData
 import androidx.room.*
+import com.example.iotproject.database.BaseDao
 
 @Dao
-interface ActivityDao {
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insert(activity: Activity)
-
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertAll(activity: List<Activity>)
-
-    @Update
-    suspend fun update(activity: Activity)
-
-    @Delete
-    suspend fun delete(activity: Activity)
-
+interface ActivityDao : BaseDao<Activity> {
     @Query("DELETE FROM activity")
     suspend fun deleteAll()
 
