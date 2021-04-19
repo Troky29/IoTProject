@@ -1,16 +1,14 @@
 package com.example.iotproject.fragments.car
 
 import android.util.Log
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.*
 import com.example.iotproject.AccessTokenAuthenticator
 import com.example.iotproject.AccessTokenInterceptor
 import com.example.iotproject.AccessTokenRepository
 import com.example.iotproject.Constants
 import com.example.iotproject.database.AppRepository
 import com.example.iotproject.database.Car
+import com.example.iotproject.fragments.gate.GateFragmentViewModel
 import kotlinx.coroutines.launch
 import okhttp3.*
 import okhttp3.RequestBody.Companion.toRequestBody
@@ -114,5 +112,15 @@ class CarFragmentViewModel(private val repository: AppRepository) : ViewModel() 
     override fun onCleared() {
         super.onCleared()
         Log.i(TAG, Constants.destroyed)
+    }
+}
+
+class CarViewModelFactory(private val repository: AppRepository) : ViewModelProvider.Factory {
+    override fun <T : ViewModel> create(modelClass: Class<T>): T {
+        if (modelClass.isAssignableFrom(CarFragmentViewModel::class.java)) {
+            @Suppress("UNCHECKED_CAST")
+            return CarFragmentViewModel(repository) as T
+        }
+        throw IllegalArgumentException("Unknown ViewModel class")
     }
 }

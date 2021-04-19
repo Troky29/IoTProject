@@ -1,14 +1,18 @@
 package com.example.iotproject.fragments.car
 
+import android.app.Activity
+import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
+import androidx.appcompat.widget.SwitchCompat
 import androidx.fragment.app.DialogFragment
-import androidx.lifecycle.ViewModelProvider
-import com.example.iotproject.MainActivityViewModel
 import com.example.iotproject.R
+import com.example.iotproject.database.Car
+import com.example.iotproject.fragments.activity.ActivityCardAdapter
 import java.util.*
 
 class RegisterCarDialog : DialogFragment() {
@@ -30,8 +34,9 @@ class RegisterCarDialog : DialogFragment() {
 
         view.findViewById<Button>(R.id.confirmButton).setOnClickListener() {
             val license = view.findViewById<EditText>(R.id.licensePlateEditText).text.toString()
-            val color = colorTextView.text.toString()
-            val brand = brandTextView.text.toString()
+            val color = colorTextView.text.toString().trim()
+            val brand = brandTextView.text.toString().trim()
+            val isGuest = !view.findViewById<SwitchCompat>(R.id.ownerSwitchCompact).isChecked
 
             val correctedLicense = license.replace("\\s".toRegex(), "").toUpperCase(Locale.ROOT)
             val format = "^[A-Z]{2}[0-9]{3}[A-Z]{2}$".toRegex()
@@ -47,10 +52,12 @@ class RegisterCarDialog : DialogFragment() {
                 messenger("Please choose one of the suggested brand")
                 return@setOnClickListener
             }
-
+            if (isGuest) {
+                //TODO: create the new routine
+                SpecialRuleDialog().show(parentFragmentManager, "SpecialRuleDialog")
+            }
             //TODO: see if we need to have a reference of these, otherwise we do not need db integration
-            val viewModel = ViewModelProvider(this).get(MainActivityViewModel::class.java)
-            viewModel.addCar(correctedLicense, color, brand)
+            sendResult(license, color, brand, isGuest)
             dismiss()
         }
 
@@ -60,7 +67,18 @@ class RegisterCarDialog : DialogFragment() {
     override fun onStart() {
         super.onStart()
         val width = (resources.displayMetrics.widthPixels * 0.75).toInt()
-        dialog!!.window?.setLayout(width, ViewGroup.LayoutParams.WRAP_CONTENT)
+        dialog?.window?.setLayout(width, ViewGroup.LayoutParams.WRAP_CONTENT)
+    }
+
+    private fun sendResult(license: String, color: String, brand: String, isGuest: Boolean) {
+        val intent = Intent().apply {
+            putExtra("license", license)
+            putExtra("color", color)
+            putExtra("brand", brand)
+            putExtra("isGuest", isGuest)
+        }
+        Log.i("DialogFragment", "$targetFragment")
+        targetFragment?.onActivityResult(targetRequestCode, Activity.RESULT_OK, intent)
     }
 
     private fun messenger(message: String) {
