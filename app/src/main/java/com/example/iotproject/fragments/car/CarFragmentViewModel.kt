@@ -8,7 +8,6 @@ import com.example.iotproject.AccessTokenRepository
 import com.example.iotproject.Constants
 import com.example.iotproject.database.AppRepository
 import com.example.iotproject.database.Car
-import com.example.iotproject.fragments.gate.GateFragmentViewModel
 import kotlinx.coroutines.launch
 import okhttp3.*
 import okhttp3.RequestBody.Companion.toRequestBody

@@ -26,7 +26,7 @@
         android:layout_marginTop="16dp"
         android:ems="10"
         android:hint="@string/license_plate"
-        android:inputType="textPersonName"
+        android:inputType="textVisiblePassword"
         android:textColor="@color/white"
         android:textColorHint="@color/white"
         android:backgroundTint="@color/white"

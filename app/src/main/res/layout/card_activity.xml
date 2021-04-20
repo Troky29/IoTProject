@@ -47,7 +47,7 @@
             android:layout_below="@id/accessTextView"
             android:layout_alignStart="@id/accessTextView"
             android:textSize="16sp"
-            android:text="01/01/2000"/>
+            android:text="01/01/2000 12:00:00"/>
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/actionConstraintLayout"
@@ -93,8 +93,7 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 app:srcCompat="@drawable/ic_gate_access" />
+
         </androidx.constraintlayout.widget.ConstraintLayout>
-
     </RelativeLayout>
-
 </androidx.cardview.widget.CardView>

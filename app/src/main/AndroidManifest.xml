@@ -18,10 +18,6 @@
         android:theme="@style/Theme.IoTProject"
         android:usesCleartextTraffic="true">
         <activity
-            android:name=".fragments.car.SpecialRuleActivity"
-            android:configChanges="orientation|keyboardHidden"
-            android:screenOrientation="portrait"/>
-        <activity
             android:name=".login.SignIn"
             android:configChanges="orientation|keyboardHidden"
             android:screenOrientation="portrait" />

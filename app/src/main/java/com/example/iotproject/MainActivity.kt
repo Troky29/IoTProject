@@ -18,6 +18,8 @@ import com.example.iotproject.fragments.activity.ActivityFragment
 import com.example.iotproject.fragments.activity.ActivityFragmentViewModel
 import com.example.iotproject.fragments.activity.ActivityViewModelFactory
 import com.example.iotproject.fragments.gate.GateFragment
+import com.example.iotproject.login.Login
+import com.example.iotproject.login.LoginViewModel
 import com.example.iotproject.services.FirebaseService
 import com.example.iotproject.services.LocationService
 import com.google.android.gms.common.ConnectionResult
@@ -114,6 +116,15 @@ class MainActivity : AppCompatActivity() {
                     REQUEST_CODE)
             return
         }
+    }
+
+    //TODO: move to the user fragment, also you have to clear the database
+    private fun logout() {
+        val intent = Intent(this, Login::class.java)
+        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+        val loginViewModel = ViewModelProvider(this).get(LoginViewModel::class.java)
+        loginViewModel.logout()
+        startActivity(intent)
     }
 
     private fun messenger(message: String) {

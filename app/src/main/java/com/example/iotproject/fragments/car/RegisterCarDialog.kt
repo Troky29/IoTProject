@@ -56,17 +56,14 @@ class RegisterCarDialog : DialogFragment() {
                 return@setOnClickListener
             }
 
-            result = getResult(license, color, brand, isGuest)
+            result = getResult(correctedLicense, color, brand, isGuest)
             if (isGuest) {
-                //TODO: create the new routine
                 val specialRuleDialog = SpecialRuleDialog()
                 specialRuleDialog.setTargetFragment(this, REQUEST_CODE)
                 specialRuleDialog.show(parentFragmentManager, "SpecialRuleDialog")
             } else {
                 sendResult(result)
             }
-            //TODO: see if we need to have a reference of these, otherwise we do not need db integration
-            //sendResult(license, color, brand, isGuest)
         }
         return view
     }
