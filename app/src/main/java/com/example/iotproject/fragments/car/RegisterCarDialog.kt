@@ -16,9 +16,12 @@ import com.example.iotproject.fragments.activity.ActivityCardAdapter
 import java.util.*
 
 class RegisterCarDialog : DialogFragment() {
+    private lateinit var result: Intent
+    private val REQUEST_CODE = 1
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(R.layout.fragment_register_car, container, false)
+
 
         val colorTextView = view.findViewById<AutoCompleteTextView>(R.id.colorAutoCompleteTextView)
         val colors: Array<out String> = resources.getStringArray(R.array.car_colors)
@@ -52,16 +55,31 @@ class RegisterCarDialog : DialogFragment() {
                 messenger("Please choose one of the suggested brand")
                 return@setOnClickListener
             }
+
+            result = getResult(license, color, brand, isGuest)
             if (isGuest) {
                 //TODO: create the new routine
-                SpecialRuleDialog().show(parentFragmentManager, "SpecialRuleDialog")
+                val specialRuleDialog = SpecialRuleDialog()
+                specialRuleDialog.setTargetFragment(this, REQUEST_CODE)
+                specialRuleDialog.show(parentFragmentManager, "SpecialRuleDialog")
+            } else {
+                sendResult(result)
             }
             //TODO: see if we need to have a reference of these, otherwise we do not need db integration
-            sendResult(license, color, brand, isGuest)
-            dismiss()
+            //sendResult(license, color, brand, isGuest)
         }
-
         return view
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if(resultCode == Activity.RESULT_OK && data != null) {
+            result.apply {
+                putExtra("nickname", data.getStringExtra("nickname"))
+                putExtra("datetime", data.getStringExtra("datetime"))
+            }
+            sendResult(result)
+        }
     }
 
     override fun onStart() {
@@ -70,15 +88,17 @@ class RegisterCarDialog : DialogFragment() {
         dialog?.window?.setLayout(width, ViewGroup.LayoutParams.WRAP_CONTENT)
     }
 
-    private fun sendResult(license: String, color: String, brand: String, isGuest: Boolean) {
-        val intent = Intent().apply {
+    private fun getResult(license: String, color: String, brand: String, isGuest: Boolean) =
+        Intent().apply {
             putExtra("license", license)
             putExtra("color", color)
             putExtra("brand", brand)
             putExtra("isGuest", isGuest)
         }
-        Log.i("DialogFragment", "$targetFragment")
+
+    private fun sendResult(intent: Intent) {
         targetFragment?.onActivityResult(targetRequestCode, Activity.RESULT_OK, intent)
+        dismiss()
     }
 
     private fun messenger(message: String) {

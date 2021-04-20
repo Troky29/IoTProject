@@ -58,7 +58,7 @@ class CarFragment : Fragment() {
         view.findViewById<FloatingActionButton>(R.id.addCarFAB).setOnClickListener {
             val registerCarDialog = RegisterCarDialog()
             registerCarDialog.setTargetFragment(this, REQUEST_CODE)
-            registerCarDialog.show(parentFragmentManager.beginTransaction(), "RegisterCardDialog")
+            registerCarDialog.show(parentFragmentManager, "RegisterCardDialog")
             //SpeAlertDialog.Builder()
         }
 

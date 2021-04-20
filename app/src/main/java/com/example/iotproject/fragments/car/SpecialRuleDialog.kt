@@ -1,16 +1,16 @@
 package com.example.iotproject.fragments.car
 
+import android.app.Activity
 import android.app.DatePickerDialog
 import android.app.TimePickerDialog
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
 import androidx.fragment.app.DialogFragment
-import com.example.iotproject.LoadingDialog
 import com.example.iotproject.R
-import java.text.SimpleDateFormat
 import java.util.*
 
 class SpecialRuleDialog : DialogFragment() {
@@ -19,11 +19,12 @@ class SpecialRuleDialog : DialogFragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(R.layout.fragment_special_rule, container, false)
 
+        val calendarHelper = CalendarHelper()
         val dateSetListener = DatePickerDialog.OnDateSetListener { _, year, monthOfYear, dayOfMonth ->
             calendar.set(Calendar.YEAR, year)
             calendar.set(Calendar.MONTH, monthOfYear)
             calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth)
-            updateDateInView()
+            view.findViewById<EditText>(R.id.dateEditText).setText(calendarHelper.getFormattedDate(calendar))
         }
         view.findViewById<ImageButton>(R.id.calendarImageButton).setOnClickListener() {
             if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
@@ -38,7 +39,7 @@ class SpecialRuleDialog : DialogFragment() {
         val timeSetListener = TimePickerDialog.OnTimeSetListener { _, hourOfDay, minute ->
             calendar.set(Calendar.HOUR_OF_DAY, hourOfDay)
             calendar.set(Calendar.MINUTE, minute)
-            updateTimeInView()
+            view.findViewById<EditText>(R.id.timeEditText).setText(calendarHelper.getFormattedTime(calendar))
         }
         view.findViewById<ImageButton>(R.id.timeImageButton).setOnClickListener {
             TimePickerDialog(requireContext(),
@@ -60,70 +61,39 @@ class SpecialRuleDialog : DialogFragment() {
                 messenger("Please insert a nickname")
                 return@setOnClickListener
             }
-            //TODO: check for actual date and time format
-            if(correctedDate.isEmpty() || !checkDate(correctedDate)) {
+            if(correctedDate.isEmpty() || !calendarHelper.checkDate(correctedDate)) {
                 messenger("Insert a valid date (day-month-year)")
                 return@setOnClickListener
             }
-            if (correctedTime.isEmpty() || !checkTime(correctedTime)) {
+            if (correctedTime.isEmpty() || !calendarHelper.checkTime(correctedTime)) {
                 messenger("Insert a valid time (hour:minute)")
                 return@setOnClickListener
             }
 
-            val dateTime = getISO(date, time)
-            //LoadingDialog().show()
-            //TODO: pass the information about the special rule
+            val dateTime = calendarHelper.getISO(date, time)
+            if (calendarHelper.isAfterNow(dateTime)) {
+                sendResult(nickname, dateTime)
+            } else {
+                messenger("The date inserted is in the past")
+                return@setOnClickListener
+            }
         }
         return view
-    }
-
-    private fun updateDateInView() {
-        val dateFormat = "dd-MM-yyyy"
-        val sdf = SimpleDateFormat(dateFormat, Locale.getDefault())
-        view?.findViewById<EditText>(R.id.dateEditText)?.setText(sdf.format(calendar.time))
-    }
-
-    private fun updateTimeInView() {
-        val timeFormat = "HH:mm"
-        val sdf = SimpleDateFormat(timeFormat, Locale.getDefault())
-        view?.findViewById<EditText>(R.id.timeEditText)?.setText(sdf.format(calendar.time))
-    }
-
-    private fun checkDate(date: String): Boolean {
-        val dateFormat = "dd-MM-yyyy"
-        val sdf = SimpleDateFormat(dateFormat, Locale.getDefault())
-        sdf.isLenient = false
-        return try {
-            sdf.parse(date)
-            true
-        } catch (e: Exception) {
-            false
-        }
-    }
-
-    private fun checkTime(time: String): Boolean {
-        val timeFormat = "HH:mm"
-        val sdf = SimpleDateFormat(timeFormat, Locale.getDefault())
-        sdf.isLenient = false
-        return try {
-            sdf.parse(time)
-            true
-        } catch (e: Exception) {
-            false
-        }
-    }
-
-    private fun getISO(date: String, time: String): String {
-        val sdf = SimpleDateFormat("dd-MM-yyyy", Locale.getDefault())
-        val sdfISO = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
-        val convertedDate = sdfISO.format(sdf.parse(date)!!)
-        return "$convertedDate $time:00"
     }
 
     override fun onStart() {
         super.onStart()
         val width = (resources.displayMetrics.widthPixels * 0.75).toInt()
         dialog?.window?.setLayout(width, ViewGroup.LayoutParams.WRAP_CONTENT)
+    }
+
+    private fun sendResult(nickname: String, dateTime: String) {
+        val intent = Intent().apply {
+            putExtra("nickname", nickname)
+            putExtra("datetime", dateTime)
+        }
+        targetFragment?.onActivityResult(targetRequestCode, Activity.RESULT_OK, intent)
+        dismiss()
     }
 
     private fun messenger(message: String) {
