@@ -46,14 +46,15 @@ class NotificationReceiver : BroadcastReceiver() {
 
         client.newCall(request).enqueue(object : Callback {
             override fun onFailure(call: Call, e: IOException) {
-                Log.e(TAG, server_error)
+                Log.e(TAG, "Failed contacting server for PUT update activity")
             }
 
             override fun onResponse(call: Call, response: Response) {
                 when (response.code) {
-                    200 -> Log.i(TAG, "Correctly updated activity state")
-                    //TODO: add all cases
-                    500 -> Log.e (TAG, server_error)
+                    200 -> Log.i(TAG, "Correctly PUT updated activity")
+                    400 -> Log.e(TAG, "Error in PUT update activity, invalid input data")
+                    404 -> Log.e(TAG, "Error in PUT update activity, no activity found")
+                    500 -> Log.e (TAG, "Server failed PUT update activity")
                 }
             }
         })
