@@ -70,6 +70,8 @@ class GateFragmentViewModel(private val repository: AppRepository) : ViewModel()
     }
 
     fun addGate(name: String, location: String, latitude: Double, longitude: Double, code: String, image: String?) {
+        insert(Gate(code, name, location, null))
+        return
         val body = """{"name":"$name", "location":"$location", "latitude":"$latitude", 
             |"longitude":"$longitude", "id_gate":"$code", "photo":"$image"}""".trimMargin()
         val requestBody = body.toRequestBody(Constants.JSON)

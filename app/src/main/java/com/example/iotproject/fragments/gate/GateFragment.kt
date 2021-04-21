@@ -52,20 +52,20 @@ class GateFragment: Fragment(), GateCardAdapter.OnOpenListener {
         })
         viewModel.gateList.observe(viewLifecycleOwner, { gateList ->
             val emptyGateTextView = view.findViewById<TextView>(R.id.emptyGateTextView)
-            flushGateCards()
-            for (gate in gateList)
-                addGateCard(gate)
-            if (gateList.isEmpty())
+            if (gateList.isEmpty()) {
+                viewModel.loadGates()
                 emptyGateTextView.visibility = View.VISIBLE
+            } else {
+                flushGateCards()
+                for (gate in gateList)
+                    addGateCard(gate)
+            }
         })
 
         view.findViewById<FloatingActionButton>(R.id.addGateFAB).setOnClickListener() {
             val intent = Intent(context, RegisterGateActivity::class.java)
             startActivity(intent)
         }
-
-        //TODO: We arrive here before the sql initialization, we should wait or initialize it before
-        viewModel.loadGates()
     }
 
     private fun addGateCard(gate: Gate) {

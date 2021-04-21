@@ -43,6 +43,7 @@ class LoginViewModel : ViewModel() {
         client.newCall(request).enqueue(object : Callback {
             override fun onFailure(call: Call, e: IOException) {
                 loading.postValue(false)
+                Log.e(TAG, "Failed contacting server for POST session token")
                 message.postValue(server_error)
             }
 
@@ -53,11 +54,16 @@ class LoginViewModel : ViewModel() {
                         val jwtExpiry = JSONObject(response.body!!.string()).get("jwt_token_expiry").toString()
                         token.postValue(jwtExpiry)
                     } catch (e: Exception) {
+                        Log.e(TAG, "Wrong Json from POST gates")
                         message.postValue(server_error)
                     }
-                    400 -> message.postValue(invalid_data)
-                    401 -> {    //We reset both, so that we actually delete the memory of the wrong token
-                        Log.i(TAG, invalid_token)
+                    400 -> {
+                        Log.e(TAG, "Invalid Json provided to the POST session token")
+                        message.postValue(invalid_data)
+                    }
+                    401 -> {
+                        //We reset both, so that we actually delete the memory of the wrong token
+                        Log.i(TAG, "Invalid token provided in POST session token")
                         token.postValue("")
                         refreshToken.postValue("")
                     }
@@ -79,6 +85,7 @@ class LoginViewModel : ViewModel() {
         client.newCall(request).enqueue(object : Callback {
             override fun onFailure(call: Call, e: IOException) {
                 loading.postValue(false)
+                Log.e(TAG, "Failed contacting server for GET login")
                 message.postValue(server_error)
             }
 
@@ -92,10 +99,17 @@ class LoginViewModel : ViewModel() {
                         refreshToken.postValue(jwtRefresh)
                         token.postValue(jwtExpiry)
                     } catch (e: Exception) {
+                        Log.e(TAG, "Wrong Json from GET login")
                         message.postValue(server_error)
                     }
-                    400 -> message.postValue(invalid_data)
-                    401 -> message.postValue(invalid_user)
+                    400 -> {
+                        Log.e(TAG, "Invalid authorization provided to GET login")
+                        message.postValue(invalid_data)
+                    }
+                    401 -> {
+                        Log.e(TAG, "User not found in GET login")
+                        message.postValue(invalid_user)
+                    }
                 }
             }
         })
@@ -114,14 +128,21 @@ class LoginViewModel : ViewModel() {
         client.newCall(request).enqueue(object : Callback {
             override fun onFailure(call: Call, e: IOException) {
                 message.postValue(server_error)
+                Log.e(TAG, "Failed contacting server for POST sign in")
                 loading.postValue(false)
             }
 
             override fun onResponse(call: Call, response: Response) {
                 when (response.code) {
                     200 -> message.postValue(success)
-                    409 -> message.postValue("User already exists!")
-                    500 -> message.postValue(server_error)
+                    409 -> {
+                        Log.e(TAG, "User already exists in POST sign in")
+                        message.postValue("User already exists!")
+                    }
+                    500 -> {
+                        Log.e(TAG, "Server failed POST sign in")
+                        message.postValue(server_error)
+                    }
                 }
                 loading.postValue(false)
             }
@@ -140,15 +161,19 @@ class LoginViewModel : ViewModel() {
 
         logoutClient.newCall(request).enqueue(object : Callback {
             override fun onFailure(call: Call, e: IOException) {
+                Log.e(TAG, "Failed contacting server for GET logout")
                 message.postValue(server_error)
             }
 
             override fun onResponse(call: Call, response: Response) {
                 when (response.code) {
                     200 -> Log.i(TAG, success)
-                    401 -> Log.i(TAG, invalid_token)
-                    404 -> Log.i(TAG, not_found)
-                    500 -> message.postValue(server_error)
+                    401 -> Log.e(TAG, "Invalid token in GET logout")
+                    404 -> Log.e(TAG, "User not found in GET logout")
+                    500 -> {
+                        Log.e(TAG, "Server failed GET logout")
+                        message.postValue(server_error)
+                    }
                 }
             }
         })

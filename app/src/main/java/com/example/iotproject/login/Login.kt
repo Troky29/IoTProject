@@ -100,6 +100,7 @@ class Login : AppCompatActivity() {
             flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
             //TODO: see if its actually useful to send information from the Login View
         }
+        (application as IoTApplication).repository.allGates
         startActivity(intent)
     }
 

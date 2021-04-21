@@ -6,6 +6,8 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ProgressBar
+import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -37,10 +39,22 @@ class CarFragment : Fragment() {
         recyclerView.setHasFixedSize(true)
 
         viewModel.message.observe(viewLifecycleOwner, { message -> messenger(message) })
+        viewModel.loading.observe(viewLifecycleOwner, { loading ->
+            if (loading)
+                view.findViewById<ProgressBar>(R.id.gateProgressBar)!!.visibility = View.VISIBLE
+            else
+                view.findViewById<ProgressBar>(R.id.gateProgressBar)!!.visibility = View.INVISIBLE
+        })
         viewModel.carList.observe(viewLifecycleOwner, { carList ->
-            flushCarCards()
-            for (car in carList)
-                addCarCard(car)
+            val emptyCarTextView = view.findViewById<TextView>(R.id.emptyCarTextView)
+            if(carList.isEmpty()) {
+                viewModel.loadCars()
+                emptyCarTextView.visibility = View.VISIBLE
+            } else {
+                flushCarCards()
+                for (car in carList)
+                    addCarCard(car)
+            }
         })
 
         view.findViewById<FloatingActionButton>(R.id.addCarFAB).setOnClickListener {

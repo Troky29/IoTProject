@@ -3,14 +3,8 @@ package com.example.iotproject
 import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
-import com.example.iotproject.Constants.Companion.JSON
-import com.example.iotproject.Constants.Companion.URL
-import com.example.iotproject.Constants.Companion.invalid_data
-import com.example.iotproject.Constants.Companion.server_error
-import kotlinx.coroutines.launch
 import okhttp3.*
-import okhttp3.RequestBody.Companion.toRequestBody
+import org.json.JSONObject
 import java.io.IOException
 
 
@@ -26,70 +20,52 @@ class MainActivityViewModel : ViewModel() {
     val loading: MutableLiveData<Boolean> by lazy { MutableLiveData<Boolean>() }
 
     fun getUser() {
-        //TODO: retrieves all information about the user, to be used for display purposes
-    }
-
-    fun logout() {
-        //TODO: upon opening the user icon dialog you can see all the info and logout
-    }
-
-    //TODO: move this in the view model of the more fragment, since we have many operation to deal with
-    fun addCar(license: String, color: String, brand: String) {
-        val body = """{"license":"$license", "color":"$color", "brand":"$brand"}""".trimMargin()
-        val requestBody = body.toRequestBody(JSON)
-
         val request = Request.Builder()
-                .url(URL + "car")
-                .post(requestBody)
+                .url(Constants.URL + "user")
                 .build()
 
         loading.postValue(true)
         client.newCall(request).enqueue(object : Callback {
             override fun onFailure(call: Call, e: IOException) {
                 loading.postValue(false)
-                Log.e(TAG, "Failed contacting server for POST car")
-                message.postValue(server_error)
+                Log.e(TAG, "Failed contacting the server for GET user")
+                message.postValue(Constants.server_error)
             }
 
             override fun onResponse(call: Call, response: Response) {
+                loading.postValue(false)
                 when (response.code) {
                     200 -> {
-                        message.postValue("Successfully added car!")
-                    }
-                    400 -> {
-                        message.postValue(invalid_data)
+                        try {
+                            val json = JSONObject(response.body!!.string())
+                            val user = json.getJSONObject("user")
+                            val nickname = user.get("Nickname").toString()
+                            val email = user.get("Email").toString()
+                            val photo = user.get("Photo").toString()
+                            insert(User(nickname, email, photo))
+                        } catch (E: Exception) {
+                            Log.e(TAG, "Wrong Json from GET user")
+                            message.postValue(Constants.server_error)
+                        }
                     }
                     409 -> {
-                        message.postValue("Car already exists!")
+                        Log.e(TAG, "User not found in GET user")
+                        message.postValue("User doesn't exists")
+                    }
+                    500 -> {
+                        Log.e(TAG, "Server failed GET user")
+                        message.postValue(Constants.server_error)
                     }
                 }
             }
         })
     }
 
-    fun addSpecialRule(nickname: String, license: String, color: String, brand: String, datetime: String) {
-        val body = """{"nickname":"$nickname", "license":"$license", 
-            |"color":"$color", "brand":"$brand", "dead_line":"$datetime"}""".trimMargin()
-        val requestBody = body.toRequestBody(JSON)
+    fun logout() {
+        //TODO: upon opening the user icon dialog you can see all the info and logout
+    }
 
-        val request = Request.Builder()
-                .url(URL + "guest")
-                .post(requestBody)
-                .build()
-
-        client.newCall(request).enqueue(object : Callback {
-            override fun onFailure(call: Call, e: IOException) {
-                message.postValue(server_error)
-            }
-
-            override fun onResponse(call: Call, response: Response) {
-                when (response.code) {
-                    200 -> message.postValue("Successfully added rule!")
-                    400 -> message.postValue(invalid_data)
-                    500 -> message.postValue(server_error)
-                }
-            }
-        })
+    private fun insert(user: User) {
     }
 
     override fun onCleared() {
@@ -97,3 +73,5 @@ class MainActivityViewModel : ViewModel() {
         Log.i(TAG, Constants.destroyed)
     }
 }
+
+data class User(val nickname: String, val email: String, val photo: String?)

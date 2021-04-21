@@ -6,6 +6,8 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ProgressBar
+import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -39,11 +41,23 @@ class ActivityFragment: Fragment(),ActivityCardAdapter.OnActionListener {
         viewModel.message.observe(viewLifecycleOwner, { message ->
             messenger(message)
         })
+        viewModel.loading.observe(viewLifecycleOwner, { loading ->
+            if (loading)
+                view.findViewById<ProgressBar>(R.id.activityProgressBar)!!.visibility = View.VISIBLE
+            else
+                view.findViewById<ProgressBar>(R.id.activityProgressBar)!!.visibility = View.INVISIBLE
+        })
         viewModel.activityList.observe(viewLifecycleOwner, { activityList ->
+            val emptyActivityTextView = view.findViewById<TextView>(R.id.emptyActivityTextView)
+            if (activityList.isEmpty())
+                emptyActivityTextView.visibility = View.VISIBLE
             flushActivityCards()
             for (activity in activityList)
                 addActivityCard(activity)
         })
+
+        //TODO: for now we reload all activities all the time we open the application and open this tab
+        viewModel.loadActivities()
     }
 
     private fun addActivityCard(activity: Activity) {
