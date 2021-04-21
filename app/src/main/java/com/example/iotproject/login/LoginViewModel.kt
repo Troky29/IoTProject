@@ -3,16 +3,11 @@ package com.example.iotproject.login
 import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.example.iotproject.AccessTokenAuthenticator
-import com.example.iotproject.AccessTokenInterceptor
-import com.example.iotproject.AccessTokenRepository
 import com.example.iotproject.Constants
 import com.example.iotproject.Constants.Companion.JSON
 import com.example.iotproject.Constants.Companion.URL
 import com.example.iotproject.Constants.Companion.invalid_data
-import com.example.iotproject.Constants.Companion.invalid_token
 import com.example.iotproject.Constants.Companion.invalid_user
-import com.example.iotproject.Constants.Companion.not_found
 import com.example.iotproject.Constants.Companion.server_error
 import com.example.iotproject.Constants.Companion.success
 import okhttp3.*
@@ -147,37 +142,6 @@ class LoginViewModel : ViewModel() {
                 loading.postValue(false)
             }
         })
-    }
-
-    fun logout() {
-        val logoutClient: OkHttpClient = OkHttpClient().newBuilder()
-            .authenticator(AccessTokenAuthenticator(AccessTokenRepository))
-            .addInterceptor(AccessTokenInterceptor(AccessTokenRepository))
-            .build()
-
-        val request = Request.Builder()
-            .url(URL + "user/logout")
-            .build()
-
-        logoutClient.newCall(request).enqueue(object : Callback {
-            override fun onFailure(call: Call, e: IOException) {
-                Log.e(TAG, "Failed contacting server for GET logout")
-                message.postValue(server_error)
-            }
-
-            override fun onResponse(call: Call, response: Response) {
-                when (response.code) {
-                    200 -> Log.i(TAG, success)
-                    401 -> Log.e(TAG, "Invalid token in GET logout")
-                    404 -> Log.e(TAG, "User not found in GET logout")
-                    500 -> {
-                        Log.e(TAG, "Server failed GET logout")
-                        message.postValue(server_error)
-                    }
-                }
-            }
-        })
-        AccessTokenRepository.logout = true
     }
 
     override fun onCleared() {

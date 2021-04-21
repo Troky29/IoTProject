@@ -12,8 +12,6 @@ class Constants {
         //TODO: update with the server key of the IoTProject
         //const val SERVER_KEY = "AAAAxL7lTsI:APA91bEsVnNzbVM2cZ2rbkl05xSYf7IVMayZpszta2QiCCqgP-8TvtDMzvkQLuQxPJuAlApXRLQQJMsBzH2a7hg9FTboUMNtAmDQktvdjp-_LNk7x7NfzsiE71ETxSd1OknVmlexum3h"
         val JSON = ("application/json; charset=utf-8").toMediaType()
-        //TODO: check if is important to pass information from login to starting screen
-        const val EMAIL = "com.example.iotproject.EMAIL"
 
         //These are the used the messages sent throughout the application
         const val server_error = "Error while contacting the server"

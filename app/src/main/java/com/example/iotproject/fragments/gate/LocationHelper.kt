@@ -47,7 +47,6 @@ class LocationHelper(val context: Context) {
         return neighbours
     }
 
-    //TODO: this approximation results a bit flattened on the longitude, see if we need a better approach
     private fun latitudeToMeter(latitude: Double): Double {
         return ((180/PI) / EARTH / cos(latitude * PI / 180)) / 1000
     }

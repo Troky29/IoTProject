@@ -14,7 +14,6 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.security.crypto.EncryptedSharedPreferences
 import androidx.security.crypto.MasterKeys
 import com.example.iotproject.*
-import com.example.iotproject.Constants.Companion.EMAIL
 
 class Login : AppCompatActivity() {
     private val loadingDialog by lazy { LoadingDialog() }
@@ -94,13 +93,7 @@ class Login : AppCompatActivity() {
         AccessTokenRepository.refreshToken = refreshToken
         AccessTokenRepository.logout = false
 
-        val email = findViewById<EditText>(R.id.emailEditText).text.toString()
-        val intent = Intent(this, MainActivity::class.java).apply {
-            putExtra(EMAIL, email)
-            flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-            //TODO: see if its actually useful to send information from the Login View
-        }
-        (application as IoTApplication).repository.allGates
+        val intent = Intent(this, MainActivity::class.java)
         startActivity(intent)
     }
 

@@ -4,46 +4,63 @@ import android.Manifest
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
+import android.util.Log
 import android.widget.ImageButton
 import android.widget.TextView
 import android.widget.Toast
-import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
-import com.example.iotproject.Constants.Companion.EMAIL
 import com.example.iotproject.fragments.car.CarFragment
 import com.example.iotproject.fragments.activity.ActivityFragment
-import com.example.iotproject.fragments.activity.ActivityFragmentViewModel
-import com.example.iotproject.fragments.activity.ActivityViewModelFactory
 import com.example.iotproject.fragments.gate.GateFragment
 import com.example.iotproject.login.Login
-import com.example.iotproject.login.LoginViewModel
 import com.example.iotproject.services.FirebaseService
 import com.example.iotproject.services.LocationService
 import com.google.android.gms.common.ConnectionResult
 import com.google.android.gms.common.GoogleApiAvailability
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.firebase.messaging.FirebaseMessaging
+import com.google.gson.Gson
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(),UserFragmentDialog.LogoutListener{
     private val REQUEST_CODE = 1
+    private lateinit var viewModel: MainActivityViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         setSupportActionBar(findViewById(R.id.toolbar))
 
-        val viewModel = ViewModelProvider(this).get(MainActivityViewModel::class.java)
+        viewModel = ViewModelProvider(this).get(MainActivityViewModel::class.java)
         viewModel.message.observe(this, { message -> messenger(message) })
+
+        //We load the saved information of the user, if we have just logged out we need to reload them
+        val gson = Gson()
+        val sharedPreferences = getSharedPreferences("userPref", MODE_PRIVATE)
+        val userPref = sharedPreferences.getString("user", null)
+        if (userPref.isNullOrEmpty()) {
+            val user: User = gson.fromJson(userPref, User::class.java)
+            Log.e("ActivityMain", user.nickname)
+            findViewById<TextView>(R.id.toolbarTextView).text = user.nickname
+        } else {
+            viewModel.getUser()
+        }
+        viewModel.user.observe(this, { user ->
+            val editor = sharedPreferences.edit()
+            editor.putString("user", gson.toJson(user)).apply()
+        })
+
+        val profilePicture = findViewById<ImageButton>(R.id.profileButton)
+        profilePicture.setOnClickListener {
+            val userFragment = UserFragmentDialog(this)
+            userFragment.show(supportFragmentManager, "UserFragmentDialog")
+        }
 
         val moreFragment = CarFragment()
         val gateFragment = GateFragment()
         val activityFragment = ActivityFragment()
-
-        findViewById<TextView>(R.id.toolbarTextView).text = intent.getStringExtra(EMAIL)
-        val profilePicture = findViewById<ImageButton>(R.id.profileButton)
 
         val bottomNavigation: BottomNavigationView = findViewById(R.id.bottom_navigation)
         bottomNavigation.setOnNavigationItemSelectedListener { item ->
@@ -77,18 +94,13 @@ class MainActivity : AppCompatActivity() {
                 FirebaseService.token = token
             }
         }
-
-        //TODO: complete the initial call here, also load the user info and add them
-        val activityViewModel: ActivityFragmentViewModel by viewModels {
-            ActivityViewModelFactory((application as IoTApplication).repository)
-        }
-        activityViewModel.loadActivities()
     }
 
     override fun onResume() {
         super.onResume()
         checkGooglePlayServices()
     }
+
 
     private fun replaceFragment(fragment: Fragment) {
         val fragmentTransaction = supportFragmentManager.beginTransaction()
@@ -118,12 +130,17 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    //TODO: move to the user fragment, also you have to clear the database
-    private fun logout() {
+    override fun logout() {
+        //We remove the saved user info
+        val prefEditor = getSharedPreferences("userPref", MODE_PRIVATE).edit()
+        prefEditor.putString("user", null).apply()
+        //Clear database to be reloaded upon new login
+        (application as IoTApplication).clearAll()
+
+        viewModel.logout()
+
         val intent = Intent(this, Login::class.java)
         intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-        val loginViewModel = ViewModelProvider(this).get(LoginViewModel::class.java)
-        loginViewModel.logout()
         startActivity(intent)
     }
 

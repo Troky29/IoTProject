@@ -83,7 +83,6 @@ class LocationService : Service() {
     }
 
     fun updateLocation(location: Location?) {
-        //TODO: update with parameters that you want to send
         val altitude = location!!.altitude.toString()
         val latitude = location.latitude.toString()
         val longitude = location.longitude.toString()

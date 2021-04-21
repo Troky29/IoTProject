@@ -22,7 +22,6 @@ class RegisterCarDialog : DialogFragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(R.layout.fragment_register_car, container, false)
 
-
         val colorTextView = view.findViewById<AutoCompleteTextView>(R.id.colorAutoCompleteTextView)
         val colors: Array<out String> = resources.getStringArray(R.array.car_colors)
         ArrayAdapter(requireContext(), android.R.layout.simple_list_item_1, colors).also { adapter ->

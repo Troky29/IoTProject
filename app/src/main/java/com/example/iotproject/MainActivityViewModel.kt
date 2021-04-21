@@ -18,6 +18,7 @@ class MainActivityViewModel : ViewModel() {
 
     val message: MutableLiveData<String> by lazy { MutableLiveData<String>() }
     val loading: MutableLiveData<Boolean> by lazy { MutableLiveData<Boolean>() }
+    val user: MutableLiveData<User> by lazy { MutableLiveData<User>() }
 
     fun getUser() {
         val request = Request.Builder()
@@ -38,11 +39,11 @@ class MainActivityViewModel : ViewModel() {
                     200 -> {
                         try {
                             val json = JSONObject(response.body!!.string())
-                            val user = json.getJSONObject("user")
-                            val nickname = user.get("Nickname").toString()
-                            val email = user.get("Email").toString()
-                            val photo = user.get("Photo").toString()
-                            insert(User(nickname, email, photo))
+                            val info = json.getJSONObject("user")
+                            val nickname = info.get("Nickname").toString()
+                            val email = info.get("Email").toString()
+                            val photo = info.get("Photo").toString()
+                            user.postValue(User(nickname, email, photo))
                         } catch (E: Exception) {
                             Log.e(TAG, "Wrong Json from GET user")
                             message.postValue(Constants.server_error)
@@ -62,10 +63,24 @@ class MainActivityViewModel : ViewModel() {
     }
 
     fun logout() {
-        //TODO: upon opening the user icon dialog you can see all the info and logout
-    }
+        val request = Request.Builder()
+            .url(Constants.URL + "user/logout")
+            .build()
 
-    private fun insert(user: User) {
+        client.newCall(request).enqueue(object : Callback {
+            override fun onFailure(call: Call, e: IOException) {
+                Log.e(TAG, "Failed contacting the server for GET logout")
+            }
+
+            override fun onResponse(call: Call, response: Response) {
+                when(response.code) {
+                    200 -> Log.i(TAG, "Success GET logout")
+                    404 -> Log.e(TAG, "User not found in GET logout")
+                    500 -> Log.e(TAG, "Server failed GET logout")
+                }
+            }
+        })
+        AccessTokenRepository.logout = true
     }
 
     override fun onCleared() {

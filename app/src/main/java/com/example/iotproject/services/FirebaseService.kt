@@ -108,20 +108,20 @@ class FirebaseService : FirebaseMessagingService() {
         val requestBody = body.toRequestBody(Constants.JSON)
 
         val request = Request.Builder()
-                .url(Constants.URL + "activity")
+                .url(Constants.URL + "fcm")
                 .post(requestBody)
                 .build()
 
         client.newCall(request).enqueue(object : Callback {
             override fun onFailure(call: Call, e: IOException) {
-                Log.e(TAG, Constants.server_error)
+                Log.e(TAG, "Failed contacting server for POST update FCM")
             }
 
             override fun onResponse(call: Call, response: Response) {
                 when (response.code) {
                     200 -> Log.i(TAG, "Correctly updated FCM token")
-                    //TODO: add all cases
-                    500 -> Log.e (TAG, Constants.server_error)
+                    400 -> Log.e(TAG, "Invalid input data POST update FCM")
+                    500 -> Log.e (TAG, "Server failed POST update FCM")
                 }
             }
         })
