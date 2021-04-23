@@ -40,7 +40,7 @@ class MainActivity : AppCompatActivity(),UserFragmentDialog.LogoutListener{
         val gson = Gson()
         val sharedPreferences = getSharedPreferences("userPref", MODE_PRIVATE)
         val userPref = sharedPreferences.getString("user", null)
-        if (userPref.isNullOrEmpty()) {
+        if (userPref != null) {
             val user: User = gson.fromJson(userPref, User::class.java)
             Log.e("ActivityMain", user.nickname)
             findViewById<TextView>(R.id.toolbarTextView).text = user.nickname

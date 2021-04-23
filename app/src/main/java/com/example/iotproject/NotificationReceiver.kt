@@ -9,7 +9,6 @@ import android.util.Log
 import com.example.iotproject.Constants.Companion.JSON
 import com.example.iotproject.Constants.Companion.State
 import com.example.iotproject.Constants.Companion.URL
-import com.example.iotproject.Constants.Companion.server_error
 import okhttp3.*
 import okhttp3.RequestBody.Companion.toRequestBody
 import java.io.IOException

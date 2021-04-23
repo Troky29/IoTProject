@@ -4,15 +4,16 @@ import android.Manifest
 import android.content.ActivityNotFoundException
 import android.content.Intent
 import android.content.pm.PackageManager
-import android.graphics.Bitmap
 import android.location.Geocoder
 import android.os.Bundle
+import android.os.Environment
 import android.provider.MediaStore
 import android.util.Log
 import android.widget.*
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
+import androidx.core.content.FileProvider
 import com.example.iotproject.Constants.Companion.NEIGHBOUR_RADIUS
 import com.example.iotproject.IoTApplication
 import com.example.iotproject.LoadingDialog
@@ -20,16 +21,19 @@ import com.example.iotproject.R
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import com.google.zxing.integration.android.IntentIntegrator
-import java.io.ByteArrayOutputStream
+import java.io.File
+import java.io.IOException
 import java.math.BigInteger
+import java.text.SimpleDateFormat
 import java.util.*
 
-class RegisterGateActivity : AppCompatActivity() {
+class RegisterGateActivity : AppCompatActivity(),GateFragmentViewModel.OnFinishListener {
     private lateinit var fusedLocationClient: FusedLocationProviderClient
+    private lateinit var currentPhotoPath: String
     private var image: String? = null
     private val loadingDialog by lazy { LoadingDialog() }
     private var REQUEST_CODE = 1
-    private val REQUEST_IMAGE_CAPTURE = 1
+    private val REQUEST_IMAGE_CAPTURE = 2
     private val REQUEST_QR_CAPTURE = 49374
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -55,7 +59,7 @@ class RegisterGateActivity : AppCompatActivity() {
             scanQR()
         }
 
-        findViewById<ImageButton>(R.id.cameraImageButton).setOnClickListener() {
+        findViewById<ImageButton>(R.id.cameraImageButton).setOnClickListener {
             captureImage()
         }
 
@@ -107,20 +111,14 @@ class RegisterGateActivity : AppCompatActivity() {
         if (resultCode == RESULT_OK) {
             when (requestCode) {
                 REQUEST_IMAGE_CAPTURE -> {
-                    val imageBitmap = data?.extras?.get("data") as Bitmap
-                    val imageBiteArray = ByteArrayOutputStream()
-                    //TODO: check for resolution
-                    imageBitmap.compress(Bitmap.CompressFormat.JPEG,100,imageBiteArray)
-                    val byteArray: ByteArray = imageBiteArray.toByteArray()
-
-                    image = BigInteger(1, byteArray).toString(16)
+                    val photo = File(currentPhotoPath)
+                    image = BigInteger(1, photo.readBytes()).toString(16)
+                    photo.delete()
                 }
                 REQUEST_QR_CAPTURE -> {
                     val result = IntentIntegrator.parseActivityResult(requestCode, resultCode, data)
                     if (result.contents != null)
                         findViewById<EditText>(R.id.gateCodeEditText).setText(result.contents)
-                    else
-                        super.onActivityResult(requestCode, resultCode, data)
                 }
             }
         }
@@ -172,17 +170,42 @@ class RegisterGateActivity : AppCompatActivity() {
             return
         }
 
+        dispatchTakePictureIntent()
+    }
+
+    private fun dispatchTakePictureIntent() {
         val intent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
+        val photo = try {
+            createImageFile()
+        } catch (ex: Exception) {
+            messenger("Failed to take the picture")
+            return
+        }
+        val photoURI = FileProvider.getUriForFile(this, "com.example.iotproject", photo)
+        intent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI)
         try {
             startActivityForResult(intent, REQUEST_IMAGE_CAPTURE)
-        } catch (e: ActivityNotFoundException) {
-            messenger("Failed to capture image")
+        } catch (ex: ActivityNotFoundException) {
+            messenger("Failed to take the picture")
         }
     }
 
+    @Throws(IOException::class)
+    private fun createImageFile(): File {
+        val timestamp = SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(Date())
+        val storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES)
+        return File.createTempFile(
+                "JPEG_${timestamp}_",
+                ".jpg",
+                storageDir
+        ).apply {
+            currentPhotoPath = absolutePath
+        }
+    }
+
+    override fun close() = finish()
+
     private fun messenger(message: String) {
         Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
-        if(message == "Successfully added gate!")
-            finish()
     }
 }
