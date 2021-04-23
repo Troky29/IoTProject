@@ -12,7 +12,7 @@
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/toolbar_background"
+        android:background="@drawable/gradient_background"
         android:minHeight="?attr/actionBarSize"
         android:theme="?attr/actionBarTheme"
         app:layout_constraintEnd_toEndOf="parent"
@@ -35,16 +35,20 @@
                 android:gravity="center"
                 android:text="@string/toolbar_default" />
 
-            <ImageButton
-                android:id="@+id/profileButton"
+            <com.google.android.material.circularreveal.cardview.CircularRevealCardView
                 android:layout_width="48dp"
                 android:layout_height="48dp"
-                android:layout_marginEnd="8dp"
-                android:background="@drawable/rounded_button"
-                app:srcCompat="@android:drawable/ic_menu_view"
-                android:contentDescription="@string/profile_image"
-                android:gravity="center" />
+                app:cardCornerRadius="24dp"
+                android:layout_marginEnd="8dp">
+                <ImageButton
+                    android:id="@+id/profileButton"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@drawable/ic_baseline_account_circle_24"
+                    android:backgroundTint="@color/ColorPrimary"
+                    android:contentDescription="@string/profile_image" />
 
+            </com.google.android.material.circularreveal.cardview.CircularRevealCardView>
         </LinearLayout>
 
     </androidx.appcompat.widget.Toolbar>
