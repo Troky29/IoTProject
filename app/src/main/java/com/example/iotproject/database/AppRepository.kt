@@ -71,4 +71,9 @@ class AppRepository (private val gateDao: GateDao,
     suspend fun deleteAllActivities() {
         activityDao.deleteAll()
     }
+
+    @WorkerThread
+    suspend fun deleteAllCars() {
+        carDao.deleteAll()
+    }
 }

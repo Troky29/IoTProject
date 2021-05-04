@@ -11,7 +11,9 @@ import com.example.iotproject.database.Car
 import kotlinx.coroutines.launch
 import okhttp3.*
 import okhttp3.RequestBody.Companion.toRequestBody
+import org.json.JSONObject
 import java.io.IOException
+import java.lang.Exception
 
 class CarFragmentViewModel(private val repository: AppRepository) : ViewModel() {
     val TAG = "CarFragmentViewModel"
@@ -26,7 +28,46 @@ class CarFragmentViewModel(private val repository: AppRepository) : ViewModel() 
     val carList: LiveData<List<Car>> = repository.allCars
 
     //Eventually add also a load cars to get all car information
-    fun loadCars() {}
+    fun loadCars() {
+        val request = Request.Builder()
+                .url(Constants.URL + "car")
+                .build()
+
+        loading.postValue(true)
+        client.newCall(request).enqueue(object : Callback {
+            override fun onFailure(call: Call, e: IOException) {
+                loading.postValue(false)
+                Log.e(TAG, "Failed contacting server for GET cars")
+                message.postValue(Constants.server_error)
+            }
+
+            override fun onResponse(call: Call, response: Response) {
+                loading.postValue(false)
+                when(response.code) {
+                    200 -> {
+                        try {
+                            val json = JSONObject(response.body!!.string())
+                            val cars = json.getJSONArray("cars")
+                            val list = ArrayList<Car>()
+                            for (index in 0 until cars.length()) {
+                                val car = getCar(cars.getJSONObject(index))
+                                list.add(car)
+                            }
+                            deleteAll()
+                            insertAll(list)
+                        } catch (e: Exception) {
+                            Log.e(TAG, "Wrong Json from GET car")
+                            message.postValue(Constants.server_error)
+                        }
+                    }
+                    500 -> {
+                        Log.e(TAG, "Server failed GET cars")
+                        message.postValue(Constants.server_error)
+                    }
+                }
+            }
+        })
+    }
 
     //This adds a car owned by the admin
     fun addCar(license: String, color: String, brand: String) {
@@ -104,8 +145,29 @@ class CarFragmentViewModel(private val repository: AppRepository) : ViewModel() 
         })
     }
 
+    fun getCar(item: JSONObject): Car {
+        val license = item.get("license").toString()
+        val color = item.get("color").toString()
+        val brand = item.get("brand").toString()
+        //TODO: determine if its guest
+        val isGuest = false
+        val nickname = item.get("nickname").toString()
+        val datetime = item.get("dead_line").toString()
+        //TODO: get image address
+        val imageURL = item.get("photo").toString()
+        return Car(license, color, brand, true, nickname, datetime, imageURL)
+    }
+
     private fun insert(car: Car) = viewModelScope.launch {
         repository.insertCar(car)
+    }
+
+    private fun insertAll(cars: List<Car>) = viewModelScope.launch {
+        repository.insertAllCars(cars)
+    }
+
+    private fun deleteAll() = viewModelScope.launch {
+        repository.deleteAllCars()
     }
 
     override fun onCleared() {
