@@ -25,7 +25,7 @@ class CarFragmentViewModel(private val repository: AppRepository) : ViewModel() 
     val loading: MutableLiveData<Boolean> by lazy { MutableLiveData<Boolean>() }
     val carList: LiveData<List<Car>> = repository.allCars
 
-    //TODO: eventually add also a load cars to get all car information
+    //Eventually add also a load cars to get all car information
     fun loadCars() {}
 
     //This adds a car owned by the admin

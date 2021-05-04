@@ -4,7 +4,6 @@ import android.Manifest
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
-import android.util.Log
 import android.widget.ImageButton
 import android.widget.TextView
 import android.widget.Toast
@@ -42,19 +41,21 @@ class MainActivity : AppCompatActivity(),UserFragmentDialog.LogoutListener{
         val userPref = sharedPreferences.getString("user", null)
         if (userPref != null) {
             val user: User = gson.fromJson(userPref, User::class.java)
-            Log.e("ActivityMain", user.nickname)
             findViewById<TextView>(R.id.toolbarTextView).text = user.nickname
         } else {
             viewModel.getUser()
         }
+
         viewModel.user.observe(this, { user ->
             val editor = sharedPreferences.edit()
             editor.putString("user", gson.toJson(user)).apply()
+            findViewById<TextView>(R.id.toolbarTextView).text = user.nickname
         })
 
         val profilePicture = findViewById<ImageButton>(R.id.profileButton)
         profilePicture.setOnClickListener {
-            val userFragment = UserFragmentDialog(this)
+            val user = gson.fromJson(userPref, User::class.java) ?: User("Nickname", "email", null)
+            val userFragment = UserFragmentDialog(this, user)
             userFragment.show(supportFragmentManager, "UserFragmentDialog")
         }
 

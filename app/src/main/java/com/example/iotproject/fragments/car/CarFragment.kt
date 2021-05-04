@@ -41,9 +41,9 @@ class CarFragment : Fragment() {
         viewModel.message.observe(viewLifecycleOwner, { message -> messenger(message) })
         viewModel.loading.observe(viewLifecycleOwner, { loading ->
             if (loading)
-                view.findViewById<ProgressBar>(R.id.gateProgressBar)!!.visibility = View.VISIBLE
+                view.findViewById<ProgressBar>(R.id.carProgressBar)!!.visibility = View.VISIBLE
             else
-                view.findViewById<ProgressBar>(R.id.gateProgressBar)!!.visibility = View.INVISIBLE
+                view.findViewById<ProgressBar>(R.id.carProgressBar)!!.visibility = View.INVISIBLE
         })
         viewModel.carList.observe(viewLifecycleOwner, { carList ->
             val emptyCarTextView = view.findViewById<TextView>(R.id.emptyCarTextView)

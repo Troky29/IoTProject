@@ -56,7 +56,6 @@ class ActivityFragment: Fragment(),ActivityCardAdapter.OnActionListener {
                 addActivityCard(activity)
         })
 
-        //TODO: for now we reload all activities all the time we open the application and open this tab
         viewModel.loadActivities()
     }
 
