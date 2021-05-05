@@ -4,6 +4,7 @@ import android.Manifest
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
+import android.util.Log
 import android.widget.ImageButton
 import android.widget.TextView
 import android.widget.Toast
@@ -95,6 +96,7 @@ class MainActivity : AppCompatActivity(),UserFragmentDialog.LogoutListener{
         FirebaseMessaging.getInstance().token.addOnSuccessListener { token ->
             if (FirebaseService.token != token) {
                 FirebaseService.token = token
+                viewModel.updateFCMToken(token)
             }
         }
     }
@@ -138,6 +140,7 @@ class MainActivity : AppCompatActivity(),UserFragmentDialog.LogoutListener{
         val prefEditor = getSharedPreferences("userPref", MODE_PRIVATE).edit()
         prefEditor.putString("user", null).apply()
         //Clear database to be reloaded upon new login
+        //TODO: error while trying to logout, becouse of the main thread for executing this command
         viewModel.viewModelScope.launch {
             (application as IoTApplication).clearAll()
         }

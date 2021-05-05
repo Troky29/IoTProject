@@ -34,7 +34,6 @@ class FirebaseService : FirebaseMessagingService() {
     override fun onNewToken(newToken: String) {
         super.onNewToken(newToken)
         token = newToken
-        updateFCMToken(newToken)
     }
 
     override fun onMessageReceived(remoteMessage: RemoteMessage) {
@@ -96,35 +95,6 @@ class FirebaseService : FirebaseMessagingService() {
             }
             notificationManager.createNotificationChannel(channel)
         }
-    }
-
-    private fun updateFCMToken(token: String) {
-        val client: OkHttpClient = OkHttpClient().newBuilder()
-                .authenticator(AccessTokenAuthenticator(AccessTokenRepository))
-                .addInterceptor(AccessTokenInterceptor(AccessTokenRepository))
-                .build()
-
-        val body = """{"fcm_token":"$token"}"""
-        val requestBody = body.toRequestBody(Constants.JSON)
-
-        val request = Request.Builder()
-                .url(Constants.URL + "fcm")
-                .post(requestBody)
-                .build()
-
-        client.newCall(request).enqueue(object : Callback {
-            override fun onFailure(call: Call, e: IOException) {
-                Log.e(TAG, "Failed contacting server for POST update FCM")
-            }
-
-            override fun onResponse(call: Call, response: Response) {
-                when (response.code) {
-                    200 -> Log.i(TAG, "Correctly updated FCM token")
-                    400 -> Log.e(TAG, "Invalid input data POST update FCM")
-                    500 -> Log.e (TAG, "Server failed POST update FCM")
-                }
-            }
-        })
     }
 
     override fun onDestroy() {
