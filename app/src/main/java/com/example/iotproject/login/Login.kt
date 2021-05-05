@@ -85,7 +85,7 @@ class Login : AppCompatActivity() {
             signIn()
         }
         //TODO: we skip the login process
-        login("", "")
+        //login("", "")
     }
 
     private fun login(sessionToken: String, refreshToken: String) {

@@ -152,10 +152,10 @@ class CarFragmentViewModel(private val repository: AppRepository) : ViewModel() 
         //TODO: determine if its guest
         val isGuest = false
         val nickname = item.get("nickname").toString()
-        val datetime = item.get("dead_line").toString()
+        //val datetime = item.get("dead_line").toString()
         //TODO: get image address
         val imageURL = item.get("photo").toString()
-        return Car(license, color, brand, true, nickname, datetime, imageURL)
+        return Car(license, color, brand, true, nickname, null, imageURL)
     }
 
     private fun insert(car: Car) = viewModelScope.launch {
