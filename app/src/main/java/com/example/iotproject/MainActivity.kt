@@ -38,7 +38,8 @@ class MainActivity : AppCompatActivity(),UserFragmentDialog.LogoutListener{
         setContentView(R.layout.activity_main)
         setSupportActionBar(findViewById(R.id.toolbar))
 
-        //viewModel = ViewModelProvider(this).get(MainActivityViewModel::class.java)
+        val userFragment = UserFragmentDialog(this, User("Nickname", "email", null))
+
         viewModel.message.observe(this, { message -> messenger(message) })
 
         //We load the saved information of the user, if we have just logged out we need to reload them
@@ -48,6 +49,7 @@ class MainActivity : AppCompatActivity(),UserFragmentDialog.LogoutListener{
         if (userPref != null) {
             val user: User = gson.fromJson(userPref, User::class.java)
             findViewById<TextView>(R.id.toolbarTextView).text = user.nickname
+            userFragment.user = user
         } else {
             viewModel.getUser()
         }
@@ -56,12 +58,11 @@ class MainActivity : AppCompatActivity(),UserFragmentDialog.LogoutListener{
             val editor = sharedPreferences.edit()
             editor.putString("user", gson.toJson(user)).apply()
             findViewById<TextView>(R.id.toolbarTextView).text = user.nickname
+            userFragment.user = user
         })
 
         val profilePicture = findViewById<ImageButton>(R.id.profileButton)
         profilePicture.setOnClickListener {
-            val user = gson.fromJson(userPref, User::class.java) ?: User("Nickname", "email", null)
-            val userFragment = UserFragmentDialog(this, user)
             userFragment.show(supportFragmentManager, "UserFragmentDialog")
         }
 

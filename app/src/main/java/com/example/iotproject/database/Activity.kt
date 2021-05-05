@@ -3,16 +3,12 @@ package com.example.iotproject.database
 import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.PrimaryKey
-
 @Entity(tableName = "activity",
         foreignKeys = [
             ForeignKey(
                     entity = Gate::class,
                     parentColumns = ["code"],
-                    childColumns = ["gate"]),
-            ForeignKey(entity = Car::class,
-                    parentColumns = ["license"],
-                    childColumns = ["car"])])
+                    childColumns = ["gate"])])
 data class Activity(
         @PrimaryKey(autoGenerate = true) val id: Int,
         val gate: String,

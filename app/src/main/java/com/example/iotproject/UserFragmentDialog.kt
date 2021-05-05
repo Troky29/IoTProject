@@ -8,7 +8,7 @@ import android.widget.Button
 import android.widget.TextView
 import androidx.fragment.app.DialogFragment
 
-class UserFragmentDialog(private val logoutListener: LogoutListener, private val user: User) : DialogFragment() {
+class UserFragmentDialog(private val logoutListener: LogoutListener, var user: User) : DialogFragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(R.layout.fragment_user, container, false)
 

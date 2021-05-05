@@ -49,7 +49,7 @@ class LoginViewModel : ViewModel() {
                         val jwtExpiry = JSONObject(response.body!!.string()).get("jwt_token_expiry").toString()
                         token.postValue(jwtExpiry)
                     } catch (e: Exception) {
-                        Log.e(TAG, "Wrong Json from POST gates")
+                        Log.e(TAG, "Wrong Json from POST session token")
                         message.postValue(server_error)
                     }
                     400 -> {

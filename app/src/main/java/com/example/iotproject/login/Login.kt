@@ -84,8 +84,6 @@ class Login : AppCompatActivity() {
         findViewById<TextView>(R.id.signInTextView).setOnClickListener() {
             signIn()
         }
-        //TODO: we skip the login process
-        //login("", "")
     }
 
     private fun login(sessionToken: String, refreshToken: String) {
@@ -94,6 +92,7 @@ class Login : AppCompatActivity() {
         AccessTokenRepository.logout = false
 
         val intent = Intent(this, MainActivity::class.java)
+        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
         startActivity(intent)
     }
 
