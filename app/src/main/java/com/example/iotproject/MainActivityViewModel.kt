@@ -3,13 +3,18 @@ package com.example.iotproject
 import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.viewModelScope
+import com.example.iotproject.database.AppRepository
+import com.example.iotproject.fragments.gate.GateFragmentViewModel
+import kotlinx.coroutines.launch
 import okhttp3.*
 import okhttp3.RequestBody.Companion.toRequestBody
 import org.json.JSONObject
 import java.io.IOException
 
 
-class MainActivityViewModel : ViewModel() {
+class MainActivityViewModel(private val repository: AppRepository) : ViewModel() {
     val TAG = "MainActivityViewModel"
 
     private var client: OkHttpClient = OkHttpClient().newBuilder()
@@ -99,7 +104,11 @@ class MainActivityViewModel : ViewModel() {
 
             override fun onResponse(call: Call, response: Response) {
                 when(response.code) {
-                    200 -> Log.i(TAG, "Success GET logout")
+                    200 -> {
+                        message.postValue(Constants.success)
+                        //We clear the database upon logout
+                        clearAll()
+                    }
                     404 -> Log.e(TAG, "User not found in GET logout")
                     500 -> Log.e(TAG, "Server failed GET logout")
                 }
@@ -108,9 +117,23 @@ class MainActivityViewModel : ViewModel() {
         AccessTokenRepository.logout = true
     }
 
+    private fun clearAll() = viewModelScope.launch {
+        repository.deleteAll()
+    }
+
     override fun onCleared() {
         super.onCleared()
         Log.i(TAG, Constants.destroyed)
+    }
+}
+
+class MainViewModelFactory(private val repository: AppRepository) : ViewModelProvider.Factory {
+    override fun <T : ViewModel> create(modelClass: Class<T>): T {
+        if (modelClass.isAssignableFrom(MainActivityViewModel::class.java)) {
+            @Suppress("UNCHECKED_CAST")
+            return MainActivityViewModel(repository) as T
+        }
+        throw IllegalArgumentException("Unknown ViewModel class")
     }
 }
 

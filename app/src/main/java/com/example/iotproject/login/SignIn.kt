@@ -8,6 +8,7 @@ import android.widget.EditText
 import android.widget.Toast
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import com.example.iotproject.Constants
 import com.example.iotproject.LoadingDialog
 import com.example.iotproject.R
 
@@ -68,7 +69,7 @@ class SignIn : AppCompatActivity() {
 
     private fun messenger(message: String) {
         Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
-        if (message == "Done!")
+        if (message == Constants.success)
             finish()
     }
 }

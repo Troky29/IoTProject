@@ -8,6 +8,7 @@ import android.util.Log
 import android.widget.ImageButton
 import android.widget.TextView
 import android.widget.Toast
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.fragment.app.Fragment
@@ -28,14 +29,16 @@ import kotlinx.coroutines.launch
 
 class MainActivity : AppCompatActivity(),UserFragmentDialog.LogoutListener{
     private val REQUEST_CODE = 1
-    private lateinit var viewModel: MainActivityViewModel
+    private val viewModel: MainActivityViewModel by viewModels {
+        MainViewModelFactory((application as IoTApplication).repository)
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         setSupportActionBar(findViewById(R.id.toolbar))
 
-        viewModel = ViewModelProvider(this).get(MainActivityViewModel::class.java)
+        //viewModel = ViewModelProvider(this).get(MainActivityViewModel::class.java)
         viewModel.message.observe(this, { message -> messenger(message) })
 
         //We load the saved information of the user, if we have just logged out we need to reload them
@@ -139,20 +142,20 @@ class MainActivity : AppCompatActivity(),UserFragmentDialog.LogoutListener{
         //We remove the saved user info
         val prefEditor = getSharedPreferences("userPref", MODE_PRIVATE).edit()
         prefEditor.putString("user", null).apply()
-        //Clear database to be reloaded upon new login
-        //TODO: error while trying to logout, becouse of the main thread for executing this command
-        viewModel.viewModelScope.launch {
-            (application as IoTApplication).clearAll()
-        }
 
         viewModel.logout()
+    }
 
+    private fun dismissActivity() {
         val intent = Intent(this, Login::class.java)
         intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
         startActivity(intent)
     }
 
     private fun messenger(message: String) {
-        Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
+        if (message == Constants.success)
+            dismissActivity()
+        else
+            Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
     }
 }
