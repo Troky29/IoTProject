@@ -20,6 +20,7 @@ import com.example.iotproject.LoadingDialog
 import com.example.iotproject.R
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
+import com.google.firebase.messaging.FirebaseMessaging
 import com.google.zxing.integration.android.IntentIntegrator
 import java.io.File
 import java.io.IOException
@@ -100,8 +101,7 @@ class RegisterGateActivity : AppCompatActivity(),GateFragmentViewModel.OnFinishL
 
             for (neighbour in locationHelper.getNeighbours(location, NEIGHBOUR_RADIUS))
                 //TODO: enable this only at the end
-                //FirebaseMessaging.getInstance().subscribeToTopic(neighbour)
-                continue
+                FirebaseMessaging.getInstance().subscribeToTopic(neighbour)
             viewModel.addGate(name, location.address, location.latitude, location.longitude, code, image)
         }
     }

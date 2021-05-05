@@ -51,9 +51,12 @@ class ActivityFragment: Fragment(),ActivityCardAdapter.OnActionListener {
             val emptyActivityTextView = view.findViewById<TextView>(R.id.emptyActivityTextView)
             if (activityList.isEmpty())
                 emptyActivityTextView.visibility = View.VISIBLE
-            flushActivityCards()
-            for (activity in activityList)
-                addActivityCard(activity)
+            else {
+                emptyActivityTextView.visibility = View.INVISIBLE
+                flushActivityCards()
+                for (activity in activityList)
+                    addActivityCard(activity)
+            }
         })
 
         viewModel.loadActivities()

@@ -51,6 +51,7 @@ class CarFragment : Fragment() {
                 viewModel.loadCars()
                 emptyCarTextView.visibility = View.VISIBLE
             } else {
+                emptyCarTextView.visibility = View.INVISIBLE
                 flushCarCards()
                 for (car in carList)
                     addCarCard(car)

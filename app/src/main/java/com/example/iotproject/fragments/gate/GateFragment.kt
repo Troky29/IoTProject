@@ -56,6 +56,7 @@ class GateFragment: Fragment(), GateCardAdapter.OnOpenListener {
                 viewModel.loadGates()
                 emptyGateTextView.visibility = View.VISIBLE
             } else {
+                emptyGateTextView.visibility = View.INVISIBLE
                 flushGateCards()
                 for (gate in gateList)
                     addGateCard(gate)
