@@ -11,6 +11,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.viewModelScope
 import com.example.iotproject.fragments.car.CarFragment
 import com.example.iotproject.fragments.activity.ActivityFragment
 import com.example.iotproject.fragments.gate.GateFragment
@@ -22,6 +23,7 @@ import com.google.android.gms.common.GoogleApiAvailability
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.firebase.messaging.FirebaseMessaging
 import com.google.gson.Gson
+import kotlinx.coroutines.launch
 
 class MainActivity : AppCompatActivity(),UserFragmentDialog.LogoutListener{
     private val REQUEST_CODE = 1
@@ -136,7 +138,9 @@ class MainActivity : AppCompatActivity(),UserFragmentDialog.LogoutListener{
         val prefEditor = getSharedPreferences("userPref", MODE_PRIVATE).edit()
         prefEditor.putString("user", null).apply()
         //Clear database to be reloaded upon new login
-        (application as IoTApplication).clearAll()
+        viewModel.viewModelScope.launch {
+            (application as IoTApplication).clearAll()
+        }
 
         viewModel.logout()
 
