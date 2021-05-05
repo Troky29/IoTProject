@@ -25,6 +25,7 @@
     <string name="ignored">Ignored</string>
     <string name="no_activity">No activity registered</string>
     <string name="no_car">No car registered</string>
+    <string name="nickname">Nickname</string>
 
     <string-array name="car_colors">
         <item>Black</item>

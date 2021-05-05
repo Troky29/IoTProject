@@ -32,11 +32,16 @@ class SignIn : AppCompatActivity() {
         loginViewModel.message.observe(this, messageObserver)
         loginViewModel.loading.observe(this, loadingObserver)
 
-        findViewById<Button>(R.id.signInButton).setOnClickListener() {
+        findViewById<Button>(R.id.signInButton).setOnClickListener {
+            val nickname = findViewById<EditText>(R.id.nicknameEditText).text.toString()
             val email = findViewById<EditText>(R.id.emailEditText).text.toString()
             val password = findViewById<EditText>(R.id.passwordEditText).text.toString()
             val repeatPassword = findViewById<EditText>(R.id.repeatPasswordEditText).text.toString()
 
+            if (nickname.isEmpty()) {
+                messenger("Insert a nickname")
+                return@setOnClickListener
+            }
             if (email.isEmpty()) {
                 messenger("Insert an email address")
                 return@setOnClickListener
@@ -53,7 +58,7 @@ class SignIn : AppCompatActivity() {
                 messenger("Repeat the password")
             }
             if (password == repeatPassword) {
-                loginViewModel.signIn(email, password)
+                loginViewModel.signIn(nickname, email, password)
             } else {
                 messenger("The passwords don't match!")
                 return@setOnClickListener

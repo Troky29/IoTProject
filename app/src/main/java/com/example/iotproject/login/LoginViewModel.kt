@@ -110,8 +110,8 @@ class LoginViewModel : ViewModel() {
         })
     }
 
-    fun signIn(email: String, password: String) {
-        val body = """{"email":"$email", "password":"$password"}"""
+    fun signIn(nickname: String, email: String, password: String) {
+        val body = """{"nickname":"$nickname","email":"$email", "password":"$password"}"""
         val requestBody = body.toRequestBody(JSON)
 
         val request = Request.Builder()
