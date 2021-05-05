@@ -146,15 +146,15 @@ class CarFragmentViewModel(private val repository: AppRepository) : ViewModel() 
     }
 
     fun getCar(item: JSONObject): Car {
-        val license = item.get("license").toString()
-        val color = item.get("color").toString()
-        val brand = item.get("brand").toString()
+        val license = item.get("Plate").toString()
+        val color = item.get("Color").toString()
+        val brand = item.get("Brand").toString()
         //TODO: determine if its guest
         val isGuest = false
-        val nickname = item.get("nickname").toString()
+        val nickname = "Owner"
         //val datetime = item.get("dead_line").toString()
         //TODO: get image address
-        val imageURL = item.get("photo").toString()
+        val imageURL = null
         return Car(license, color, brand, true, nickname, null, imageURL)
     }
 
