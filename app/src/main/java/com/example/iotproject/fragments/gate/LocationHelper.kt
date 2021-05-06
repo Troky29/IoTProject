@@ -37,7 +37,7 @@ class LocationHelper(val context: Context) {
                     val postalCode = address.postalCode
                     if (thoroughfare.isNullOrEmpty() || thoroughfare == "Unnamed Road" || postalCode.isNullOrEmpty())
                         continue
-                    val neighbour = "$thoroughfare $postalCode"
+                    val neighbour = "$thoroughfare $postalCode".replace(" ", "-")
                     if(!neighbours.contains(neighbour))
                         neighbours.add(neighbour)
                 }

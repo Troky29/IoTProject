@@ -102,9 +102,7 @@ class RegisterGateActivity : AppCompatActivity(),GateFragmentViewModel.OnFinishL
             }
 
             for (neighbour in locationHelper.getNeighbours(location, NEIGHBOUR_RADIUS))
-                Log.e("RegisterGateActivity", neighbour)
-                //TODO: enable this only at the end
-                //FirebaseMessaging.getInstance().subscribeToTopic(neighbour)
+                FirebaseMessaging.getInstance().subscribeToTopic(neighbour)
 
             viewModel.addGate(name, location.address, location.latitude, location.longitude, code, image)
         }
