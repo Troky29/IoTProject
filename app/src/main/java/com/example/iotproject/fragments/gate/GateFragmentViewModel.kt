@@ -91,7 +91,6 @@ class GateFragmentViewModel(private val repository: AppRepository) : ViewModel()
                 loading.postValue(false)
                 when (response.code) {
                     200 -> {
-                        message.postValue("Successfully added gate!")
                         val json = JSONObject(response.body!!.string())
                         //The server returns a Json with the url of the saved image only if its uploaded
                         val imageURL: String? = try {
@@ -99,6 +98,7 @@ class GateFragmentViewModel(private val repository: AppRepository) : ViewModel()
                         } catch (e: Exception) { null }
 
                         insert(Gate(code, name, location, imageURL))
+                        message.postValue(Constants.success)
                     }
                     400 -> {
                         Log.e(TAG, "Invalid data provided to POST gate")

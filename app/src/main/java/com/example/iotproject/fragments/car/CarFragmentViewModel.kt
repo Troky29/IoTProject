@@ -149,13 +149,11 @@ class CarFragmentViewModel(private val repository: AppRepository) : ViewModel() 
         val license = item.get("Plate").toString()
         val color = item.get("Color").toString()
         val brand = item.get("Brand").toString()
-        //TODO: determine if its guest
-        val isGuest = false
-        val nickname = "Owner"
-        //val datetime = item.get("dead_line").toString()
-        //TODO: get image address
+        val isGuest = item.get("Deadline").toString() != "null"
+        val nickname = if (isGuest) item.get("Nickname").toString() else "Owner"
+        val datetime = if (isGuest) item.get("Deadline").toString() else null
         val imageURL = null
-        return Car(license, color, brand, true, nickname, null, imageURL)
+        return Car(license, color, brand, isGuest, nickname, datetime, imageURL)
     }
 
     private fun insert(car: Car) = viewModelScope.launch {

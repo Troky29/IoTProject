@@ -15,11 +15,13 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.FileProvider
 import com.example.iotproject.Constants.Companion.NEIGHBOUR_RADIUS
+import com.example.iotproject.Constants.Companion.success
 import com.example.iotproject.IoTApplication
 import com.example.iotproject.LoadingDialog
 import com.example.iotproject.R
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
+import com.google.firebase.messaging.Constants
 import com.google.firebase.messaging.FirebaseMessaging
 import com.google.zxing.integration.android.IntentIntegrator
 import java.io.File
@@ -208,6 +210,8 @@ class RegisterGateActivity : AppCompatActivity(),GateFragmentViewModel.OnFinishL
     override fun close() = finish()
 
     private fun messenger(message: String) {
+        if (message == success)
+            finish()
         Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
     }
 }
