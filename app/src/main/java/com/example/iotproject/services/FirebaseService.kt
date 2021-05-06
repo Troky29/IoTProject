@@ -1,5 +1,6 @@
 package com.example.iotproject.services
 
+import android.app.Notification
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.NotificationManager.IMPORTANCE_HIGH
@@ -39,7 +40,6 @@ class FirebaseService : FirebaseMessagingService() {
     override fun onMessageReceived(remoteMessage: RemoteMessage) {
         super.onMessageReceived(remoteMessage)
 
-        Log.i(TAG, remoteMessage.data.toString())
         val intent = Intent(this, MainActivity::class.java)
         val notificationManager = getSystemService(NOTIFICATION_SERVICE) as NotificationManager
         val notificationID = Random.nextInt()
@@ -48,39 +48,54 @@ class FirebaseService : FirebaseMessagingService() {
             createNotificationChannel(notificationManager)
         }
 
-        //TODO: check the kind of notification, the generate the corresponding body
+        val notification: Notification
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
         val pendingIntent = PendingIntent.getActivity(this, 0, intent, FLAG_ONE_SHOT)
 
-        val allowBroadcastIntent = Intent(this, NotificationReceiver::class.java).apply {
-            putExtra("requestCode", State.ALLOW)
-            putExtra("notificationID", notificationID)
-        }
-        val allowAction = PendingIntent.getBroadcast(this, 0, allowBroadcastIntent, PendingIntent.FLAG_UPDATE_CURRENT)
+        when (remoteMessage.data["type"]) {
+            "anomaly" -> {
+                val allowBroadcastIntent = Intent(this, NotificationReceiver::class.java).apply {
+                    putExtra("requestCode", State.ALLOW)
+                    putExtra("notificationID", notificationID)
+                }
+                val allowAction = PendingIntent.getBroadcast(this, 0, allowBroadcastIntent, PendingIntent.FLAG_UPDATE_CURRENT)
 
-        val denyBroadcastIntent = Intent(this, NotificationReceiver::class.java).apply {
-            putExtra("requestCode", State.DENY)
-            putExtra("notificationID", notificationID)
-        }
-        val denyAction = PendingIntent.getBroadcast(this, 0, denyBroadcastIntent, PendingIntent.FLAG_UPDATE_CURRENT)
+                val denyBroadcastIntent = Intent(this, NotificationReceiver::class.java).apply {
+                    putExtra("requestCode", State.DENY)
+                    putExtra("notificationID", notificationID)
+                }
+                val denyAction = PendingIntent.getBroadcast(this, 0, denyBroadcastIntent, PendingIntent.FLAG_UPDATE_CURRENT)
 
-        val reportBroadcastReceiver = Intent(this, NotificationReceiver::class.java).apply {
-            putExtra("requestCode", State.REPORT)
-            putExtra("notificationID", notificationID)
-        }
-        val reportAction = PendingIntent.getBroadcast(this, 0, reportBroadcastReceiver, PendingIntent.FLAG_UPDATE_CURRENT)
+                val reportBroadcastReceiver = Intent(this, NotificationReceiver::class.java).apply {
+                    putExtra("requestCode", State.REPORT)
+                    putExtra("notificationID", notificationID)
+                }
+                val reportAction = PendingIntent.getBroadcast(this, 0, reportBroadcastReceiver, PendingIntent.FLAG_UPDATE_CURRENT)
 
-        val notification = NotificationCompat.Builder(this, CHANNEL_ID)
-            .setContentTitle(remoteMessage.notification!!.title)
-            .setContentText(remoteMessage.notification!!.body)
-            .setSmallIcon(R.drawable.ic_gate_access)
-            .setColor(resources.getColor(R.color.ColorPrimary, theme))
-            .setAutoCancel(true)
-            .setContentIntent(pendingIntent)
-            .addAction(R.drawable.ic_baseline_check_24, "ALLOW", allowAction)
-            .addAction(R.mipmap.ic_launcher, "DENY", denyAction)
-            .addAction(R.mipmap.ic_launcher, "REPORT", reportAction)
-            .build()
+                notification  = NotificationCompat.Builder(this, CHANNEL_ID)
+                        .setContentTitle(remoteMessage.notification!!.title)
+                        .setContentText(remoteMessage.notification!!.body)
+                        .setSmallIcon(R.drawable.ic_gate_access)
+                        .setColor(resources.getColor(R.color.ColorPrimary, theme))
+                        .setAutoCancel(true)
+                        .setContentIntent(pendingIntent)
+                        .addAction(R.drawable.ic_baseline_check_24, "ALLOW", allowAction)
+                        .addAction(R.mipmap.ic_launcher, "DENY", denyAction)
+                        .addAction(R.mipmap.ic_launcher, "REPORT", reportAction)
+                        .build()
+            }
+            //We include alert and guest with the same behavior, can be changed
+            else -> {
+                notification = NotificationCompat.Builder(this, CHANNEL_ID)
+                        .setContentTitle(remoteMessage.notification!!.title)
+                        .setContentText(remoteMessage.notification!!.body)
+                        .setSmallIcon(R.drawable.ic_gate_access)
+                        .setColor(resources.getColor(R.color.ColorPrimary, theme))
+                        .setAutoCancel(true)
+                        .setContentIntent(pendingIntent)
+                        .build()
+            }
+        }
 
         notificationManager.notify(notificationID, notification)
     }
