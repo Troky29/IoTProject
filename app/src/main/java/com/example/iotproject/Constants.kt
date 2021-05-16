@@ -5,9 +5,9 @@ import okhttp3.MediaType.Companion.toMediaType
 class Constants {
     companion object {
         //Localhost
-        const val URL = "http://10.0.2.2:5000/api/v1/"
+        //const val URL = "http://10.0.2.2:5000/api/v1/"
         //Google Cloud Api service
-        //const val URL = "https://api-dot-quiet-groove-306310.appspot.com/api/v1/"
+        const val URL = "https://api-dot-quiet-groove-306310.appspot.com/api/v1/"
         val JSON = ("application/json; charset=utf-8").toMediaType()
 
         //These are the used the messages sent throughout the application

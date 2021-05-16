@@ -91,9 +91,9 @@ class GateFragmentViewModel(private val repository: AppRepository) : ViewModel()
                 loading.postValue(false)
                 when (response.code) {
                     200 -> {
-                        val json = JSONObject(response.body!!.string())
                         //The server returns a Json with the url of the saved image only if its uploaded
                         val imageURL: String? = try {
+                            val json = JSONObject(response.body!!.string())
                             json.getString("url_image")
                         } catch (e: Exception) { null }
 
